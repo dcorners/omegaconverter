@@ -504,7 +504,7 @@
     </div>
 </div>
    
-      <<div id="alias-modal" class="modal-overlay">
+      <div id="alias-modal" class="modal-overlay">
         <div class="modal-content" style="width: 350px;">
             <h3 id="alias-modal-title" style="margin-top: 0; border-bottom: 1px solid var(--border); padding-bottom: 10px;">Aliases</h3>
             
@@ -6891,7 +6891,11 @@ function setupQuickConvert() {
             loadStorage();
             buildDefaultConfigs();
             renderSidebar();
-
+// Fail-safe URL reset trigger for stuck mobile devices
+if (window.location.search.includes('reset=1')) {
+    localStorage.clear();
+    sessionStorage.clear();
+}
             //  Build dropdown list for density-based tabs dynamically
             if (typeof TAB_CONFIG !== 'undefined') {
                 const dl = document.getElementById('ingredients-list');
