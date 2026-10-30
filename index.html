@@ -107,6 +107,242 @@
         .modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
         .btn-save { background: var(--primary); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
         .btn-cancel { background: #ccc; color: #333; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+       /* ==========================================================================
+   Mobile Responsive Overrides
+   Isolates layout shifts to viewports under 768px to preserve the rigid 
+   desktop flex layout.
+   ========================================================================== */
+
+/* ==========================================================================
+   Mobile Responsive Overrides & DOM Reordering
+   Uses display: contents to strip structural wrappers, allowing Flexbox 
+   to reorder elements across different parent nodes on mobile only.
+   ========================================================================== */
+/* ==========================================================================
+   Mobile Responsive Overrides & DOM Reordering
+   Uses display: contents to strip structural wrappers, allowing Flexbox 
+   to reorder elements across different parent nodes on mobile only.
+   ========================================================================== */
+
+/* ==========================================================================
+   Mobile Responsive Overrides & DOM Reordering
+   Uses display: contents to strip structural wrappers, allowing Flexbox 
+   to reorder elements across different parent nodes on mobile only.
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* Lock horizontal scrolling at the root to prevent autofocus screen-shifting */
+    html, body {
+        overflow-x: hidden !important;
+        width: 100vw !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    body {
+        flex-direction: column !important;
+        overflow-y: auto !important;
+        display: flex !important;
+    }
+
+    /* 
+       STRIP STRUCTURAL CONTAINERS
+       We remove the main wrappers, but deliberately keep the wrapper around 
+       the Title and Quick Lookup intact to prevent the input from collapsing.
+    */
+    #sidebar, 
+    #main, 
+    #top-bar {
+        display: contents !important;
+    }
+/* Override all user-defined PC column widths with a uniform mobile width */
+    th, td {
+        min-width: 50px !important; 
+        width: 50px !important;
+    }
+
+    /* Keep the first (frozen/context) column slightly wider if desired */
+    th:first-child, 
+    td:first-child {
+        min-width: 50px !important;
+        width: 50px !important;
+    }
+/* 
+       Volumetric Cost Custom Header Compression
+       Aggressively shrinks panels to 1 line each by hiding redundant headers 
+       and forcing inputs to stay on a single line.
+    */
+    .volumetric-header-container {
+        order: 3; 
+        width: 100% !important;
+        padding: 0 10px !important;
+        box-sizing: border-box;
+    }
+
+    .vol-wrapper {
+        gap: 5px !important;
+        margin-bottom: 8px !important;
+    }
+
+    .vol-panel {
+        padding: 6px 8px !important;
+        flex-basis: 100% !important; 
+    }
+
+    /* 1. Hide the headers to save an entire line per panel */
+    .vol-panel h3 {
+        display: none !important;
+    }
+
+    /* 2. Force the math rows to stay on a single line */
+    .vol-math-row {
+        gap: 4px !important; 
+        flex-wrap: nowrap !important; /* Prevents wrapping onto a second line */
+        justify-content: center !important;
+    }
+
+    /* Shrink the physical size of the inputs and dropdowns */
+    .vol-input, .vol-select, .vol-input-result {
+        padding: 2px 4px !important;
+        font-size: 0.8rem !important;
+        height: 26px !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Target specific widths so they perfectly fit a 320px screen width */
+    #vol-w, #vol-l, #vol-d { width: 48px !important; }
+    #mat-price { width: 55px !important; }
+    #mat-qty { width: 40px !important; }
+    #mat-base-cost { width: 55px !important; }
+    
+    /* Shrink the math symbols (X, @, $, ➔) */
+    .vol-math-row span {
+        font-size: 0.75rem !important;
+        white-space: nowrap !important;
+    }
+    /* 1. LOGO */
+    #sidebar > div:first-child {
+        order: 1;
+        padding: 10px !important; 
+        width: 100%;
+        box-sizing: border-box;
+    }
+    #sidebar > div:first-child h2 {
+        font-size: 1.1rem !important; 
+    }
+
+    /* 2. TITLE & QUICK LOOKUP (Preserved as a Flex Column) */
+    #top-bar > div:first-child {
+        order: 2;
+        display: flex !important;
+        flex-direction: column !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+        background: white;
+    }
+
+    #current-tab-title {
+        width: 100% !important;
+        min-width: 0 !important;
+        text-align: center;
+        font-size: 1.2rem;
+        margin: 0 0 15px 0 !important;
+    }
+
+    /* The specific wrapper holding the input - margins stripped to prevent overflow */
+    #top-bar > div:first-child > div:last-child {
+        width: 100% !important;
+        margin: 0 !important;
+        display: block !important;
+        position: relative !important;
+    }
+
+    #quick-convert {
+        width: 100% !important;
+        font-size: 16px !important; /* 16px prevents iOS Safari auto-zoom */
+        box-sizing: border-box !important;
+    }
+
+    /* 3. THE CONVERSION GRID */
+    #grid-container {
+        order: 3;
+        width: 100% !important;
+        padding: 0 !important;
+        /* Allow the grid to expand, but enforce scrolling on small screens */
+        flex: 1 1 40vh !important; 
+        min-height: 40vh !important; 
+        box-sizing: border-box;
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
+    }
+
+    table {
+        display: block;
+        max-width: 100vw;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch; 
+        margin: 0 !important;
+    }
+
+    th {
+        background: #ecf0f1;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* 4. HEADER ACTIONS (Column Settings & Clear Data) */
+    .header-actions {
+        order: 4;
+        width: 100% !important;
+        padding: 12px 15px !important;
+        box-sizing: border-box;
+        justify-content: space-between;
+        background: white; 
+        display: flex !important;
+    }
+
+    /* 5. TAB LIST */
+    #tab-list {
+        order: 5;
+        width: 100% !important;
+        max-height: 25vh !important; 
+        background: var(--sidebar-bg); 
+        overflow-y: auto !important; /* Keep the tabs scrollable natively */
+    }
+
+    /* 6. SIDEBAR FOOTER (Tab Settings, Coffee, Reset) */
+    #sidebar-footer {
+        order: 6;
+        width: 100% !important;
+        box-sizing: border-box;
+        display: flex !important;
+    }
+
+    /* Deprioritize the Reset button so it isn't visually dominant */
+    .btn-reset-all {
+        background: transparent !important;
+        color: var(--text-light) !important;
+        border: 1px solid rgba(231, 76, 60, 0.5) !important;
+        flex-grow: 0 !important;
+    }
+
+    /* MODAL FLUIDITY (Keeps popups on-screen) */
+    .modal-content {
+        width: 90% !important;
+        max-width: 400px !important; 
+        margin: 20px auto;
+        max-height: 85vh; 
+    }
+    #settings-modal .modal-content {
+        max-width: 600px !important;
+    }
+    .modal-actions {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
     </style>
 </head>
 <body>
@@ -712,13 +948,26 @@ const COLOR_UTILS = {
 
         const TAB_CONFIG = {
             "Lengths": {
-            baseUnitName: "Meters",
-            defaultVisible: [
-              "Nanometers", "Microns (µm)", "Millimeters", "Centimeters", "Meters", "Kilometers",
-              "Inches", "Inches (fraction)", "Feet", "Yards", "Miles", "Nautical Miles",
-              "Light Years", "Last Updated"
-            ],
-            defaultHeaders: [
+                baseUnitName: "Meters",
+                defaultVisible: [
+                  "Nanometers", "Microns (µm)", "Millimeters", "Centimeters", "Meters", "Kilometers",
+                  "Inches", "Inches (fraction)", "Feet", "Yards", "Miles", "Nautical Miles",
+                  "Light Years", "Last Updated"
+                ],
+                mobileVisible: [
+                  "Millimeters", "Centimeters", "Meters", "Kilometers",
+                  "Inches", "Inches (fraction)", "Feet", "Yards", "Miles", "Last Updated"
+                ],
+                mobileHeaders: {
+                    "millimeters": "mm",
+                    "centimeters": "cm",
+                    "meters": "m",
+                    "kilometers": "km",
+                    "inches": "in",
+                    "inches (fraction)": "in (frac)", 
+                    "last updated": "Updated"
+                },
+                defaultHeaders: [
               "Planck Length", "Attometers", "Femtometers (Fermi)", "Picometers", "Angstroms", 
               "Bohr Radius", "Nanometers", "Microns (µm)", "Mils (thou)", "Microinches", "Twips", "Points", "Picas",
               "Millimeters", "Centimeters", "Decimeters", "Meters", "Dekameters", "Hectometers", "Kilometers",
@@ -1898,6 +2147,25 @@ const COLOR_UTILS = {
               "Square Millimeters", "Square Centimeters", "Square Meters", "Hectares", "Square Kilometers",
               "Last Updated"
             ],
+            // NEW: Curated for mobile (Everyday practical area units)
+            mobileVisible: [
+              "Square Inches", "Square Feet", "Acres", 
+              "Square Centimeters", "Square Meters", "Hectares", "Last Updated"
+            ],
+            // NEW: Ultra-short column headers for touch screens
+            mobileHeaders: {
+              "square inches": "sq in",
+              "square feet": "sq ft",
+              "square yards": "sq yd",
+              "acres": "acre",
+              "square miles": "sq mi",
+              "square millimeters": "sq mm",
+              "square centimeters": "sq cm",
+              "square meters": "sq m",
+              "hectares": "ha",
+              "square kilometers": "sq km",
+              "last updated": "Updated"
+            },
             defaultHeaders: [
               "Electron Cross Section", "Barns", "Square Nanometers", "Square Micrometers", "Square Mils", "Circular Mils",
               "Square Millimeters", "Square Centimeters", "Square Decimeters", "Square Meters",
@@ -1960,8 +2228,26 @@ const COLOR_UTILS = {
             defaultVisible: [
               "Meters/Second", "Kilometers/Hour", "Miles/Hour", 
               "Feet/Second", "Knots", "Mach (20°C, 1 atm)", 
-              "Velocity of Light in Vacuum", "Warp (TOS)", "Warp (TNG)","Last Updated"
+              "Velocity of Light in Vacuum", "Warp (TOS)", "Warp (TNG)", "Last Updated"
             ],
+
+            mobileVisible: [
+              "Miles/Hour", "Kilometers/Hour", "Meters/Second", 
+              "Feet/Second", "Knots", "Mach (20°C, 1 atm)", "Last Updated"
+            ],
+
+            mobileHeaders: {
+              "meters/second": "m/s",
+              "kilometers/hour": "km/h",
+              "miles/hour": "mph",
+              "feet/second": "ft/s",
+              "knots": "kn",
+              "mach (20°c, 1 atm)": "Mach",
+              "velocity of light in vacuum": "Light (c)",
+              "warp (tos)": "Warp (TOS)",
+              "warp (tng)": "Warp (TNG)",
+              "last updated": "Updated"
+            },
             defaultHeaders: [
               "Millimeters/Second", "Millimeters/Minute", "Millimeters/Hour",
               "Centimeters/Second", "Centimeters/Minute", "Centimeters/Hour",
@@ -1976,7 +2262,7 @@ const COLOR_UTILS = {
               "Velocity of Sound in Pure Water", "Velocity of Sound in Sea Water",
               "Earth's Velocity",
               "Cosmic Velocity - First", "Cosmic Velocity - Second", "Cosmic Velocity - Third",
-              "Velocity of Light in Vacuum","Warp (TOS)", "Warp (TNG)",
+              "Velocity of Light in Vacuum", "Warp (TOS)", "Warp (TNG)",
               "Last Updated"
             ],
             units: {
@@ -2037,7 +2323,7 @@ const COLOR_UTILS = {
 
           "Ring Sizes": {
             baseUnitName: "Diameter (mm)",
-            isRingTab: true, // NEW: Flag to bypass standard number parsing
+            isRingTab: true,
             defaultVisible: [
               "US / Canada", "UK / Australia", "Europe (ISO)", 
               "Japan", "Diameter (mm)", "Circumference (mm)"
@@ -2089,6 +2375,30 @@ const COLOR_UTILS = {
               "Cubic Inches", "Cubic Feet", "Cubic Yards", "Oil Barrels",
               "Last Updated"
             ],
+            
+            mobileVisible: [
+              "Milliliters", "Liters", "Teaspoons (US)", "Tablespoons (US)", 
+              "Fluid Ounces (US)", "Cups (US)", "Gallons (US)", "Cubic Meters",
+              "Last Updated"
+            ],
+            mobileHeaders: {
+              "milliliters": "mL",
+              "liters": "L",
+              "teaspoons (us)": "tsp",
+              "tablespoons (us)": "tbsp",
+              "fluid ounces (us)": "fl oz",
+              "cups (us)": "cup",
+              "pints (us)": "pt",
+              "quarts (us)": "qt",
+              "gallons (us)": "gal",
+              "cubic centimeters": "cm³",
+              "cubic meters": "m³",
+              "fluid ounces (imp)": "fl oz (UK)",
+              "gallons (imp)": "gal (UK)",
+              "cubic inches": "in³",
+              "cubic feet": "ft³",
+              "last updated": "Updated"
+            },
             defaultHeaders: [
               "Drops", "Minims (US)", "Minims (UK)", 
               "Teaspoons (US)", "Teaspoons (UK)", "Teaspoons (Metric)",
@@ -2194,12 +2504,36 @@ const COLOR_UTILS = {
        "Culinary": {
             baseUnitName: "Grams / Milliliters",
             isDensityTab: true,
+            // Added defaultVisible for PC parity
+            defaultVisible: [
+              "Ingredient", "Cups (US)", "Tablespoons (US)", "Teaspoons (US)",
+              "Milliliters", "Liters", "Grams", "Kilograms", "Ounces", "Pounds",
+              "Last Updated"
+            ],
+           
+            mobileVisible: [
+              "Ingredient", "Cups (US)", "Tablespoons (US)", 
+              "Milliliters", "Grams", "Ounces", "Last Updated"
+            ],
+            
+            mobileHeaders: {
+              "ingredient": "Item",
+              "cups (us)": "cup",
+              "tablespoons (us)": "tbsp",
+              "teaspoons (us)": "tsp",
+              "milliliters": "mL",
+              "liters": "L",
+              "grams": "g",
+              "kilograms": "kg",
+              "ounces": "oz",
+              "pounds": "lb",
+              "last updated": "Updated"
+            },
             defaultHeaders: [
               "Ingredient", "Cups (US)", "Tablespoons (US)", "Teaspoons (US)",
               "Milliliters", "Liters", "Grams", "Kilograms", "Ounces", "Pounds",
               "Last Updated"
             ],
-            
             units: {
               "ingredient": { type: "anchor" },
               "cups (us)": { type: "volume", factor: 236.5882365 },
@@ -2280,13 +2614,33 @@ const COLOR_UTILS = {
             }
           },
 
-       "Weight/Mass":{
+       "Weight/Mass": {
             baseUnitName: "Kilograms",
             defaultVisible: [
               "Micrograms", "Milligrams", "Grams", "Kilograms", "Metric Tons",
               "Ounces", "Pounds", "Stones (UK)", "Short Tons (US)", "Long Tons (UK)",
               "Last Updated"
             ],
+           
+            mobileVisible: [
+              "Milligrams", "Grams", "Kilograms", "Metric Tons",
+              "Ounces", "Pounds", "Stones (UK)", "Short Tons (US)", 
+              "Last Updated"
+            ],
+           
+            mobileHeaders: {
+              "micrograms": "mcg",
+              "milligrams": "mg",
+              "grams": "g",
+              "kilograms": "kg",
+              "metric tons": "MT",
+              "ounces": "oz",
+              "pounds": "lb",
+              "stones (uk)": "st",
+              "short tons (us)": "ton (US)",
+              "long tons (uk)": "ton (UK)",
+              "last updated": "Updated"
+            },
             defaultHeaders: [
               "Electron Mass (Rest)", "Muon Mass", "Proton Mass", "Neutron Mass", "Deuteron Mass",
               "Attograms", "Femtograms", "Picograms", "Nanograms", "Gammas", "Micrograms",
@@ -2597,6 +2951,29 @@ const COLOR_UTILS = {
               "Kibibytes (KiB)", "Mebibytes (MiB)", "Gibibytes (GiB)", "Tebibytes (TiB)",
               "Last Updated"
             ],
+            
+            mobileVisible: [
+              "Bytes", "Kilobytes (KB)", "Megabytes (MB)", 
+              "Gigabytes (GB)", "Terabytes (TB)", "Last Updated"
+            ],
+          
+            mobileHeaders: {
+              "bits": "b",
+              "bytes": "B",
+              "kilobits (kb)": "Kb",
+              "megabits (mb)": "Mb",
+              "gigabits (gb)": "Gb",
+              "terabits (tb)": "Tb",
+              "kilobytes (kb)": "KB",
+              "megabytes (mb)": "MB",
+              "gigabytes (gb)": "GB",
+              "terabytes (tb)": "TB",
+              "kibibytes (kib)": "KiB",
+              "mebibytes (mib)": "MiB",
+              "gibibytes (gib)": "GiB",
+              "tebibytes (tib)": "TiB",
+              "last updated": "Updated"
+            },
             defaultHeaders: [
               "Bits", "Nibbles", "Bytes", "Characters", "Words", "MAPM-words", "Quadruple-words", "Blocks",
               "Kilobits (Kb)", "Megabits (Mb)", "Gigabits (Gb)", "Terabits (Tb)", "Petabits (Pb)", "Exabits (Eb)",
@@ -2665,6 +3042,24 @@ const COLOR_UTILS = {
               "Liters", "Milliliters / cc", "Fluid Ounces (US)", 
               "Cups (Fraction)", "Gallons (US)", "Cost/Liter ($)", "Project Cost ($)", "Last Updated"
             ],
+            // FIX: Restored "Cost/Liter ($)" so custom JS functions don't crash when trying to locate the cell
+            mobileVisible: [
+              "Liters", "Milliliters / cc", "Fluid Ounces (US)", 
+              "Cups (Fraction)", "Gallons (US)", "Cost/Liter ($)", "Project Cost ($)", "Last Updated"
+            ],
+            mobileHeaders: {
+              "liters": "L",
+              "milliliters / cc": "mL/cc",
+              "fluid ounces (us)": "fl oz",
+              "cups (fraction)": "cups",
+              "gallons (us)": "gal",
+              "cubic inches": "in³",
+              "cubic feet": "ft³",
+              "cost/liter ($)": "$/L",
+              "project cost ($)": "Cost",
+              "last updated": "Updated"
+            },
+            
             defaultHeaders: [
               "Liters", "Milliliters / cc", "Cups (Fraction)", "Gallons (US)", "Fluid Ounces (US)", 
               "Cubic Inches", "Cubic Feet", "Cost/Liter ($)", "Project Cost ($)", "Last Updated"
@@ -2696,6 +3091,35 @@ const COLOR_UTILS = {
 
      "Data Transfer": {
             baseUnitName: "Bytes per Second",
+            // Added sensible defaults for PC so it isn't cluttered
+            defaultVisible: [
+              "Kilobits/Sec (Kbps)", "Kilobytes/Sec (KB/s)",
+              "Megabits/Sec (Mbps)", "Megabytes/Sec (MB/s)", 
+              "Gigabits/Sec (Gbps)", "Gigabytes/Sec (GB/s)",
+              "Terabytes/Sec (TB/s)", "Last Updated"
+            ],
+           
+            mobileVisible: [
+              "Kilobytes/Sec (KB/s)", "Megabits/Sec (Mbps)", "Megabytes/Sec (MB/s)", 
+              "Gigabits/Sec (Gbps)", "Gigabytes/Sec (GB/s)", "Last Updated"
+            ],
+            
+            mobileHeaders: {
+              "bits/sec (bps)": "bps",
+              "bytes/sec (b/s)": "B/s",
+              "kilobits/sec (kbps)": "Kbps",
+              "kilobytes/sec (kb/s)": "KB/s",
+              "megabits/sec (mbps)": "Mbps",
+              "megabytes/sec (mb/s)": "MB/s",
+              "gigabits/sec (gbps)": "Gbps",
+              "gigabytes/sec (gb/s)": "GB/s",
+              "terabits/sec (tbps)": "Tbps",
+              "terabytes/sec (tb/s)": "TB/s",
+              "kibibytes/sec (kib/s)": "KiB/s",
+              "mebibytes/sec (mib/s)": "MiB/s",
+              "gibibytes/sec (gib/s)": "GiB/s",
+              "last updated": "Updated"
+            },
             defaultHeaders: [
               "Megabits/Sec (Mbps)", "Megabytes/Sec (MB/s)", "Gigabits/Sec (Gbps)", "Gigabytes/Sec (GB/s)",
               "Kilobits/Sec (Kbps)", "Kilobytes/Sec (KB/s)", "Bits/Sec (bps)", "Bytes/Sec (B/s)",
@@ -2703,7 +3127,6 @@ const COLOR_UTILS = {
               "Kibibytes/Sec (KiB/s)", "Mebibytes/Sec (MiB/s)", "Gibibytes/Sec (GiB/s)",
               "Last Updated"
             ],
-
             units: {
               "bits/sec (bps)": 0.125, "bytes/sec (b/s)": 1.0, "kilobits/sec (kbps)": 125, "kilobytes/sec (kb/s)": 1e3,
               "megabits/sec (mbps)": 125000, "megabytes/sec (mb/s)": 1e6, "gigabits/sec (gbps)": 125000000,
@@ -6713,12 +7136,12 @@ function loadTab(tabName) {
             const qc = document.getElementById('quick-convert');
         if (qc) {
           // TROUBLESHOOTING PROBES
-            console.log("--- TAB SWITCH TRIGGERED ---");
-            console.log("1. Target tab:", tabName);
-            console.log("2. Is qc focused right now?", document.activeElement === qc);
-            console.log("3. Exact qc value:", qc.value);
-            console.log("4. Value length:", qc.value.length);
-            console.log("5. Does it match exactly?", qc.value === '"');
+        //    console.log("--- TAB SWITCH TRIGGERED ---");
+      //      console.log("1. Target tab:", tabName);
+          //  console.log("2. Is qc focused right now?", document.activeElement === qc);
+         //   console.log("3. Exact qc value:", qc.value);
+       //     console.log("4. Value length:", qc.value.length);
+       //     console.log("5. Does it match exactly?", qc.value === '"');
             // If they leave the tab with just the auto-inserted quote, wipe it clean
             if (qc.value.trim() === '"') {
                 qc.value = '';
@@ -6786,14 +7209,44 @@ function loadTab(tabName) {
         }
 
         function renderGrid() {
-            const activeCols = userColConfig[currentTab].filter(c => c.visible);
+            let activeCols = userColConfig[currentTab].filter(c => c.visible);
+            
+            // 1. Declare these at the TOP so the whole function can access them
+            const isMobile = window.innerWidth <= 768;
+            let config = null;
+            
+            // 2. PRO INTERCEPTOR: Data-driven mobile filtering
+            if (isMobile) {
+                const tabClean = currentTab.toLowerCase().replace(/[\s\/\\]+/g, "");
+                
+                if (["wages", "wage", "salary", "pay"].includes(tabClean)) {
+                    config = typeof WAGES_CONFIG !== 'undefined' ? WAGES_CONFIG : null;
+                } else if (["timezone", "timezones", "worldtime"].includes(tabClean)) {
+                    config = typeof TIMEZONE_CONFIG !== 'undefined' ? TIMEZONE_CONFIG : null;
+                } else if (typeof TAB_CONFIG !== 'undefined') {
+                    config = TAB_CONFIG[currentTab];
+                }
+
+                if (config && config.mobileVisible) {
+                    const mobileAllowed = config.mobileVisible.map(v => v.toLowerCase());
+                    activeCols = activeCols.filter(c => mobileAllowed.includes(c.name.toLowerCase()));
+                }
+            }
             
             const thead = document.getElementById('grid-head');
             
-            // Map over active columns, applying custom widths if set
+            // 3. Map over active columns, checking for mobile short-names
             thead.innerHTML = '<tr>' + activeCols.map(c => {
                 const widthStyle = c.minWidth ? `style="width: ${c.minWidth}px; min-width: ${c.minWidth}px;"` : '';
-                return `<th ${widthStyle}>${c.displayName || c.name}</th>`;
+                
+                let headerText = c.displayName || c.name;
+                
+                // Now 'config' is safely in scope!
+                if (isMobile && config && config.mobileHeaders && config.mobileHeaders[c.name.toLowerCase()]) {
+                    headerText = config.mobileHeaders[c.name.toLowerCase()];
+                }
+                
+                return `<th ${widthStyle}>${headerText}</th>`;
             }).join('') + '<th style="width: 40px; min-width: 40px; padding: 0;"></th></tr>';
 
             const tbody = document.getElementById('grid-body');
@@ -8686,7 +9139,7 @@ function initVolumetricCostUI(currentTabName) {
         
         container = document.createElement('div');
         container.id = 'volumetric-header-container';
-        container.style.marginBottom = '20px';
+        container.className = 'volumetric-header-container'; // Added for CSS targeting
         
         tableElement.parentNode.insertBefore(container, tableElement);
     }
@@ -8698,36 +9151,44 @@ function initVolumetricCostUI(currentTabName) {
     
     container.style.display = 'block';
 
+    // UI REFACTOR: Removed rigid inline min-widths and replaced with CSS classes 
+    // to allow for aggressive mobile compression.
     container.innerHTML = `
-        <div style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch;">
+        <div class="vol-wrapper" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: stretch; margin-bottom: 15px;">
+            
             <!-- Surface Volume Block -->
-            <div style="flex: 1; min-width: 320px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
-                <h3 style="margin: 0 0 12px 0; font-size: 1.05em; color: #333;">Calculate Surface Volume</h3>
-                <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+            <div class="vol-panel" style="flex: 1; background: white; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
+                <h3 style="margin: 0 0 10px 0; font-size: 1.05em; color: #333;">Calculate Surface Volume</h3>
+                <div class="vol-math-row" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    
                     <div style="display: flex; align-items: center; gap: 4px;">
-                        <input type="number" id="vol-w" placeholder="Width" style="width: 75px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
-                        <select id="vol-w-unit" style="padding: 6px; border-radius: 4px;">
-                            <option value="in">Inches</option>
+                        <input type="number" id="vol-w" placeholder="Width" class="vol-input" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                        <select id="vol-w-unit" class="vol-select" style="padding: 6px; border-radius: 4px;">
+                            <option value="in">in</option>
                             <option value="cm">cm</option>
                             <option value="mm">mm</option>
-                            <option value="ft">Feet</option>
+                            <option value="ft">ft</option>
                         </select>
                     </div>
-                    <span style="font-weight: bold; color: #666;">✕</span>
+                    
+                    <span style="font-weight: bold; color: #666; font-size: 0.9em;">✕</span>
+                    
                     <div style="display: flex; align-items: center; gap: 4px;">
-                        <input type="number" id="vol-l" placeholder="Length" style="width: 75px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
-                        <select id="vol-l-unit" style="padding: 6px; border-radius: 4px;">
-                            <option value="in">Inches</option>
+                        <input type="number" id="vol-l" placeholder="Length" class="vol-input" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                        <select id="vol-l-unit" class="vol-select" style="padding: 6px; border-radius: 4px;">
+                            <option value="in">in</option>
                             <option value="cm">cm</option>
                             <option value="mm">mm</option>
-                            <option value="ft">Feet</option>
+                            <option value="ft">ft</option>
                         </select>
                     </div>
-                    <span style="font-weight: bold; color: #666;">@</span>
+                    
+                    <span style="font-weight: bold; color: #666; font-size: 0.9em;">@</span>
+                    
                     <div style="display: flex; align-items: center; gap: 4px;">
-                        <input type="number" id="vol-d" placeholder="Depth" style="width: 75px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
-                        <select id="vol-d-unit" style="padding: 6px; border-radius: 4px;">
-                            <option value="in">Inches</option>
+                        <input type="number" id="vol-d" placeholder="Depth" class="vol-input" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                        <select id="vol-d-unit" class="vol-select" style="padding: 6px; border-radius: 4px;">
+                            <option value="in">in</option>
                             <option value="mm">mm</option>
                             <option value="cm">cm</option>
                         </select>
@@ -8736,19 +9197,22 @@ function initVolumetricCostUI(currentTabName) {
             </div>
 
             <!-- Materials Cost Block -->
-            <div style="flex: 1; min-width: 380px; background: white; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
-                <h3 style="margin: 0 0 12px 0; font-size: 1.05em; color: #333;">Materials Cost</h3>
-                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <div class="vol-panel" style="flex: 1; background: white; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6;">
+                <h3 style="margin: 0 0 10px 0; font-size: 1.05em; color: #333;">Materials Cost</h3>
+                <div class="vol-math-row" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    
                     <div style="display: flex; align-items: center; gap: 4px;">
                         <span style="font-weight: bold; color: #666;">$</span>
-                        <input type="number" id="mat-price" placeholder="65.00" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                        <input type="number" id="mat-price" placeholder="65.00" class="vol-input" style="width: 65px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
                     </div>
-                    <span style="color: #666; font-size: 0.9em;">for each</span>
+                    
+                    <span style="color: #666; font-size: 0.85em;">for</span>
+                    
                     <div style="display: flex; align-items: center; gap: 4px;">
-                        <input type="number" id="mat-qty" placeholder="2" style="width: 60px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
-                        <select id="mat-unit" style="padding: 6px; border-radius: 4px;">
-                            <option value="gallons">Gallons</option>
-                            <option value="liters">Liters</option>
+                        <input type="number" id="mat-qty" placeholder="2" class="vol-input" style="width: 50px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                        <select id="mat-unit" class="vol-select" style="padding: 6px; border-radius: 4px;">
+                            <option value="gallons">gal</option>
+                            <option value="liters">L</option>
                             <option value="oz">oz</option>
                             <option value="ml">ml</option>
                         </select>
@@ -8758,8 +9222,8 @@ function initVolumetricCostUI(currentTabName) {
                     
                     <div style="display: flex; align-items: center; gap: 4px; background: #e8f5e9; padding: 4px 8px; border-radius: 4px; border: 1px solid #c8e6c9;">
                         <span style="font-weight: bold; color: #28a745;">$</span>
-                        <input type="number" id="mat-base-cost" placeholder="0.00" style="width: 70px; padding: 4px; border: 1px solid #a5d6a7; border-radius: 4px; color: #28a745; font-weight: bold; background: white;">
-                        <span style="font-size: 0.85em; color: #28a745; font-weight: bold;">/ Liter</span>
+                        <input type="number" id="mat-base-cost" placeholder="0.00" class="vol-input-result" style="width: 60px; padding: 4px; border: 1px solid #a5d6a7; border-radius: 4px; color: #28a745; font-weight: bold; background: white;">
+                        <span style="font-size: 0.8em; color: #28a745; font-weight: bold;">/ L</span>
                     </div>
                 </div>
             </div>
@@ -8875,17 +9339,25 @@ function calculateVolumetric() {
                         
     const liters = cubicMeters * 1000;
     
-    const litersInput = getActiveLitersInput();
+    // PRO FIX: Decouple from visual header text. 
+    // 1. Get the true index of "Liters" directly from the configuration dictionary.
+    const config = TAB_CONFIG["Volumetric Cost"];
+    const litersColIdx = config.defaultHeaders.findIndex(h => h.toLowerCase() === "liters");
+    
+    // 2. Determine which row to inject the calculation into (prioritizing the active row)
+    let targetRowIdx = typeof quickConvertActiveRow !== 'undefined' && quickConvertActiveRow > -1 
+        ? quickConvertActiveRow 
+        : Math.max(0, document.querySelectorAll('#grid-body tr').length - 1);
+        
+    // 3. Select the exact input using immutable data attributes, bypassing screen text entirely
+    const litersInput = document.querySelector(`td[data-row="${targetRowIdx}"][data-col="${litersColIdx}"] input`);
+    
     if (litersInput) {
         litersInput.value = liters.toFixed(4);
         
-        const td = litersInput.closest('td');
-        if (td && typeof handleStandardInput === 'function') {
-            const rowIdx = parseInt(td.getAttribute('data-row'), 10);
-            const colIdx = parseInt(td.getAttribute('data-col'), 10);
-            const config = TAB_CONFIG["Volumetric Cost"];
-            
-            handleStandardInput(rowIdx, colIdx, litersInput.value, config);
+        if (typeof handleStandardInput === 'function') {
+            // Fire the standard conversion engine so the rest of the row calculates
+            handleStandardInput(targetRowIdx, litersColIdx, litersInput.value, config);
         }
     }
 }
