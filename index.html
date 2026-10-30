@@ -72,7 +72,8 @@
         input[type="checkbox"] { width: auto; margin: 0 10px 0 5px; padding: 0; cursor: pointer; flex-shrink: 0; transform: scale(1.1); }
 
 #quick-convert {
-    width: 420px !important;
+    width: 100% !important;
+    max-width: 420px;
     font-size: 1rem;
     padding: 6px 12px;
     border-radius: 6px;
@@ -361,15 +362,15 @@
 
     <div id="main">
           <div id="top-bar">  
-            <div style="display: flex; align-items: center; flex-grow: 1; margin-right: 20px;">
-                <h1 id="current-tab-title" style="width: 380px; min-width: 380px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Select a Tab</h1>
+            <div style="display: flex; align-items: center; flex-grow: 1; min-width: 0; margin-right: 15px;">
+                <h1 id="current-tab-title" style="max-width: 250px; min-width: 0; flex-shrink: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">Select a Tab</h1>
                 
-                <div style="position: relative; margin-left: 25px;">
-                <div id="quick-status" style="position: absolute; top: -18px; left: 5px; font-size: 0.75rem; color: var(--danger); white-space: nowrap;"></div>
-                 <input type="text" id="quick-convert" placeholder="12 in" autofocus title="Quick Convert: Type amount and unit (e.g. 12 in)">
-                  </div>
+                <div style="position: relative; margin-left: 15px; flex-grow: 1; max-width: 420px; min-width: 140px;">
+                    <div id="quick-status" style="position: absolute; top: -18px; left: 5px; font-size: 0.75rem; color: var(--danger); white-space: nowrap;"></div>
+                    <input type="text" id="quick-convert" placeholder="12 in" autofocus title="Quick Convert: Type amount and unit (e.g. 12 in)">
+                </div>
             </div>
-            <div class="header-actions">
+            <div class="header-actions" style="flex-shrink: 0;">
                 <button class="btn-icon" onclick="openColSettings()" title="Configure Columns">⚙️</button>
                 <button class="btn-clear-page" onclick="clearCurrentPage()">🗑 Clear Tab Data</button>
             </div>
