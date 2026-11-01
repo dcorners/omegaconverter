@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OmegaConverter</title>
@@ -23,7 +22,7 @@
             --grid-font-size: 16px;
         }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; display: flex; height: 100vh; overflow: hidden; background: var(--bg-color); }
-        
+         
 
        /* Sidebar */
           #sidebar { 
@@ -965,31 +964,34 @@ const COLOR_UTILS = {
         };
 
         const TAB_CONFIG = {
-            "Lengths": {
-                baseUnitName: "Meters",
-                defaultVisible: [
-                  "Nanometers", "Microns (µm)", "Millimeters", "Centimeters", "Meters", "Kilometers",
-                  "Inches", "Inches (fraction)", "Feet", "Yards", "Miles", "Nautical Miles",
-                  "Light Years", "Last Updated"
-                ],
-                mobileVisible: [
-                  "Millimeters", "Centimeters", "Meters", "Kilometers",
-                  "Inches", "Inches (fraction)", "Feet", "Yards", "Miles", "Last Updated"
-                ],
-                mobileHeaders: {
-                    "millimeters": "mm",
-                    "centimeters": "cm",
-                    "meters": "m",
-                    "kilometers": "km",
-                    "inches": "in",
-                    "inches (fraction)": "in (frac)", 
-                    "last updated": "Updated"
-                },
-                defaultHeaders: [
+            
+          "Lengths": {
+            baseUnitName: "Meters",
+            defaultVisible: [
+              "Nanometers", "Microns (µm)", "Millimeters", "Centimeters", "Meters", "Kilometers",
+              "Inches", "Inches (fraction)", "Feet", "Feet & Inches", "Yards", "Miles", "Nautical Miles",
+              "Light Years", "Last Updated"
+            ],
+            mobileVisible: [
+              "Millimeters", "Centimeters", "Meters", "Kilometers",
+              "Inches", "Inches (fraction)", "Feet", "Feet & Inches", "Yards", "Miles", "Last Updated"
+            ],
+            mobileHeaders: {
+                "millimeters": "mm",
+                "centimeters": "cm",
+                "meters": "m",
+                "kilometers": "km",
+                "inches": "in",
+                "inches (fraction)": "in (frac)", 
+                "feet": "ft",
+                "feet & inches": "ft & in",
+                "last updated": "Updated"
+            },
+            defaultHeaders: [
               "Planck Length", "Attometers", "Femtometers (Fermi)", "Picometers", "Angstroms", 
               "Bohr Radius", "Nanometers", "Microns (µm)", "Mils (thou)", "Microinches", "Twips", "Points", "Picas",
               "Millimeters", "Centimeters", "Decimeters", "Meters", "Dekameters", "Hectometers", "Kilometers",
-              "Inches", "Inches (fraction)", "Feet", "Feet (US Survey)", "Yards", "Miles", "Miles (US Survey)",
+              "Inches", "Inches (fraction)", "Feet", "Feet & Inches", "Feet (US Survey)", "Yards", "Miles", "Miles (US Survey)",
               "Nails", "Fingers", "Hands", "Spans", "Links", "Links (US Survey)", "Cubits (UK)", 
               "Rods", "Rods (US Survey)", "Ropes", "Chains", "Chains (US Survey)", "Furlongs", 
               "Fathoms", "Cables", "Nautical Miles", "Leagues", "Leagues (Nautical)",
@@ -1022,6 +1024,40 @@ const COLOR_UTILS = {
               "inches": 0.0254,
               "inches (fraction)": { type: "fraction", value: 0.0254 },
               "feet": 0.3048,
+              "feet & inches": {
+                  type: "compound",
+                  toBase: (val) => {
+                      const clean = String(val).trim().toLowerCase();
+                      // Capture Group 1: Feet (digits)
+                      // Capture Group 2: Inches (decimals or fractions like "10 1/2")
+                      const match = clean.match(/^(\d+)(?:'|\s*ft)?\s+([\d\s\.\/]+)(?:"|\s*in)?$/i) ||
+                                    clean.match(/^(\d+)'\s*([\d\s\.\/]*)(?:"|\s*in)?$/i);
+                      
+                      let totalInches = 0;
+                      if (match && match[2].trim() !== "") {
+                          const ft = parseFloat(match[1]);
+                          const inc = parseNumber(match[2]) || 0; // Native fraction handling!
+                          totalInches = (ft * 12) + inc;
+                      } else {
+                          const singleFt = clean.match(/^([\d\s\.\/]+)(?:'|\s*ft)$/i);
+                          if (singleFt) totalInches = (parseNumber(singleFt[1]) || 0) * 12;
+                          else totalInches = parseNumber(clean) || 0; 
+                      }
+                      return totalInches * 0.0254; 
+                  },
+                  fromBase: (m) => {
+                      if (m === 0) return "0'";
+                      const totalInches = m / 0.0254;
+                      const ft = Math.floor(totalInches / 12);
+                      let remainingInches = totalInches % 12;
+                      remainingInches = Math.round(remainingInches * 100) / 100;
+                      
+                      if (remainingInches === 12) return `${ft + 1}'`;
+                      if (remainingInches === 0) return `${ft}'`;
+                      if (ft === 0) return `${remainingInches}"`;
+                      return `${ft}' ${remainingInches}"`;
+                  }
+              },
               "feet (us survey)": 0.3048006096,
               "yards": 0.9144,
               "miles": 1609.344,
@@ -6475,38 +6511,132 @@ function setupQuickConvert() {
                 }
 
                 // ==========================================
-                // 1. REGEX: Extract strings, networking, or standard units
+                // 0. COMPOUND UNIT PARSER & REGEX ROUTER
                 // ==========================================
                 let numStr = "";
                 let unitStr = "";
                 let directTab = null;
                 let directCol = null;
+                let compoundMatch = false;
 
+                // Expand shorthand 5'1/2" to 5' 1/2" for clean tokenization
+                let normVal = val.replace(/(\d+)'\s*([\d\s\.\/]+)(?:"|in)?/g, "$1' $2\"");
+                
+                // Safely capture integers, decimals (0.5), or fractions (1 1/2)
+                const tokenRegex = /((?:\d+\s+)?\d+(?:\.\d+|\/\d+)?)\s*([a-z'"°]+(?:[a-z0-9\/]+)?)/gi;
+                const tokens = [];
+                let tMatch;
+                
+                while ((tMatch = tokenRegex.exec(normVal)) !== null) {
+                    const parsedNum = parseNumber(tMatch[1].trim());
+                    if (parsedNum !== null) {
+                        tokens.push({ num: parsedNum, unit: tMatch[2].toLowerCase() });
+                    }
+                }
+
+                if (tokens.length > 1) {
+                    let detectedTab = null;
+                    let validCompound = true;
+                    let totalBase = 0;
+
+                    for (const t of tokens) {
+                        let foundTab = null;
+                        let foundCol = null;
+                        
+                        // Generate plural/singular fallbacks just like the main engine
+                        const noS = t.unit.endsWith('s') ? t.unit.slice(0, -1) : t.unit;
+                        const tryS = noS + 's';
+
+                        // 1. Check custom aliases and quick units with plural fallbacks
+                        let alias = null;
+                        if (!disabledDefaultAliases.includes(t.unit) && (userAliases[t.unit] || QUICK_UNITS[t.unit])) {
+                            alias = userAliases[t.unit] || QUICK_UNITS[t.unit];
+                        } else if (!disabledDefaultAliases.includes(noS) && (userAliases[noS] || QUICK_UNITS[noS])) {
+                            alias = userAliases[noS] || QUICK_UNITS[noS];
+                        } else if (!disabledDefaultAliases.includes(tryS) && (userAliases[tryS] || QUICK_UNITS[tryS])) {
+                            alias = userAliases[tryS] || QUICK_UNITS[tryS];
+                        }
+
+                        if (alias) {
+                            foundTab = alias.tab;
+                            foundCol = alias.col;
+                        } else if (typeof TAB_CONFIG !== 'undefined') {
+                            // 2. Check the raw tab dictionaries with plural fallbacks
+                            for (const tab in TAB_CONFIG) {
+                                if (tab.toLowerCase() === "culinary") continue;
+                                if (TAB_CONFIG[tab].units) {
+                                    if (TAB_CONFIG[tab].units[t.unit] !== undefined) {
+                                        foundTab = tab; foundCol = t.unit; break;
+                                    } else if (TAB_CONFIG[tab].units[noS] !== undefined) {
+                                        foundTab = tab; foundCol = noS; break;
+                                    } else if (TAB_CONFIG[tab].units[tryS] !== undefined) {
+                                        foundTab = tab; foundCol = tryS; break;
+                                    }
+                                }
+                            }
+                        }
+
+                        if (foundTab && foundCol) {
+                            if (!detectedTab) detectedTab = foundTab;
+                            else if (detectedTab !== foundTab) { validCompound = false; break; }
+                            
+                            const uDef = TAB_CONFIG[foundTab].units[foundCol];
+                            totalBase += typeof uDef === "number" ? t.num * uDef : uDef.toBase(t.num);
+                        } else {
+                            validCompound = false;
+                            break;
+                        }
+                    }
+
+                    if (validCompound && detectedTab) {
+                        compoundMatch = true;
+                        directTab = detectedTab;
+                        
+                        // Find the core metric/base unit to route the total sum to
+                        let baseCol = null;
+                        for (const u in TAB_CONFIG[detectedTab].units) {
+                            if (TAB_CONFIG[detectedTab].units[u] === 1.0) {
+                                baseCol = u;
+                                break;
+                            }
+                        }
+                        
+                        if (baseCol) {
+                            directCol = baseCol;
+                            numStr = totalBase.toString();
+                        } else {
+                            const firstCol = QUICK_UNITS[tokens[0].unit] ? QUICK_UNITS[tokens[0].unit].col : tokens[0].unit;
+                            directCol = firstCol;
+                            const uDef = TAB_CONFIG[detectedTab].units[firstCol];
+                            numStr = (typeof uDef === "number" ? totalBase / uDef : uDef.fromBase(totalBase)).toString();
+                        }
+                    }
+                }
+
+                // ==========================================
+                // 1. REGEX: Fallback for standard or single units
+                // ==========================================
                 const currencyRegex = /^([$€£¥₹₩₽฿])\s*([\d\.\-\s\/]+)$|^([\d\.\-\s\/]+)\s*([$€£¥₹₩₽฿])$/;
                 const currencyMatch = val.match(currencyRegex);
                 const quoteMatch = rawVal.match(/^["']([^"']*)["']?\s*(.*)$/);
                 const netExplicitMatch = val.match(/^(?:ip|url)[:\s]+\s*(.+)$/);
                 const netIpMatch = val.match(/^(\d{1,3}\.\d{1,3}\.[\d\.]*)$/);
                 const netUrlMatch = val.match(/^((?:https?:\/\/|www\.)[^\s]+|[a-z0-9\-]+\.[a-z]{2,}(?:\/[^\s]*)?)$/);
-                
-                //  Color & Geo matchers 
                 const colorMatch = val.match(/^(#[0-9a-f]{3}|#[0-9a-f]{6}|(?:rgb|hsl)a?\([\d\s,%.]+\)|cmyk\([\d\s,%.]+\))$/i);
                 
-                //  Context-Aware Geo Matcher 
                 const geoMatch = (currentTab === "Geographic Coordinates") 
                     ? rawVal.match(/^([\d\.\-\s°'"]+[NS][\s,]+[\d\.\-\s°'"]+[EW])$/i) 
                     : null;
 
-                //  Strictly match time formats
                 const timeMatch = val.match(/^(\d{1,2}:\d{2}(?::\d{2})?(?:\s*[ap]m)?|\d{1,2}\s*[ap]m)\s+([a-z]+)$/);
-                
-                // Match standard entries with numbers (e.g. "12 ft", "25 $/hr")
                 const numMatch = val.match(/^([a-z0-9\.\-\s\/\+]+?)\s+([$a-z"'][a-z0-9\/\s\(\)\-"'$]*)$/) || val.match(/^([\d\.\-\s\/\+]+)([$a-z"'][a-z0-9\/\s\(\)\-"'$]*)$/);
-                
-                // Match text-only entries without numbers (e.g. "barns", "ft", "c")
                 const textOnlyMatch = val.match(/^[a-z"'][a-z0-9\/\s\(\)\-"']*$/);
 
-               if (currencyMatch) {
+                // Skip regex routing if the compound engine successfully intercepted the math
+                if (compoundMatch) {
+                    // Do nothing, directTab and directCol are already set
+                } else if (currencyMatch) {
+
                     const isPrefix = currencyMatch[1] !== undefined;
                     const symPart = isPrefix ? currencyMatch[1] : currencyMatch[4];
                     numStr = isPrefix ? currencyMatch[2] : currencyMatch[3];
@@ -7948,10 +8078,13 @@ function renderModalList() {
             const sourceUnitKey = resolveUnitKey(config, headers[colIdx]);
             if (!sourceUnitKey || headers[colIdx].toLowerCase() === "last updated") return;
 
-            // Allow UK ring sizes to bypass the parseNumber check
+            // Allow UK ring sizes and compound strings to bypass the parseNumber check 
+           
             let numericValue;
             if (config.isRingTab && sourceUnitKey === "uk / australia") {
                 numericValue = val; 
+            } else if (config.units[sourceUnitKey] && config.units[sourceUnitKey].type === "compound") {
+                numericValue = val;
             } else {
                 numericValue = parseNumber(val);
                 if (numericValue === null || isNaN(numericValue)) return; 
