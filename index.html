@@ -398,10 +398,10 @@
 
     /* Deprioritize the Reset button so it isn't visually dominant */
     .btn-reset-all {
-        background: transparent !important;
-        color: var(--text-light) !important;
-        border: 1px solid rgba(231, 76, 60, 0.5) !important;
-        flex-grow: 0 !important;
+        background: transparent ;
+        color: var(--text-light) ;
+        border: 1px solid rgba(231, 76, 60, 0.5);
+        flex-grow: 0 ;
     }
 
     /* MODAL FLUIDITY (Keeps popups on-screen) */
@@ -451,10 +451,39 @@
                     <div id="quick-help-popover" class="help-popover" style="display: none;">
                         <strong style="display: block; border-bottom: 1px solid var(--border); padding-bottom: 6px; margin-bottom: 8px;">Quick Convert Tips:</strong>
                         <ul style="margin: 0; padding-left: 20px; line-height: 1.5;">
-                            <li style="margin-bottom: 6px;"><strong>Compound Units:</strong> Add mixed units together. Try <code>5 ft 10 in</code> or <code>1 lb 2 oz</code></li> or <code>1/4 cup 5.5 tsp 10ml</code>.</li>
-                            <li style="margin-bottom: 6px;"><strong>Universal Search:</strong> Type <code>65 eur</code> or <code>100 hp</code> to open that tab, <strong>Enter</strong> to lock it into your view.</li>
+                            <li style="margin-bottom: 6px;">
+                                <strong>Universal Search:</strong> Type in the number and unit you want to convert. Use common abbreviations or full unit name. The grid will automatically pop to the tab you need (for most conversions).
+                                <details style="margin-top: 4px; cursor: pointer;">
+                                    <summary style="color: var(--primary); font-size: 0.85rem; font-weight: bold; user-select: none;">Examples</summary>
+                                    <div style="padding: 6px 10px; margin-top: 6px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; font-size: 0.8rem; line-height: 1.8;">
+                                        <code>$25</code> or <code>25 AUD</code> (Currency - will fetch rates!)<br>
+                                        <code>39.34 m/s</code> or <code>39.34 ms</code> (Speed)<br>
+                                        <code>warp 1</code> or <code>mach 872504.24</code> (Speed)<br>
+                                        <code>9 3/4 pounds</code> or <code>9 lbs 12 oz</code> (Weight)<br>
+                                        <code>9.81 m/s2</code> or <code>1 grav</code> (Acceleration)<br>
+                                        <code>1A4 hex</code> or <code>CDXX roman</code> (Numbers)<br>
+                                        <code>1.21 gw</code> (Power)<br>
+                                        <code>14 AWG</code> (Wire Gauge)<br>
+                                        <code>72 f</code> (Temperature)<br>
+                                        <code>500 gb</code> (Digital Storage) <br>
+                                        <code>2.2 gbps</code> (Data Transfer) <br>
+                                        <code>15 Milliampere-Hour</code> (Electric Charge)<br>
+                                        <code>#3498db</code> (Colors)<br>
+                                        <code>525600 min</code> (Time)<br>
+                                        <code>10 mpg</code> (Fuel Consumption)<br>
+                                        <code>voxell.ai</code> (Networking - will resolve IP!)<br>
+                                        <code>25 $/hr</code> (Wages)<br>
+                                        <code>1 banana</code> (Lengths)<br>
+                                        <code>.00001 rd</code> or <code> 1 bed</code> (Radiation (absorbed...))<br>
+                                        <code>37.235 N, 115.811 W</code> (Geographic Coordinates)<br>           
+                                        <code>"hello world"</code> (Text case)
+                                    </div>
+                                </details>
+                            </li>  
+                            <li style="margin-bottom: 6px;"><strong>Lock It:</strong> Press <strong>Enter</strong> to pin your conversion to the grid, and keep the desired tab and/or column visible.</li>
+                            <li style="margin-bottom: 6px;"><strong>Compound Units:</strong> Add mixed units together. Try <code>5' 10"</code> or <code>5 ft 10 in</code> or <code>1 lb 2 oz</code> or <code>1/4 cup 5.5 tsp 10ml</code>.</li>
                             <li style="margin-bottom: 6px;"><strong>Fractions:</strong> Type fractions naturally, like <code>1 1/2 cups</code> or <code>3/4 in</code>.</li>
-                            <li><strong>Lock It:</strong> Press <strong>Enter</strong> to pin your conversion to the grid.</li>
+                            <li><strong>Custom Aliases:</strong> Your customized unit abbreviations will work in the search.<br>(Try 'Configure Columns - Alias') </li>
                         </ul>
                     </div>
                 </div>
@@ -474,8 +503,12 @@
     <div id="settings-modal" class="modal-overlay">
 <div class="modal-content">
             <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 10px;">
-                <h3 id="modal-title" style="margin: 0; border: none; padding: 0;">Settings</h3>
-                <div style="display: flex; gap: 5px;">
+              <h3 id="modal-title" style="margin: 0; border: none; padding: 0;">Settings</h3>
+                <div style="display: flex; gap: 5px; align-items: center;">
+                    <!-- NEW SHORT HEADERS TOGGLE (Shown only for columns) -->
+                    <label id="short-headers-wrapper" style="display: none; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer; margin-right: 10px; color: var(--text-dark);">
+                        <input type="checkbox" id="short-headers-cb" onchange="toggleShortHeaders(this.checked)" style="margin: 0; cursor: pointer;"> Short Names
+                    </label>
                     <button class="btn-icon" onclick="toggleAllSettings(true)" title="Check All" style="padding: 2px 8px; font-size: 0.9rem;">+ All</button>
                     <button class="btn-icon" onclick="toggleAllSettings(false)" title="Uncheck All" style="padding: 2px 8px; font-size: 0.9rem;">- All</button>
                 </div>
@@ -571,11 +604,11 @@
         <div style="text-align: left; font-size: 0.85rem; color: var(--text-dark, #2b2b2b); line-height: 1.55; margin-bottom: 18px;">
             <p style="margin: 0 0 12px 0;">
                 <strong style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted, #777); margin-bottom: 2px;">Why this exists</strong>
-                Built by an indie maker tired of calculating metric layer flood coats on imperial canvases and losing recipe math every time a tab refreshed.
+                I got tired of calculating complicated mixed units manually. I needed to know how many ml of resin to prepar to make a 1 millimeter thick flood on an 8 x 10 canvas.
             </p>
             <p style="margin: 0;">
                 <strong style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted, #777); margin-bottom: 2px;">Support & Commercial Use</strong>
-                Free for personal projects. If this saves you ruined materials or powers your studio workflow, consider supporting development or grabbing a <strong>$5 commercial seat</strong>.
+                Free for personal projects. If this saves you ruined materials or helps your studio workflow, consider supporting development or grabbing a <strong>$5/mo commercial seat</strong>.
             </p>
         </div>
 
@@ -604,9 +637,16 @@
                 <button class="btn-cancel" style="padding: 4px 12px; font-size: 0.85rem;" onclick="document.getElementById('directory-modal').style.display='none'">Close</button>
             </div>
             
-            <input type="text" id="directory-search" placeholder="Search for any unit (e.g. 'ounces' or 'miles')..." 
-                   style="width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem;"
-                   oninput="filterDirectory()">
+            <div style="display: flex; gap: 12px; margin-bottom: 15px; align-items: center;">
+                <input type="text" id="directory-search" placeholder="Search for any unit..." 
+                       style="flex-grow: 1; min-width: 0; padding: 12px; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; font-size: 1rem;"
+                       oninput="filterDirectory()">
+                
+                <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer; color: var(--text-dark); white-space: nowrap; background: #f8fafc; padding: 10px 12px; border: 1px solid var(--border); border-radius: 6px; user-select: none;">
+                    <input type="checkbox" id="directory-visible-only" onchange="filterDirectory()" style="margin: 0; cursor: pointer; transform: scale(1.1);">
+                    Visible Tabs Only
+                </label>
+            </div>
             
             <div id="directory-list" style="overflow-y: auto; flex-grow: 1; padding-right: 5px;">
                 <!-- Generated dynamically via JavaScript -->
@@ -792,6 +832,7 @@
     // "Surface Charge Density",
     // "Surface Current Density",
     // "Volume Charge Density",
+    // "Voltage Drop",
 
     // --- LIGHT, WAVES & RADIATION ---
     // "Frequency Wavelength",
@@ -1113,6 +1154,7 @@ const COLOR_UTILS = {
               "dekameters": 10.0,
               "hectometers": 100.0,
               "kilometers": 1000.0,
+              "bananas (for scale)": 0.1905,
               "inches": 0.0254,
               "inches (fraction)": { type: "fraction", value: 0.0254 },
               "feet": 0.3048,
@@ -1188,6 +1230,40 @@ const COLOR_UTILS = {
               "megaparsecs": 3.085677581e22
             }
           },
+
+          "Voltage Drop": {
+            isVoltageDropTab: true, 
+            baseUnitName: "Voltage Drop (V)",
+            defaultVisible: [
+              "Wire Gauge (AWG)", "Distance (ft)", "Current (Amps)", 
+              "Material (Cu/Al)", "System Voltage (V)", "Voltage Drop (V)", "% Drop"
+            ],
+            mobileVisible: [
+              "Wire Gauge (AWG)", "Distance (ft)", "Current (Amps)", "System Voltage (V)", "% Drop"
+            ],
+            mobileHeaders: {
+                "wire gauge (awg)": "AWG",
+                "distance (ft)": "ft",
+                "current (amps)": "Amps",
+                "material (cu/al)": "Cu/Al",
+                "system voltage (v)": "Sys V",
+                "voltage drop (v)": "V Drop",
+                "% drop": "% Drop"
+            },
+            defaultHeaders: [
+              "Wire Gauge (AWG)", "Distance (ft)", "Current (Amps)", 
+              "Material (Cu/Al)", "System Voltage (V)", "Voltage Drop (V)", "% Drop"
+            ],
+            units: {
+                "wire gauge (awg)": 1.0,
+                "distance (ft)": 1.0,
+                "current (amps)": 1.0,
+                "material (cu/al)": 1.0,
+                "system voltage (v)": 1.0,
+                "voltage drop (v)": 1.0,
+                "% drop": 1.0
+            }
+        },
 
           "Nutrition & Macros": {
             baseUnitName: "Grams (g)",
@@ -2763,29 +2839,22 @@ const COLOR_UTILS = {
        "Weight/Mass": {
             baseUnitName: "Kilograms",
             defaultVisible: [
-              "Micrograms", "Milligrams", "Grams", "Kilograms", "Metric Tons",
-              "Ounces", "Pounds", "Stones (UK)", "Short Tons (US)", "Long Tons (UK)",
-              "Last Updated"
-            ],
-           
-            mobileVisible: [
               "Milligrams", "Grams", "Kilograms", "Metric Tons",
-              "Ounces", "Pounds", "Stones (UK)", "Short Tons (US)", 
-              "Last Updated"
+              "Ounces", "Pounds", "Pounds & Ounces", "Stones (UK)", "Short Tons (US)"
             ],
-           
+            mobileVisible: [
+              "Grams", "Kilograms", "Ounces", "Pounds", "Pounds & Ounces", "Stones (UK)"
+            ],
             mobileHeaders: {
-              "micrograms": "mcg",
-              "milligrams": "mg",
-              "grams": "g",
-              "kilograms": "kg",
-              "metric tons": "MT",
-              "ounces": "oz",
-              "pounds": "lb",
-              "stones (uk)": "st",
-              "short tons (us)": "ton (US)",
-              "long tons (uk)": "ton (UK)",
-              "last updated": "Updated"
+                "milligrams": "mg",
+                "grams": "g",
+                "kilograms": "kg",
+                "metric tons": "tonnes",
+                "ounces": "oz",
+                "pounds": "lbs",
+                "pounds & ounces": "lbs & oz",
+                "stones (uk)": "st",
+                "short tons (us)": "tons (us)"
             },
             defaultHeaders: [
               "Electron Mass (Rest)", "Muon Mass", "Proton Mass", "Neutron Mass", "Deuteron Mass",
@@ -2794,7 +2863,7 @@ const COLOR_UTILS = {
               "Dekagrams", "Hectograms", "Kilograms",
               "Megagrams", "Gigagrams", "Teragrams", "Petagrams", "Exagrams",
               "Metric Tons", "Kilotons (Metric)",
-              "Ounces", "Pounds", "Stones (US)", "Stones (UK)",
+              "Ounces", "Pounds", "Pounds & Ounces", "Stones (US)", "Stones (UK)",
               "Hundredweights (US)", "Hundredweights (UK)",
               "Short Tons (US)", "Long Tons (UK)",
               "Quarters (US)", "Quarters (UK)",
@@ -2838,6 +2907,40 @@ const COLOR_UTILS = {
               "kilotons (metric)": 1e6,
               "ounces": 0.0283495231,
               "pounds": 0.45359237,
+              "pounds & ounces": {
+                  type: "compound",
+                  toBase: (val) => {
+                      const clean = String(val).trim().toLowerCase();
+                      // Capture Group 1: lbs
+                      // Capture Group 2: oz (decimals or fractions like "10 1/2")
+                      const match = clean.match(/^(\d+)(?:\s*lbs?|\s*pounds?|\s*lb)?\s+([\d\s\.\/]+)(?:\s*oz|\s*ounces?)?$/i) ||
+                                    clean.match(/^(\d+)(?:lbs?|pounds?|lb)\s*([\d\s\.\/]*)(?:\s*oz|\s*ounces?)?$/i);
+                      
+                      let totalOunces = 0;
+                      if (match && match[2].trim() !== "") {
+                          const lbs = parseFloat(match[1]);
+                          const oz = parseNumber(match[2]) || 0; // Leverages native fraction handling
+                          totalOunces = (lbs * 16) + oz;
+                      } else {
+                          const singleLb = clean.match(/^([\d\s\.\/]+)(?:\s*lbs?|\s*pounds?|\s*lb)$/i);
+                          if (singleLb) totalOunces = (parseNumber(singleLb[1]) || 0) * 16;
+                          else totalOunces = parseNumber(clean) || 0; 
+                      }
+                      return totalOunces * 0.028349523125; 
+                  },
+                  fromBase: (kg) => {
+                      if (kg === 0) return "0 lbs";
+                      const totalOunces = kg / 0.028349523125;
+                      const lbs = Math.floor(totalOunces / 16);
+                      let remainingOz = totalOunces % 16;
+                      remainingOz = Math.round(remainingOz * 100) / 100;
+                      
+                      if (remainingOz === 16) return `${lbs + 1} lbs`;
+                      if (remainingOz === 0) return `${lbs} lbs`;
+                      if (lbs === 0) return `${remainingOz} oz`;
+                      return `${lbs} lbs ${remainingOz} oz`;
+                  }
+              },
               "stones (us)": 5.669904625,
               "stones (uk)": 6.35029318,
               "hundredweights (us)": 45.359237,
@@ -5415,11 +5518,24 @@ const COLOR_UTILS = {
         "Radiation (Absorbed Dose)": {
             baseUnitName: "Rad (rd)",
             defaultVisible: [
-              "Rad (rd)", "Gray (Gy)", "Millirad (mrd)", 
-              "Centigray (cGy)", "Joule/Kilogram", "Last Updated"
+              "Rad (rd)", "Gray (Gy)", "Rem (rem)", 
+              "Sievert (Sv)", "Banana Equivalent Dose (BED)"
             ],
+            mobileVisible: [
+              "Rad (rd)", "Gray (Gy)", "Rem (rem)", "Sievert (Sv)", "Banana Equivalent Dose (BED)"
+            ],
+            mobileHeaders: {
+                "rad (rd)": "rad",
+                "gray (gy)": "Gy",
+                "rem (rem)": "rem",
+                "sievert (sv)": "Sv",
+                "banana equivalent dose (bed)": "🍌 BED"
+            },
             defaultHeaders: [
               "Rad (rd)", "Millirad (mrd)", 
+              "Rem (rem)", "Millirem (mrem)",
+              "Sievert (Sv)", "Millisievert (mSv)", "Microsievert (µSv)",
+              "Banana Equivalent Dose (BED)",
               "Gray (Gy)", "Exagray (EGy)", "Petagray (PGy)", "Teragray (TGy)",
               "Gigagray (GGy)", "Megagray (MGy)", "Kilogray (kGy)", "Hectogray (hGy)",
               "Dekagray (daGy)", "Decigray (dGy)", "Centigray (cGy)", "Milligray (mGy)",
@@ -5430,6 +5546,12 @@ const COLOR_UTILS = {
             units: {
               "rad (rd)": 1.0,
               "millirad (mrd)": 0.001,
+              "rem (rem)": 1.0,
+              "millirem (mrem)": 0.001,
+              "sievert (sv)": 100.0,
+              "millisievert (msv)": 0.1,
+              "microsievert (µsv)": 0.0001,
+              "banana equivalent dose (bed)": 0.00001,
               "joule/kilogram": 100.0,
               "joule/gram": 100000.0,
               "joule/centigram": 10000000.0,
@@ -6047,6 +6169,7 @@ const QUICK_UNITS = {
             // Radiation (Absorbed Dose)
             "rd": { tab: "Radiation (Absorbed Dose)", col: "rad (rd)" },
             "gy": { tab: "Radiation (Absorbed Dose)", col: "gray (gy)" },
+            "bed": { tab: "Radiation (Absorbed Dose)", col: "banana equivalent dose (bed)" },
 
             // Frequency Wavelength
             "hz": { tab: "Frequency Wavelength", col: "hertz (hz)" },
@@ -6168,6 +6291,7 @@ const QUICK_UNITS = {
             "oct": { tab: "Numbers", col: "octal (base-8)" },
             "hex": { tab: "Numbers", col: "hexadecimal (base-16)" },
             "frac": { tab: "Numbers", col: "fraction" },
+            "roman": { tab: "Numbers", col: "roman numerals" },
 
             // Area
             "sqin": { tab: "Area", col: "square inches" },
@@ -6210,12 +6334,17 @@ const QUICK_UNITS = {
             "mpc": { tab: "Lengths", col: "megaparsecs" },
             "thou": { tab: "Lengths", col: "mils (thou)" },
             "fathom": { tab: "Lengths", col: "fathoms" },
+            "banana for scale": { tab: "Lengths", col: "bananas (for scale)" },
+            "bananas for scale": { tab: "Lengths", col: "bananas (for scale)" },
+            "banana length": { tab: "Lengths", col: "bananas (for scale)" },
             
             // Speed
             "mph": { tab: "Speed", col: "miles/hour" },
             "kph": { tab: "Speed", col: "kilometers/hour" },
             "kmh": { tab: "Speed", col: "kilometers/hour" },
             "mps": { tab: "Speed", col: "meters/second" },
+            "m/s": { tab: "Speed", col: "meters/second" },
+            "ms": { tab: "Speed", col: "meters/second" },
             "fps": { tab: "Speed", col: "feet/second" },
             "fpm": { tab: "Speed", col: "feet/minute" },
             "warp": { tab: "Speed", col: "warp (tng)" },
@@ -6320,7 +6449,7 @@ const QUICK_UNITS = {
             "ps": { tab: "Time", col: "picoseconds" },
             "ns": { tab: "Time", col: "nanoseconds" },
             "us": { tab: "Time", col: "microseconds" },
-            "ms": { tab: "Time", col: "milliseconds" },
+         //   "ms": { tab: "Time", col: "milliseconds" },
             "sec": { tab: "Time", col: "seconds" },
             "s": { tab: "Time", col: "seconds" },
             "min": { tab: "Time", col: "minutes" },
@@ -6592,13 +6721,23 @@ function setupQuickConvert() {
             qc.addEventListener('input', function(e) {
                 let rawVal = e.target.value.trim();
                 
+                
                 // 1. Sanitize: Remove degree symbols so "32°C" parses cleanly as "32 C"
                 rawVal = rawVal.replace(/°/g, "");
                 let val = rawVal.toLowerCase();
                 
+                //  Flip "mach/warp 4" to "4 mach/warp" so the engine can read it natively
+                //val = val.replace(/^warp\s+([\d\.\/]+)/, "$1 warp");
+                val = val.replace(/^(warp|mach)\s+([\d\.\/]+)/, "$2 $1");
+                
                 if (val === "") {
                     statusEl.textContent = "";
-                    quickConvertActiveRow = -1; 
+                    quickConvertActiveRow = -1;
+                    
+                    // NEW: Destroy temporary preview tabs when input is cleared
+                    if (typeof renderTabs === 'function') {
+                        renderTabs();
+                    }
                     return;
                 }
 
@@ -6891,10 +7030,12 @@ function setupQuickConvert() {
                         const radix = config.units[colName];
                         if (radix === 10 || radix === "fraction") {
                             isValid = parseNumber(numStr) !== null;
+                        } else if (colName === "roman numerals" || radix === "roman") {
+                            // VIP PASS: Allow standard digits OR letters used in Roman Numerals
+                            isValid = /^[IVXLCDMivxlcdm]+$/.test(numStr) || !isNaN(parseInt(numStr, 10));
                         } else {
                             isValid = !isNaN(parseInt(numStr, radix));
                         }
-                    // NEW: Bypass standard number validation for UK Ring Sizes
                     } else if (config && config.isRingTab && colName === "uk / australia") {
                         isValid = !isNaN(RING_UTILS.parseUK(numStr));
                     } else if (config && (config.isTextTab || config.isNetworkingTab || config.isCryptoTab || targetTab === "Time Zone")) {
@@ -6973,6 +7114,8 @@ function setupQuickConvert() {
                                     handleTimeZoneInput(targetRowIdx, colIdx, numStr, config);
                                 } else if (targetTab.toLowerCase() === "numbers") {
                                     handleNumbersInput(targetRowIdx, colIdx, numStr, config);
+                                } else if (config.isVoltageDropTab) {
+                                    handleVoltageDropInput(targetRowIdx, colIdx, numStr, config);
                                 } else {
                                     handleStandardInput(targetRowIdx, colIdx, numStr, config);
                                 }
@@ -7041,6 +7184,8 @@ function setupQuickConvert() {
             return typeof TAB_CONFIG !== 'undefined' && TAB_CONFIG[tabName] ? TAB_CONFIG[tabName].defaultHeaders : [];
         }
 
+        let useShortHeaders = false;
+
         function loadStorage() {
             const savedData = localStorage.getItem('converterData');
             if (savedData) tabData = JSON.parse(savedData);
@@ -7056,6 +7201,9 @@ function setupQuickConvert() {
             
             const savedDisabled = localStorage.getItem('converterDisabledAliases');
             if (savedDisabled) disabledDefaultAliases = JSON.parse(savedDisabled) || [];
+
+            const savedShort = localStorage.getItem('useShortHeaders');
+            if (savedShort !== null) useShortHeaders = savedShort === 'true';
         }
 
         function saveStorage() {
@@ -7063,6 +7211,13 @@ function setupQuickConvert() {
             localStorage.setItem('converterTabConfig', JSON.stringify(userTabConfig));
             localStorage.setItem('converterColConfig', JSON.stringify(userColConfig));
             localStorage.setItem('converterAliases', JSON.stringify(userAliases));
+            localStorage.setItem('useShortHeaders', useShortHeaders);
+        }
+
+        function toggleShortHeaders(state) {
+            useShortHeaders = state;
+            saveStorage();
+            renderGrid(); // Instantly update the grid in the background
         }
 
         function buildDefaultConfigs() {
@@ -7374,6 +7529,7 @@ function loadTab(tabName) {
                 "Nutrition & Macros": "Select a Macronutrient...",
                 "Beer & Malt Color": "10 srm",
                 "Acoustic Pressure (dB SPL)": "85 spl",
+                "Voltage Drop": "Use the grid below...",
                 "Photography Exposure (EV)": "10 ev"
 
             };
@@ -7455,43 +7611,43 @@ function loadTab(tabName) {
         function renderGrid() {
             let activeCols = userColConfig[currentTab].filter(c => c.visible);
             
-            // 1. Declare these at the TOP so the whole function can access them
             const isMobile = window.innerWidth <= 768;
             let config = null;
             
-            // 2. PRO INTERCEPTOR: Data-driven mobile filtering
-            if (isMobile) {
-                const tabClean = currentTab.toLowerCase().replace(/[\s\/\\]+/g, "");
-                
-                if (["wages", "wage", "salary", "pay"].includes(tabClean)) {
-                    config = typeof WAGES_CONFIG !== 'undefined' ? WAGES_CONFIG : null;
-                } else if (["timezone", "timezones", "worldtime"].includes(tabClean)) {
-                    config = typeof TIMEZONE_CONFIG !== 'undefined' ? TIMEZONE_CONFIG : null;
-                } else if (typeof TAB_CONFIG !== 'undefined') {
-                    config = TAB_CONFIG[currentTab];
-                }
+            // 1. ALWAYS load the config so desktop can use it for Short Headers
+            const tabClean = currentTab.toLowerCase().replace(/[\s\/\\]+/g, "");
+            if (["wages", "wage", "salary", "pay"].includes(tabClean)) {
+                config = typeof WAGES_CONFIG !== 'undefined' ? WAGES_CONFIG : null;
+            } else if (["timezone", "timezones", "worldtime"].includes(tabClean)) {
+                config = typeof TIMEZONE_CONFIG !== 'undefined' ? TIMEZONE_CONFIG : null;
+            } else if (typeof TAB_CONFIG !== 'undefined') {
+                config = TAB_CONFIG[currentTab];
+            }
 
-                if (config && config.mobileVisible) {
-                    const mobileAllowed = config.mobileVisible.map(v => v.toLowerCase());
-                    activeCols = activeCols.filter(c => mobileAllowed.includes(c.name.toLowerCase()));
-                }
+            // 2. PRO INTERCEPTOR: Data-driven mobile filtering (Only run if mobile)
+            if (isMobile && config && config.mobileVisible) {
+                const mobileAllowed = config.mobileVisible.map(v => v.toLowerCase());
+                activeCols = activeCols.filter(c => mobileAllowed.includes(c.name.toLowerCase()));
             }
             
             const thead = document.getElementById('grid-head');
             
-            // 3. Map over active columns, checking for mobile short-names
+            // 3. Map over active columns, checking for mobile short-names and explicit toggles
             thead.innerHTML = '<tr>' + activeCols.map(c => {
-                const widthStyle = c.minWidth ? `style="width: ${c.minWidth}px; min-width: ${c.minWidth}px;"` : '';
+                const widthStyle = c.minWidth ? `style="width: ${c.minWidth}px; min-width: ${c.minWidth}px; max-width: ${c.minWidth}px;"` : '';
                 
                 let headerText = c.displayName || c.name;
+                const isCustom = c.displayName && c.displayName !== c.name;
                 
-                // Now 'config' is safely in scope!
-                if (isMobile && config && config.mobileHeaders && config.mobileHeaders[c.name.toLowerCase()]) {
-                    headerText = config.mobileHeaders[c.name.toLowerCase()];
+                // If not customized by the user, and mobile headers exist for this field
+                if (!isCustom && config && config.mobileHeaders && config.mobileHeaders[c.name.toLowerCase()]) {
+                    if (isMobile || (typeof useShortHeaders !== 'undefined' && useShortHeaders)) {
+                        headerText = config.mobileHeaders[c.name.toLowerCase()];
+                    }
                 }
                 
                 return `<th ${widthStyle}>${headerText}</th>`;
-            }).join('') + '<th style="width: 40px; min-width: 40px; padding: 0;"></th></tr>';
+            }).join('') + '<th style="width: 70px; min-width: 70px; padding: 0;"></th></tr>';
 
             const tbody = document.getElementById('grid-body');
             tbody.innerHTML = '';
@@ -7533,6 +7689,12 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                 const td = document.createElement('td');
                 td.setAttribute('data-row', rowIndex);
                 td.setAttribute('data-col', origIndex);
+
+                if (colDef.minWidth) {
+                    td.style.width = `${colDef.minWidth}px`;
+                    td.style.minWidth = `${colDef.minWidth}px`;
+                    td.style.maxWidth = `${colDef.minWidth}px`;
+                }
 
                 const cellValue = rowData[origIndex] !== undefined ? rowData[origIndex] : "";
                const isIngredientCol = config.isDensityTab && (origIndex === 0 || resolveUnitKey(config, colDef.name) === "ingredient");
@@ -7585,9 +7747,13 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     td.appendChild(dateInput);
 
                 } else {
-                    // Standard numeric input field for units, OR a Color Swatch, OR Orientation Dropdown
+                    // Standard numeric input field, OR a Color Swatch, OR Orientation Dropdown
                     const isSwatch = currentTab === "Colors" && colDef.name.toLowerCase() === "swatch";
                     const isOrientation = currentTab === "Aspect Ratios & Resolutions" && colDef.name.toLowerCase() === "orientation";
+                    
+                    // NEW: Voltage Drop UI overrides
+                    const isMaterial = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "material (cu/al)";
+                    const isVDropResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "voltage drop (v)";
                     
                     let input;
                     if (isOrientation) {
@@ -7599,9 +7765,27 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                             input.appendChild(opt);
                         });
                         input.value = cellValue;
+                    } else if (isMaterial) {
+                        //voltage drop - Material Dropdown
+                        input = document.createElement('select');
+                        ['Cu', 'Al', 'CCA', 'Ag', 'Au'].forEach(optStr => {
+                            let opt = document.createElement('option');
+                            opt.value = optStr; 
+                            opt.innerText = optStr;
+                            input.appendChild(opt);
+                        });
+                        input.value = cellValue || "Cu"; // Default to Copper
+                        if (cellValue === "") tabData[currentTab][rowIndex][origIndex] = "Cu"; // Save default
                     } else {
                         input = document.createElement('input');
                         input.type = isSwatch ? 'color' : 'text';
+                        
+                        // NEW: Make Voltage Drop read-only
+                        if (isVDropResult) {
+                            input.readOnly = true;
+                            input.tabIndex = -1; // Prevents the Tab key from stopping here
+                        }
+                        
                         if (isSwatch) {
                             input.value = (cellValue === "" || !cellValue.startsWith('#')) ? "#ffffff" : cellValue;
                             input.style.height = '40px';
@@ -7615,17 +7799,6 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     
                     input.style.width = '100%';
                     input.style.fontSize = 'var(--grid-font-size)';
-                    
-                    
-                    if (isSwatch) {
-                        input.value = (cellValue === "" || !cellValue.startsWith('#')) ? "#ffffff" : cellValue;
-                        input.style.height = '40px';
-                        input.style.padding = '0';
-                        input.style.cursor = 'pointer';
-                        input.style.border = '1px solid var(--border)';
-                    } else {
-                        input.value = cellValue;
-                    }
                     
                     //Double-click to copy
                     input.addEventListener('dblclick', function(e) {
@@ -7683,6 +7856,9 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                             handleCaseInput(rowIndex, origIndex, e.target.value, config);
                         } else if (config && config.isNetworkingTab) {
                             handleNetworkingInput(rowIndex, origIndex, e.target.value, config, false);
+                        } else if (config && config.isVoltageDropTab) {
+                            handleVoltageDropInput(rowIndex, origIndex, e.target.value, config);
+                            
                         } else {
                             handleStandardInput(rowIndex, origIndex, e.target.value, config);
                         }
@@ -7695,14 +7871,37 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                 tr.appendChild(td);
             });
             // ==========================================
-            // NEW: DELETE ROW BUTTON
+            // ACTION BUTTONS (DUPLICATE & DELETE)
             // ==========================================
-            const deleteTd = document.createElement('td');
-            deleteTd.style.textAlign = 'center';
-            deleteTd.style.verticalAlign = 'middle';
-            deleteTd.style.width = '40px';
-            deleteTd.style.minWidth = '40px'; // Overrides the default 120px CSS rule
+            const actionTd = document.createElement('td');
+            actionTd.style.textAlign = 'center';
+            actionTd.style.verticalAlign = 'middle';
+            actionTd.style.width = '70px';
+            actionTd.style.minWidth = '70px'; 
+            actionTd.style.whiteSpace = 'nowrap';
             
+            // 1. Duplicate Button
+            const dupBtn = document.createElement('button');
+            dupBtn.innerHTML = '⧉'; // Unicode clone/duplicate icon
+            dupBtn.className = 'btn-icon';
+            dupBtn.style.color = '#7f8c8d';
+            dupBtn.style.border = 'none';
+            dupBtn.style.background = 'transparent';
+            dupBtn.style.fontSize = '1.2rem';
+            dupBtn.style.padding = '0 6px';
+            dupBtn.style.lineHeight = '1';
+            dupBtn.style.cursor = 'pointer';
+            dupBtn.title = "Duplicate Row";
+            
+            dupBtn.onclick = () => {
+                // Clone the exact state of the current row and insert it right below
+                const clonedRow = [...tabData[currentTab][rowIndex]];
+                tabData[currentTab].splice(rowIndex + 1, 0, clonedRow);
+                saveStorage();
+                renderGrid(); 
+            };
+
+            // 2. Delete Button
             const delBtn = document.createElement('button');
             delBtn.innerHTML = '×';
             delBtn.className = 'btn-icon';
@@ -7710,24 +7909,23 @@ function appendRowDom(activeCols, rowData, rowIndex) {
             delBtn.style.border = 'none';
             delBtn.style.background = 'transparent';
             delBtn.style.fontSize = '1.5rem';
-            delBtn.style.padding = '0 8px';
+            delBtn.style.padding = '0 6px';
             delBtn.style.lineHeight = '1';
             delBtn.style.cursor = 'pointer';
             delBtn.title = "Delete Row";
             
             delBtn.onclick = () => {
-                // Remove this specific row from the data array
                 tabData[currentTab].splice(rowIndex, 1);
                 quickConvertActiveRow = -1; // Reset quick convert anchor
                 saveStorage();
-                renderGrid(); // Instantly refresh the UI
+                renderGrid();
             };
 
-            deleteTd.appendChild(delBtn);
-            tr.appendChild(deleteTd);
+            actionTd.appendChild(dupBtn);
+            actionTd.appendChild(delBtn);
+            tr.appendChild(actionTd);
 
             tbody.appendChild(tr);
-
         }
 
         // --- Custom Time Prompt Logic ---
@@ -7752,17 +7950,26 @@ function appendRowDom(activeCols, rowData, rowIndex) {
         // --- Modals ---
         let tempSettingsList = [];
 
-        function openTabSettings() {
+function openTabSettings() {
             activeModalMode = "tabs";
             document.getElementById('modal-title').textContent = "Configure Tabs";
+            const shw = document.getElementById('short-headers-wrapper');
+            if (shw) shw.style.display = 'none';
+            
             tempSettingsList = JSON.parse(JSON.stringify(userTabConfig));
             renderModalList();
             document.getElementById('settings-modal').style.display = 'flex';
         }
 
-          function openColSettings() {
+        function openColSettings() {
             activeModalMode = "cols";
             document.getElementById('modal-title').textContent = `Configure ${currentTab} Columns`;
+            const shw = document.getElementById('short-headers-wrapper');
+            if (shw) {
+                shw.style.display = 'flex';
+                document.getElementById('short-headers-cb').checked = useShortHeaders;
+            }
+
             tempSettingsList = JSON.parse(JSON.stringify(userColConfig[currentTab]));
             renderModalList();
             
@@ -9192,7 +9399,61 @@ function renderModalList() {
                 localStorage.setItem('omega_grid_font', size);
             }
         }
+function handleVoltageDropInput(rowIdx, colIdx, numStr, config) {
+    const targetTab = "Voltage Drop";
+    tabData[targetTab][rowIdx][colIdx] = numStr;
+    
+    const headers = getBaseHeaders(targetTab);
+    const awgIdx = headers.findIndex(h => h.toLowerCase() === "wire gauge (awg)");
+    const distIdx = headers.findIndex(h => h.toLowerCase() === "distance (ft)");
+    const ampIdx = headers.findIndex(h => h.toLowerCase() === "current (amps)");
+    const matIdx = headers.findIndex(h => h.toLowerCase() === "material (cu/al)");
+    const sysVIdx = headers.findIndex(h => h.toLowerCase() === "system voltage (v)");
+    const dropIdx = headers.findIndex(h => h.toLowerCase() === "voltage drop (v)");
+    const pctIdx = headers.findIndex(h => h.toLowerCase() === "% drop");
 
+    const row = tabData[targetTab][rowIdx];
+    const awg = parseNumber(row[awgIdx]);
+    const dist = parseNumber(row[distIdx]);
+    const amps = parseNumber(row[ampIdx]);
+    const sysV = parseNumber(row[sysVIdx]);
+    const mat = (row[matIdx] || "cu").toLowerCase().trim();
+
+    if (awg !== null && dist !== null && amps !== null) {
+        const diameterInches = 0.005 * Math.pow(92, (36 - awg) / 39);
+        const circularMils = Math.pow(diameterInches * 1000, 2);
+        // 2. K-Factor (Ohms-CM/ft) mapping
+        let k = 12.9; // Default Copper
+        if (mat.startsWith("al")) k = 21.2;
+        else if (mat.startsWith("cca")) k = 20.0;
+        else if (mat.startsWith("ag")) k = 12.3;
+        else if (mat.startsWith("au")) k = 14.7;
+
+        const vDrop = (2 * k * amps * dist) / circularMils;
+        const formattedDrop = (Math.round(vDrop * 100) / 100).toString();
+        
+        tabData[targetTab][rowIdx][dropIdx] = formattedDrop;
+        updateCellDom(rowIdx, dropIdx, formattedDrop);
+
+        // NEW: Calculate % Drop if System Voltage is provided
+        if (sysV !== null && sysV > 0 && pctIdx > -1) {
+            const pctDrop = (vDrop / sysV) * 100;
+            const formattedPct = (Math.round(pctDrop * 100) / 100).toString();
+            tabData[targetTab][rowIdx][pctIdx] = formattedPct;
+            updateCellDom(rowIdx, pctIdx, formattedPct);
+        } else if (pctIdx > -1) {
+            tabData[targetTab][rowIdx][pctIdx] = "";
+            updateCellDom(rowIdx, pctIdx, "");
+        }
+    } else {
+        tabData[targetTab][rowIdx][dropIdx] = "";
+        updateCellDom(rowIdx, dropIdx, "");
+        if (pctIdx > -1) {
+            tabData[targetTab][rowIdx][pctIdx] = "";
+            updateCellDom(rowIdx, pctIdx, "");
+        }
+    }
+}
         // Load saved font sizes when the app boots
         function loadSavedFonts() {
             const savedTab = localStorage.getItem('omega_tab_font') || '16';
@@ -9644,12 +9905,14 @@ function showDirectory() {
             // 3. Generate HTML for each tab and its units
             sortedTabs.forEach(tabName => {
                 const headers = allConfigs[tabName].defaultHeaders || [];
-                html += `<div class="directory-group" style="margin-bottom: 15px;">`;
-                html += `<h4 style="margin: 0 0 5px 0; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 4px;">${tabName}</h4>`;
+                // Check if the tab is currently set to visible in the user's config
+                const isTabVisible = userTabConfig.find(t => t.name === tabName)?.visible ? 'true' : 'false';
+                
+                html += `<div class="directory-group" data-is-visible="${isTabVisible}" style="margin-bottom: 20px;">`;
+                html += `<h4 style="margin: 0 0 8px 0; color: var(--primary); border-bottom: 1px solid #eee; padding-bottom: 4px; font-size: 1.1rem;">${tabName}</h4>`;
                 html += `<div style="display: flex; flex-wrap: wrap; gap: 6px;">`;
                 
                 headers.forEach(unit => {
-                    // Escape quotes so units like "Degrees (°)" or "3.5\"" don't break the HTML string
                     const safeTab = tabName.replace(/'/g, "\\'");
                     const safeUnit = unit.replace(/'/g, "\\'");
                     
@@ -9671,9 +9934,18 @@ function showDirectory() {
         }
         function filterDirectory() {
             const term = document.getElementById('directory-search').value.toLowerCase();
+            const showVisibleOnly = document.getElementById('directory-visible-only').checked;
             const groups = document.querySelectorAll('.directory-group');
             
             groups.forEach(group => {
+                const isVisibleTab = group.getAttribute('data-is-visible') === 'true';
+                
+                // If the user checked the box and this tab is hidden in the sidebar, hide it instantly
+                if (showVisibleOnly && !isVisibleTab) {
+                    group.style.display = 'none';
+                    return; 
+                }
+
                 const items = group.querySelectorAll('.directory-item');
                 let groupHasMatch = false;
                 
