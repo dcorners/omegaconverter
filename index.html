@@ -832,7 +832,7 @@
     // "Surface Charge Density",
     // "Surface Current Density",
     // "Volume Charge Density",
-    // "Voltage Drop",
+     "Voltage Drop",
 
     // --- LIGHT, WAVES & RADIATION ---
     // "Frequency Wavelength",
@@ -6722,24 +6722,28 @@ function setupQuickConvert() {
             qc.addEventListener('input', function(e) {
                 let rawVal = e.target.value.trim();
                 
-                
-                // 1. Sanitize: Remove degree symbols so "32°C" parses cleanly as "32 C"
+                // 1. Sanitize: Remove degree symbols
                 rawVal = rawVal.replace(/°/g, "");
                 let val = rawVal.toLowerCase();
                 
-                //  Flip "mach/warp 4" to "4 mach/warp" so the engine can read it natively
-                //val = val.replace(/^warp\s+([\d\.\/]+)/, "$1 warp");
                 val = val.replace(/^(warp|mach)\s+([\d\.\/]+)/, "$2 $1");
                 
                 if (val === "") {
                     statusEl.textContent = "";
                     quickConvertActiveRow = -1;
                     
-                    // NEW: Destroy temporary preview tabs when input is cleared
-                    if (typeof renderTabs === 'function') {
-                        renderTabs();
+                    // FIX: Check if we are currently sitting on a preview tab
+                    const activeTabConf = userTabConfig.find(t => t.name === currentTab);
+                    if (activeTabConf && !activeTabConf.visible) {
+                        // We are on a ghost tab! Kick the user back to their first visible tab
+                        const visibleTabs = userTabConfig.filter(t => t.visible);
+                        const fallbackTab = visibleTabs.length > 0 ? visibleTabs[0].name : userTabConfig[0].name;
+                        loadTab(fallbackTab);
+                    
+                        renderSidebar();
+                        return;
                     }
-                    return;
+                    
                 }
 
                 // ==========================================
@@ -7409,14 +7413,12 @@ function loadTab(tabName) {
                 "Fuel Efficiency (Mass)": "1000 j/kg",
                 "Fuel Efficiency (Vol)": "1000 j/m3",
                 "EV Efficiency": "4 miles/kwh",
-                "Shoe Sizes": "10 usm",
                 "Ring Sizes": "7 us ring",
                 "Blood Glucose": "100 mg/dl",
                 "Sports Betting": "-150 odds",
                 "Precious Metals": "18 kt",
                 "Scuba Diving": "33 fsw",
                 
-
                 // --- BASIC MECHANICS & PHYSICS ---
                 "Angles & Rotation": "180 deg",
                 "Energy": "500 cal",
@@ -7530,36 +7532,24 @@ function loadTab(tabName) {
                 "Nutrition & Macros": "Select a Macronutrient...",
                 "Beer & Malt Color": "10 srm",
                 "Acoustic Pressure (dB SPL)": "85 spl",
-                "Voltage Drop": "Use the grid below...",
                 "Photography Exposure (EV)": "10 ev"
-
             };
-            const qc = document.getElementById('quick-convert');
-        if (qc) {
-          // TROUBLESHOOTING PROBES
-        //    console.log("--- TAB SWITCH TRIGGERED ---");
-      //      console.log("1. Target tab:", tabName);
-          //  console.log("2. Is qc focused right now?", document.activeElement === qc);
-         //   console.log("3. Exact qc value:", qc.value);
-       //     console.log("4. Value length:", qc.value.length);
-       //     console.log("5. Does it match exactly?", qc.value === '"');
-            // If they leave the tab with just the auto-inserted quote, wipe it clean
-            if (qc.value.trim() === '"') {
-                qc.value = '';
-                const statusEl = document.getElementById('quick-status');
-                if (statusEl) statusEl.textContent = ""; // Clear the "RAW TEXT" status too
-            }
-            qc.placeholder = placeholders[tabName] || "Enter amount & unit...";
-        }
 
+            const qc = document.getElementById('quick-convert');
+            if (qc) {
+                if (qc.value.trim() === '"') {
+                    qc.value = '';
+                    const statusEl = document.getElementById('quick-status');
+                    if (statusEl) statusEl.textContent = ""; 
+                }
+                qc.placeholder = placeholders[tabName] || "Enter amount & unit...";
+            }
 
             localStorage.setItem('lastActiveTab', tabName);
-            
             const displayStr = userTabConfig.find(t => t.name === tabName)?.displayName || tabName;
             
-            document.querySelectorAll('#tab-list li').forEach(li => {
-                li.classList.toggle('active', li.textContent === displayStr);
-            });
+            renderSidebar();
+            
             document.getElementById('current-tab-title').textContent = displayStr;
 
             const statusEl = document.getElementById('quick-status');
@@ -7576,8 +7566,7 @@ function loadTab(tabName) {
             }
 
             renderGrid();
-            // Inject custom Volumetric Cost header if applicable
-             if (typeof initVolumetricCostUI === 'function') initVolumetricCostUI(tabName);
+            if (typeof initVolumetricCostUI === 'function') initVolumetricCostUI(tabName);
         }
         function renderSidebar() {
             const list = document.getElementById('tab-list');
@@ -7919,7 +7908,17 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                 tabData[currentTab].splice(rowIndex, 1);
                 quickConvertActiveRow = -1; // Reset quick convert anchor
                 saveStorage();
-                renderGrid();
+                
+                const isGridEmpty = tabData[currentTab].length === 0 || tabData[currentTab].every(row => row.every(cell => cell === ""));
+                const activeTabConf = userTabConfig.find(t => t.name === currentTab);
+                
+                if (isGridEmpty && activeTabConf && !activeTabConf.visible) {
+                    const visibleTabs = userTabConfig.filter(t => t.visible);
+                    const fallbackTab = visibleTabs.length > 0 ? visibleTabs[0].name : userTabConfig[0].name;
+                    loadTab(fallbackTab);
+                } else {
+                    renderGrid();
+                }
             };
 
             actionTd.appendChild(dupBtn);
