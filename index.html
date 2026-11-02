@@ -470,6 +470,7 @@
                                         <code>15 Milliampere-Hour</code> (Electric Charge)<br>
                                         <code>#3498db</code> (Colors)<br>
                                         <code>525600 min</code> (Time)<br>
+                                        <code>1:00 PT</code> (Time Zone)<br>
                                         <code>10 mpg</code> (Fuel Consumption)<br>
                                         <code>voxell.ai</code> (Networking - will resolve IP!)<br>
                                         <code>25 $/hr</code> (Wages)<br>
@@ -812,6 +813,7 @@
     // "Thermal Resistance (Absolute)",
 
     // --- ELECTRICITY & ELECTROMAGNETISM ---
+    "Voltage Drop",
     // "Capacitance",
     // "Current",
     // "Electric Charge",
@@ -832,7 +834,7 @@
     // "Surface Charge Density",
     // "Surface Current Density",
     // "Volume Charge Density",
-     "Voltage Drop",
+     
 
     // --- LIGHT, WAVES & RADIATION ---
     // "Frequency Wavelength",
@@ -896,7 +898,7 @@ const ALL_TABS_ORDERED = [
     "Thermal Resistance (Absolute)",
     
     // ELECTRICITY & ELECTROMAGNETISM
-    "Capacitance", "Current", "Electric Charge", "Electric Conductance", "Electric Conductivity", 
+    "Voltage Drop","Capacitance", "Current", "Electric Charge", "Electric Conductance", "Electric Conductivity", 
     "Electric Field Strength", "Electric Potential", "Electric Resistance", "Electric Resistivity", 
     "Electrostatic Capacitance", "Inductance", "Linear Charge Density", "Linear Current Density", 
     "Magnetic Field Strength", "Magnetic Flux", "Magnetic Flux Density", "Magnetomotive Force", 
@@ -3289,15 +3291,15 @@ const COLOR_UTILS = {
           "Volumetric Cost": {
             baseUnitName: "Liters",
             defaultVisible: [
-              "Liters", "Milliliters / cc", "Fluid Ounces (US)", 
+              "Dimensions", "Liters", "Milliliters / cc", "Fluid Ounces (US)", 
               "Cups (Fraction)", "Gallons (US)", "Cost/Liter ($)", "Project Cost ($)", "Last Updated"
             ],
-            // FIX: Restored "Cost/Liter ($)" so custom JS functions don't crash when trying to locate the cell
             mobileVisible: [
-              "Liters", "Milliliters / cc", "Fluid Ounces (US)", 
+              "Dimensions", "Liters", "Milliliters / cc", "Fluid Ounces (US)", 
               "Cups (Fraction)", "Gallons (US)", "Cost/Liter ($)", "Project Cost ($)", "Last Updated"
             ],
             mobileHeaders: {
+              "dimensions": "Dims",
               "liters": "L",
               "milliliters / cc": "mL/cc",
               "fluid ounces (us)": "fl oz",
@@ -3309,12 +3311,12 @@ const COLOR_UTILS = {
               "project cost ($)": "Cost",
               "last updated": "Updated"
             },
-            
             defaultHeaders: [
-              "Liters", "Milliliters / cc", "Cups (Fraction)", "Gallons (US)", "Fluid Ounces (US)", 
-              "Cubic Inches", "Cubic Feet", "Cost/Liter ($)", "Project Cost ($)", "Last Updated"
+              "Dimensions", "Liters", "Milliliters / cc", "Cups (Fraction)", "Gallons (US)", 
+              "Fluid Ounces (US)", "Cubic Inches", "Cubic Feet", "Cost/Liter ($)", "Project Cost ($)", "Last Updated"
             ],
             units: {
+              "dimensions": { type: "anchor" },
               "liters": 1.0,
               "milliliters / cc": 0.001,
               "gallons (us)": 3.785411784,
@@ -6343,6 +6345,8 @@ const QUICK_UNITS = {
             "mph": { tab: "Speed", col: "miles/hour" },
             "kph": { tab: "Speed", col: "kilometers/hour" },
             "kmh": { tab: "Speed", col: "kilometers/hour" },
+            "kms": { tab: "Speed", col: "kilometers/second" },
+            "km/s": { tab: "Speed", col: "kilometers/second" },
             "mps": { tab: "Speed", col: "meters/second" },
             "m/s": { tab: "Speed", col: "meters/second" },
             "ms": { tab: "Speed", col: "meters/second" },
@@ -7385,7 +7389,7 @@ function loadTab(tabName) {
                 "Lengths": "12 in",
                 "Weight/Mass": "150 lbs",
                 "Volume": "3 gal",
-                "baking (weight/vol)": "Select an ingredient...",
+                "Baking (Weight/Vol)": "Select an ingredient...",
                 "Temperature": "98.6 f",
                 "Area": "5 acre",
                 "Time": "5 hr",
@@ -7465,6 +7469,7 @@ function loadTab(tabName) {
                 "Temperature Interval": "10 c",
 
                 // --- ELECTRICITY & ELECTROMAGNETISM ---
+                "Voltage Drop": "Use the grid below...",
                 "Capacitance": "10 uf",
                 "Electric Charge": "500 mah",
                 "Linear Charge Density": "5 c/m",
@@ -7501,6 +7506,7 @@ function loadTab(tabName) {
                 "Sound": "50 sones",
                 
                 // --- MISCELLANEOUS ---
+                "Culinary": "Select an ingredient",
                 "Typography": "12 pt",
                 "Print Production (Paper)": "300 gsm",
                 "Horology (Watches)": "28800 vph",
@@ -7741,9 +7747,11 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     const isSwatch = currentTab === "Colors" && colDef.name.toLowerCase() === "swatch";
                     const isOrientation = currentTab === "Aspect Ratios & Resolutions" && colDef.name.toLowerCase() === "orientation";
                     
-                    // NEW: Voltage Drop UI overrides
+                    // NEW: Voltage Drop & Volumetric Cost UI overrides
                     const isMaterial = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "material (cu/al)";
                     const isVDropResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "voltage drop (v)";
+                    const isPctResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "% drop";
+                    const isDimNote = currentTab === "Volumetric Cost" && colDef.name.toLowerCase() === "dimensions";
                     
                     let input;
                     if (isOrientation) {
@@ -7770,10 +7778,10 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                         input = document.createElement('input');
                         input.type = isSwatch ? 'color' : 'text';
                         
-                        // NEW: Make Voltage Drop read-only
-                        if (isVDropResult) {
+                        // NEW: Make formula results and dimensions read-only
+                        if (isVDropResult || isPctResult || isDimNote) {
                             input.readOnly = true;
-                            input.tabIndex = -1; // Prevents the Tab key from stopping here
+                            if (!isDimNote) input.tabIndex = -1; // Let users click dimensions to copy, but skip when tabbing
                         }
                         
                         if (isSwatch) {
@@ -8362,6 +8370,15 @@ function renderModalList() {
         // STANDARD PHYSICAL UNITS ENGINE
         // ==========================================
         function handleStandardInput(rowIdx, colIdx, val, config) {
+            // NEW: Clear Dimensions column if the user edits the Volumetric Cost grid manually
+            if (currentTab === "Volumetric Cost") {
+                const headers = getBaseHeaders(currentTab);
+                const dimIdx = headers.findIndex(h => h.toLowerCase() === "dimensions");
+                if (dimIdx > -1 && colIdx !== dimIdx) {
+                    tabData[currentTab][rowIdx][dimIdx] = "";
+                    updateCellDom(rowIdx, dimIdx, "");
+                }
+            }
             const headers = config.defaultHeaders;
             
             if (val === "") {
@@ -8377,8 +8394,6 @@ function renderModalList() {
             const sourceUnitKey = resolveUnitKey(config, headers[colIdx]);
             if (!sourceUnitKey || headers[colIdx].toLowerCase() === "last updated") return;
 
-            // Allow UK ring sizes and compound strings to bypass the parseNumber check 
-           
             let numericValue;
             if (config.isRingTab && sourceUnitKey === "uk / australia") {
                 numericValue = val; 
@@ -8407,8 +8422,6 @@ function renderModalList() {
                     let converted = fromBase(config.units[targetUnitKey], baseVal);
                     let displayValue = converted;
                     
-                    // FIX: Only format mathematically if it is an actual number.
-                    // If it is a string (like a UK ring size), skip math formatting entirely.
                     if (typeof converted === 'number') {
                         converted = formatDisplayNumber(converted); 
                         displayValue = isFractionCol ? decimalToFraction(converted) : converted;
@@ -9851,7 +9864,13 @@ function calculateVolumetric() {
     const l = parseFloat(document.getElementById('vol-l').value) || 0;
     const d = parseFloat(document.getElementById('vol-d').value) || 0;
     
-    if (w === 0 || l === 0 || d === 0) return;
+    if (w === 0 || l === 0 || d === 0) {
+        return;
+    }
+
+    const wUnit = document.getElementById('vol-w-unit').value;
+    const lUnit = document.getElementById('vol-l-unit').value;
+    const dUnit = document.getElementById('vol-d-unit').value;
     
     const toMeters = (val, unit) => {
         if (unit === 'in') return val * 0.0254;
@@ -9861,31 +9880,35 @@ function calculateVolumetric() {
         return val;
     };
     
-    const cubicMeters = toMeters(w, document.getElementById('vol-w-unit').value) * 
-                        toMeters(l, document.getElementById('vol-l-unit').value) * 
-                        toMeters(d, document.getElementById('vol-d-unit').value);
-                        
+    const cubicMeters = toMeters(w, wUnit) * toMeters(l, lUnit) * toMeters(d, dUnit);
     const liters = cubicMeters * 1000;
     
-    // PRO FIX: Decouple from visual header text. 
-    // 1. Get the true index of "Liters" directly from the configuration dictionary.
     const config = TAB_CONFIG["Volumetric Cost"];
-    const litersColIdx = config.defaultHeaders.findIndex(h => h.toLowerCase() === "liters");
+    const headersLower = config.defaultHeaders.map(h => h.toLowerCase());
     
-    // 2. Determine which row to inject the calculation into (prioritizing the active row)
+    const litersColIdx = headersLower.indexOf("liters");
+    const dimIdx = headersLower.indexOf("dimensions");
+    
     let targetRowIdx = typeof quickConvertActiveRow !== 'undefined' && quickConvertActiveRow > -1 
         ? quickConvertActiveRow 
         : Math.max(0, document.querySelectorAll('#grid-body tr').length - 1);
         
-    // 3. Select the exact input using immutable data attributes, bypassing screen text entirely
     const litersInput = document.querySelector(`td[data-row="${targetRowIdx}"][data-col="${litersColIdx}"] input`);
     
     if (litersInput) {
         litersInput.value = liters.toFixed(4);
         
+        // 1. Fire the standard conversion engine FIRST
         if (typeof handleStandardInput === 'function') {
-            // Fire the standard conversion engine so the rest of the row calculates
             handleStandardInput(targetRowIdx, litersColIdx, litersInput.value, config);
+        }
+        
+        // 2. Inject the dimension string AFTER the math engine finishes,
+        // so the safety-wipe mechanism doesn't instantly erase it!
+        if (dimIdx > -1) {
+            const dimString = `${w}${wUnit} × ${l}${lUnit} × ${d}${dUnit}`;
+            tabData["Volumetric Cost"][targetRowIdx][dimIdx] = dimString;
+            updateCellDom(targetRowIdx, dimIdx, dimString);
         }
     }
 }
