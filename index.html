@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OmegaConverter</title>
+    <title>omegaConverter</title>
+    <link rel="manifest" href="manifest.json">
     <!-- App Icons -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232c3e50'/><text x='50' y='72' font-family='-apple-system, sans-serif' font-size='65' font-weight='bold' fill='%233498db' text-anchor='middle'>Ω</text></svg>">
     <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='22' fill='%232c3e50'/><text x='50' y='72' font-family='-apple-system, sans-serif' font-size='65' font-weight='bold' fill='%233498db' text-anchor='middle'>Ω</text></svg>">
@@ -418,6 +419,23 @@
         flex-wrap: wrap;
         justify-content: center;
     }
+    /* 1. Prevent iOS double-tap zoom when typing fractions quickly */
+    .frac-btn, .frac-btn-sub {
+        touch-action: manipulation !important; 
+    }
+    
+    /* 2. Increase touch target for the fraction button inside the grid */
+    td button[title="Open Fraction Pad"] {
+        padding: 10px !important;
+        right: -8px !important;
+        font-size: 1.4rem !important;
+    }
+
+    /* 3. Pull the Mix Ratio badge inward so it doesn't bleed across tight mobile columns */
+    span[id^="ratio-badge-"] {
+        right: 0px !important;
+        transform: translateY(-50%) scale(0.85) !important;
+    }
 }
 /* FRACTION UI STYLES */
         .frac-btn {
@@ -443,6 +461,43 @@
             color: #0284c7;
         }
         .frac-btn-sub:active { background: #bae6fd; }
+        /* SHAPE PICKER UI */
+        .shape-picker {
+            display: inline-flex;
+            align-items: center;
+            background: #f1f5f9;
+            padding: 3px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-left: 15px;
+            vertical-align: middle;
+        }
+        .shape-btn {
+            background: transparent;
+            border: 2px solid transparent;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 4px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            color: #64748b;
+        }
+        .shape-btn:hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+        .shape-btn.active {
+            border-color: var(--primary);
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .shape-icon {
+            width: 18px;
+            height: 18px;
+        }
     </style>
 </head>
 <body>
@@ -9886,7 +9941,36 @@ function initVolumetricCostUI(currentTabName) {
         <div class="vol-wrapper" style="display: flex; flex-wrap: wrap; gap: 15px; align-items: stretch; margin-bottom: 15px;">
             
             <div class="vol-panel" style="flex: 1; background: white; padding: 15px; border-radius: 8px; border: 1px solid #dee2e6; min-width: 250px;">
-                <h3 style="margin: 0 0 10px 0; font-size: 1.05em; color: #333;">Calculate Surface Volume</h3>
+                
+                <div style="display: flex; align-items: center; margin-bottom: 10px;">
+                    <h3 style="margin: 0; font-size: 1.05em; color: #333;">Calculate Surface Volume</h3>
+                    
+                    <div class="shape-picker">
+                        <!-- Rectangle (Active by default) -->
+                        <button class="shape-btn active" title="Rectangle" onclick="event.preventDefault()">
+                            <svg class="shape-icon" viewBox="0 0 24 24">
+                                <rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                        </button>
+                        
+                        <!-- Cylinder -->
+                        <button class="shape-btn" title="Cylinder" onclick="event.preventDefault()">
+                            <svg class="shape-icon" viewBox="0 0 24 24">
+                                <ellipse cx="12" cy="6" rx="8" ry="3" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <path d="M4 6v12c0 1.66 3.58 3 8 3s8-1.34 8-3V6" stroke="currentColor" stroke-width="2" fill="none"/>
+                            </svg>
+                        </button>
+                        
+                        <!-- Sphere -->
+                        <button class="shape-btn" title="Sphere" onclick="event.preventDefault()">
+                            <svg class="shape-icon" viewBox="0 0 24 24">
+                                <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" fill="none"/>
+                                <ellipse cx="12" cy="12" rx="9" ry="3" stroke="currentColor" stroke-width="2" fill="none" stroke-dasharray="3 3"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
                 <div class="vol-math-row" style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <div style="display: flex; align-items: center; gap: 4px;">
                         <input type="number" id="vol-w" placeholder="Width" class="vol-input" style="width: 70px; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
@@ -10015,6 +10099,17 @@ function initVolumetricCostUI(currentTabName) {
     matInputs.forEach(id => {
         document.getElementById(id).addEventListener('keydown', handleVolumetricEnter);
     });
+const shapeBtns = document.querySelectorAll('.shape-btn');
+    if (shapeBtns.length === 3) {
+        shapeBtns[0].onclick = (e) => { e.preventDefault(); setVolShape('rectangle'); };
+        shapeBtns[1].onclick = (e) => { e.preventDefault(); setVolShape('cylinder'); };
+        shapeBtns[2].onclick = (e) => { e.preventDefault(); setVolShape('sphere'); };
+        
+        // Restore last used shape on load
+        setTimeout(() => {
+            setVolShape(localStorage.getItem('volShape') || 'rectangle');
+        }, 0);
+    }
 }
 
 function handleRatioInput() {
@@ -10091,6 +10186,57 @@ function refreshRatioBadge(rowIdx) {
     badge.style.display = 'inline-block';
 }
 
+function setVolShape(shape) {
+    localStorage.setItem('volShape', shape);
+    
+    // Update Button Styling
+    const btns = document.querySelectorAll('.shape-btn');
+    if(btns.length === 3) {
+        btns[0].classList.toggle('active', shape === 'rectangle');
+        btns[1].classList.toggle('active', shape === 'cylinder');
+        btns[2].classList.toggle('active', shape === 'sphere');
+    }
+    
+    // Grab elements based on your exact HTML structure
+    const wInput = document.getElementById('vol-w');
+    const dInput = document.getElementById('vol-d');
+    const lWrap = document.getElementById('vol-l').parentElement;
+    const dWrap = document.getElementById('vol-d').parentElement;
+    const sep1 = lWrap.previousElementSibling; // The '✕'
+    const sep2 = dWrap.previousElementSibling; // The '@'
+    
+    // Swap UI layout
+    if (shape === 'rectangle') {
+        wInput.placeholder = "Width";
+        dInput.placeholder = "Depth";
+        lWrap.style.display = 'flex';
+        dWrap.style.display = 'flex';
+        sep1.style.display = 'inline';
+        sep2.style.display = 'inline';
+        sep2.textContent = "@";
+    } else if (shape === 'cylinder') {
+        wInput.placeholder = "Radius";
+        dInput.placeholder = "Height";
+        lWrap.style.display = 'none';
+        dWrap.style.display = 'flex';
+        sep1.style.display = 'none';
+        sep2.style.display = 'inline';
+        sep2.textContent = "@";
+    } else if (shape === 'sphere') {
+        wInput.placeholder = "Radius";
+        lWrap.style.display = 'none';
+        dWrap.style.display = 'none';
+        sep1.style.display = 'none';
+        sep2.style.display = 'none';
+    }
+    
+    // Clear out hidden values so they don't corrupt the math
+    if (shape !== 'rectangle') document.getElementById('vol-l').value = "";
+    if (shape === 'sphere') document.getElementById('vol-d').value = "";
+    
+    if (typeof calculateVolumetric === 'function') calculateVolumetric();
+}
+
 function updateMixRatios(liters, rowIdx) {
     if (!document.getElementById('vol-ratio-a')) return;
     
@@ -10137,13 +10283,16 @@ function updateMixRatios(liters, rowIdx) {
 }
 
 function calculateVolumetric() {
+    const shape = localStorage.getItem('volShape') || 'rectangle';
+    
     const w = parseFloat(document.getElementById('vol-w').value) || 0;
     const l = parseFloat(document.getElementById('vol-l').value) || 0;
     const d = parseFloat(document.getElementById('vol-d').value) || 0;
     
-    if (w === 0 || l === 0 || d === 0) {
-        return;
-    }
+    // Shape-specific validation to prevent premature calculation
+    if (shape === 'rectangle' && (w === 0 || l === 0 || d === 0)) return;
+    if (shape === 'cylinder' && (w === 0 || d === 0)) return;
+    if (shape === 'sphere' && w === 0) return;
 
     const wUnit = document.getElementById('vol-w-unit').value;
     const lUnit = document.getElementById('vol-l-unit').value;
@@ -10157,7 +10306,25 @@ function calculateVolumetric() {
         return val;
     };
     
-    const cubicMeters = toMeters(w, wUnit) * toMeters(l, lUnit) * toMeters(d, dUnit);
+    const wM = toMeters(w, wUnit);
+    const lM = toMeters(l, lUnit);
+    const dM = toMeters(d, dUnit);
+    
+    let cubicMeters = 0;
+    let dimString = "";
+
+    // Math Engine & Label Formatting
+    if (shape === 'rectangle') {
+        cubicMeters = wM * lM * dM;
+        dimString = `${w}${wUnit} × ${l}${lUnit} × ${d}${dUnit}`;
+    } else if (shape === 'cylinder') {
+        cubicMeters = Math.PI * Math.pow(wM, 2) * dM;
+        dimString = `Cyl: ${w}${wUnit} r, ${d}${dUnit} h`;
+    } else if (shape === 'sphere') {
+        cubicMeters = (4/3) * Math.PI * Math.pow(wM, 3);
+        dimString = `Sph: ${w}${wUnit} r`;
+    }
+    
     const liters = cubicMeters * 1000;
     
     const config = TAB_CONFIG["Volumetric Cost"];
@@ -10180,7 +10347,6 @@ function calculateVolumetric() {
         }
         
         if (dimIdx > -1) {
-            const dimString = `${w}${wUnit} × ${l}${lUnit} × ${d}${dUnit}`;
             tabData["Volumetric Cost"][targetRowIdx][dimIdx] = dimString;
             updateCellDom(targetRowIdx, dimIdx, dimString);
         }
@@ -10505,6 +10671,12 @@ function handleVolumetricEnter(e) {
             reader.readAsText(file);
         }
         window.onload = init;
+        // Register Service Worker for Offline Mode
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('sw.js').catch(err => console.log('Offline mode setup failed:', err));
+    });
+}
     </script>
 </body>
 </html>
