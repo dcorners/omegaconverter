@@ -210,17 +210,17 @@
 @media (max-width: 768px) {
     /* Lock horizontal scrolling at the root to prevent autofocus screen-shifting */
     html, body {
-        overflow-x: hidden !important;
-        width: 100vw !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
+        overflow-x: hidden;
+        width: 100vw;
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
     body {
-        flex-direction: column !important;
-        overflow-y: auto !important;
-        display: flex !important;
+        flex-direction: column;
+        overflow-y: auto;
+        display: flex;
     }
 
     /* 
@@ -231,126 +231,128 @@
     #sidebar, 
     #main, 
     #top-bar {
-        display: contents !important;
+        display: contents;
     }
-/* Override all user-defined PC column widths with a uniform mobile width */
+
+    /* Set a uniform mobile width, but allow user resizing to override it */
     th, td {
-        min-width: 50px !important; 
-        width: 50px !important;
+        min-width: 50px; 
+        width: 50px;
     }
 
     /* Keep the first (frozen/context) column slightly wider if desired */
     th:first-child, 
     td:first-child {
-        min-width: 50px !important;
-        width: 50px !important;
+        min-width: 50px;
+        width: 50px;
     }
-/* 
+
+    /* 
        Volumetric Cost Custom Header Compression
        Aggressively shrinks panels to 1 line each by hiding redundant headers 
        and forcing inputs to stay on a single line.
     */
     .volumetric-header-container {
         order: 3; 
-        width: 100% !important;
-        padding: 0 10px !important;
+        width: 100%;
+        padding: 0 10px;
         box-sizing: border-box;
     }
 
     .vol-wrapper {
-        gap: 5px !important;
-        margin-bottom: 8px !important;
+        gap: 5px;
+        margin-bottom: 8px;
     }
 
     .vol-panel {
-        padding: 6px 8px !important;
-        flex-basis: 100% !important; 
+        padding: 6px 8px;
+        flex-basis: 100%; 
     }
 
     /* 1. Hide the headers to save an entire line per panel */
     .vol-panel h3 {
-        display: none !important;
+        display: none;
     }
 
     /* 2. Force the math rows to stay on a single line */
     .vol-math-row {
-        gap: 4px !important; 
-        flex-wrap: nowrap !important; /* Prevents wrapping onto a second line */
-        justify-content: center !important;
+        gap: 4px; 
+        flex-wrap: nowrap; 
+        justify-content: center;
     }
 
     /* Shrink the physical size of the inputs and dropdowns */
     .vol-input, .vol-select, .vol-input-result {
-        padding: 2px 4px !important;
-        font-size: 0.8rem !important;
-        height: 26px !important;
-        box-sizing: border-box !important;
+        padding: 2px 4px;
+        font-size: 0.8rem;
+        height: 26px;
+        box-sizing: border-box;
     }
 
     /* Target specific widths so they perfectly fit a 320px screen width */
-    #vol-w, #vol-l, #vol-d { width: 48px !important; }
-    #mat-price { width: 55px !important; }
-    #mat-qty { width: 40px !important; }
-    #mat-base-cost { width: 55px !important; }
+    #vol-w, #vol-l, #vol-d { width: 48px; }
+    #mat-price { width: 55px; }
+    #mat-qty { width: 40px; }
+    #mat-base-cost { width: 55px; }
     
     /* Shrink the math symbols (X, @, $, ➔) */
     .vol-math-row span {
-        font-size: 0.75rem !important;
-        white-space: nowrap !important;
+        font-size: 0.75rem;
+        white-space: nowrap;
     }
+
     /* 1. LOGO */
     #sidebar > div:first-child {
         order: 1;
-        padding: 10px !important; 
+        padding: 10px; 
         width: 100%;
         box-sizing: border-box;
     }
     #sidebar > div:first-child h2 {
-        font-size: 1.1rem !important; 
+        font-size: 1.1rem; 
     }
 
     /* 2. TITLE & QUICK CONVERT (Preserved as a Flex Column) */
     #top-bar > div:first-child {
         order: 2;
-        display: flex !important;
-        flex-direction: column !important;
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 15px !important;
-        box-sizing: border-box !important;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+        box-sizing: border-box;
         background: white;
     }
 
     #current-tab-title {
-        width: 100% !important;
-        min-width: 0 !important;
+        width: 100%;
+        min-width: 0;
         text-align: center;
         font-size: 1.2rem;
-        margin: 0 0 15px 0 !important;
+        margin: 0 0 15px 0;
     }
 
     /* The specific wrapper holding the input - margins stripped to prevent overflow */
     #top-bar > div:first-child > div:last-child {
-        width: 100% !important;
-        margin: 0 !important;
-        display: block !important;
-        position: relative !important;
+        width: 100%;
+        margin: 0;
+        display: block;
+        position: relative;
     }
 
     #quick-convert {
-        width: 100% !important;
-        font-size: 16px !important; /* 16px prevents iOS Safari auto-zoom */
-        box-sizing: border-box !important;
+        width: 100%;
+        font-size: 16px; /* 16px prevents iOS Safari auto-zoom */
+        box-sizing: border-box;
     }
 
     /* 3. THE CONVERSION GRID */
     #grid-container {
         order: 3;
-        width: 100% !important;
-        padding: 0 !important;
-        /* Allow the grid to expand, but enforce scrolling on small screens */
-        flex: 1 1 40vh !important; 
-        min-height: 40vh !important; 
+        width: 100%;
+        padding: 0;
+        flex: 1 1 40vh; 
+        min-height: 40vh; 
         box-sizing: border-box;
         border-top: 1px solid var(--border);
         border-bottom: 1px solid var(--border);
@@ -361,7 +363,7 @@
         max-width: 100vw;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch; 
-        margin: 0 !important;
+        margin: 0;
     }
 
     th {
@@ -372,69 +374,69 @@
     /* 4. HEADER ACTIONS (Column Settings & Clear Data) */
     .header-actions {
         order: 4;
-        width: 100% !important;
-        padding: 12px 15px !important;
+        width: 100%;
+        padding: 12px 15px;
         box-sizing: border-box;
         justify-content: space-between;
         background: white; 
-        display: flex !important;
+        display: flex;
     }
 
     /* 5. TAB LIST */
     #tab-list {
         order: 5;
-        width: 100% !important;
-        max-height: 25vh !important; 
+        width: 100%;
+        max-height: 25vh; 
         background: var(--sidebar-bg); 
-        overflow-y: auto !important; /* Keep the tabs scrollable natively */
+        overflow-y: auto; 
     }
 
     /* 6. SIDEBAR FOOTER (Tab Settings, Coffee, Reset) */
     #sidebar-footer {
         order: 6;
-        width: 100% !important;
+        width: 100%;
         box-sizing: border-box;
-        display: flex !important;
+        display: flex;
     }
 
-    /* Deprioritize the Reset button so it isn't visually dominant */
     .btn-reset-all {
-        background: transparent ;
-        color: var(--text-light) ;
+        background: transparent;
+        color: var(--text-light);
         border: 1px solid rgba(231, 76, 60, 0.5);
-        flex-grow: 0 ;
+        flex-grow: 0;
     }
 
     /* MODAL FLUIDITY (Keeps popups on-screen) */
     .modal-content {
-        width: 90% !important;
-        max-width: 400px !important; 
+        width: 90%;
+        max-width: 400px; 
         margin: 20px auto;
         max-height: 85vh; 
     }
     #settings-modal .modal-content {
-        max-width: 600px !important;
+        max-width: 600px;
     }
     .modal-actions {
         flex-wrap: wrap;
         justify-content: center;
     }
+
     /* 1. Prevent iOS double-tap zoom when typing fractions quickly */
     .frac-btn, .frac-btn-sub {
-        touch-action: manipulation !important; 
+        touch-action: manipulation; 
     }
     
     /* 2. Increase touch target for the fraction button inside the grid */
     td button[title="Open Fraction Pad"] {
-        padding: 10px !important;
-        right: -8px !important;
-        font-size: 1.4rem !important;
+        padding: 10px;
+        right: -8px;
+        font-size: 1.4rem;
     }
 
     /* 3. Pull the Mix Ratio badge inward so it doesn't bleed across tight mobile columns */
     span[id^="ratio-badge-"] {
-        right: 0px !important;
-        transform: translateY(-50%) scale(0.85) !important;
+        right: 0px;
+        transform: translateY(-50%) scale(0.85);
     }
 }
 /* FRACTION UI STYLES */
@@ -810,7 +812,6 @@
     "Baking (Weight/Vol)",
     "Digital Storage",
     "Data Transfer",
-    "Volumetric Cost",
     "Text Case",
 
     // =========================================================
@@ -871,8 +872,10 @@
     // "Particle & Mesh Size",
     // "Permeability",
 
-    // --- ENGINEERING, INDUSTRIAL & MATERIALS ---
-    // "3D Printing (1.75mm)",
+// --- ENGINEERING, INDUSTRIAL & MATERIALS ---
+    "3D Print Estimator",
+  //  "3D Printing (1.75mm)",
+    "Volumetric Cost",
     // "Slopes & Gradients",
     // "HVAC Cooling Capacity",
     // "Wire Gauge",
@@ -999,7 +1002,7 @@ const ALL_TABS_ORDERED = [
     
     // HOBBIES, CRAFTS & SPECIALTIES
     "Beer & Malt Color", "Scale Modeling", "Scuba Diving", "Brewing & Winemaking", 
-    "Horology (Watches)", "Diamond Size (Round Brilliant)", "Optometry & Lenses", "IV Drip Rates (Nursing)",
+    "Horology (Watches)", "Diamond Size (Round Brilliant)", "Optometry & Lenses", "IV Drip Rates (Nursing)","3D Print Estimator",
     
     // BASIC PHYSICS & MECHANICS
     "Force", "Power", "Pressure", "Energy", "Torque", "Angles & Rotation", "Acceleration", "Density",
@@ -3515,6 +3518,54 @@ const COLOR_UTILS = {
               }
             }
         },
+
+        "3D Print Estimator": {
+            baseUnitName: "Machine",
+            defaultVisible: [
+              "Machine Type", "Electric Rate", "Filament Type", "Spool Cost", "Spool Weight", 
+              "Grams Consumed", "Build Time", "Abrasive", "Power (Watts)", 
+              "Power Cost", "Material Cost", "Wear Cost", "Total Cost"
+            ],
+            defaultHeaders: [
+              "Machine Type", "Electric Rate", "Filament Type", "Spool Cost", "Spool Weight", 
+              "Grams Consumed", "Build Time", "Abrasive", "Power (Watts)", 
+              "Power Cost", "Material Cost", "Wear Cost", "Total Cost", "Last Updated"
+            ],
+            mobileVisible: [
+              "Machine Type", "Grams Consumed", "Build Time", "Total Cost"
+            ],
+            mobileHeaders: {
+                "machine type": "Machine",
+                "electric rate": "$/kWh",
+                "filament type": "Mat",
+                "spool cost": "$/Spool",
+                "spool weight": "Spool(g)",
+                "grams consumed": "Grams",
+                "build time": "Time",
+                "abrasive": "Abrasive",
+                "power (watts)": "Watts",
+                "power cost": "Pwr $",
+                "material cost": "Mat $",
+                "wear cost": "Wear $",
+                "total cost": "Total $"
+            },
+            units: {
+                "machine type": { type: "anchor" },
+                "electric rate": { type: "anchor" },
+                "filament type": { type: "anchor" },
+                "spool cost": { type: "anchor" },
+                "spool weight": { type: "anchor" },
+                "grams consumed": { type: "anchor" },
+                "build time": { type: "anchor" },
+                "abrasive": { type: "anchor" },
+                "power (watts)": { type: "anchor" },
+                "power cost": { type: "anchor" },
+                "material cost": { type: "anchor" },
+                "wear cost": { type: "anchor" },
+                "total cost": { type: "anchor" }
+            }
+        },
+
      "Data Transfer": {
             baseUnitName: "Bytes per Second",
             // Added sensible defaults for PC so it isn't cluttered
@@ -7327,7 +7378,9 @@ function setupQuickConvert() {
                         statusEl.style.color = "var(--primary)"; 
                     }
                 } else {
-                    if (rawVal.startsWith('"') || rawVal.startsWith("'")) {
+                    if (!rawVal.trim()) {
+                        statusEl.textContent = "";
+                    } else if (rawVal.startsWith('"') || rawVal.startsWith("'")) {
                         statusEl.textContent = "RAW TEXT";
                         statusEl.style.color = "var(--primary)";
                     } else if (unitStr && !targetTab) {
@@ -7350,6 +7403,33 @@ function setupQuickConvert() {
         let activeModalMode = null;
         let userAliases = {}; // Holds custom shortcuts
         let disabledDefaultAliases = []; // Holds deleted default shortcuts
+
+        // --- 3D PRINT ESTIMATOR GLOBALS ---
+        let user3DMachines = [];
+        let user3DSettings = {};
+
+        const DEFAULT_3D_MACHINES = [
+            { id: "m_mini", name: "Mini / Small (A1 Mini, Prusa Mini)", baseWatts: 60, highWatts: 60, wearPerHour: 0.10 },
+            { id: "m_std", name: "Standard (Ender 3, MK4, A1)", baseWatts: 90, highWatts: 170, wearPerHour: 0.10 },
+            { id: "m_corexy", name: "Enclosed CoreXY (P1S, X1C, K1)", baseWatts: 110, highWatts: 190, wearPerHour: 0.20 },
+            { id: "m_large", name: "Large Format (300mm+)", baseWatts: 150, highWatts: 300, wearPerHour: 0.25 }
+        ];
+
+        const DEFAULT_3D_SETTINGS = {
+            electricRate: 0.16,
+            spoolCost: 20.00,
+            spoolWeight: 1000,
+            abrasiveSurchargeKg: 5.00,
+            defaultMachineId: "m_corexy",
+            defaultFilament: "PLA / TPU (Low Temp)"
+        };
+        const P3D_FILAMENT_TYPES = [
+            'PLA / TPU (Low Temp)', 
+            'PETG / PVB (Mid Temp)', 
+            'ABS / ASA / Nylon (High Temp)'
+        ];
+
+
 
         function toggleAllSettings(state) {
             const actionText = state ? "enable all" : "disable all";
@@ -7387,6 +7467,12 @@ function setupQuickConvert() {
 
             const savedShort = localStorage.getItem('useShortHeaders');
             if (savedShort !== null) useShortHeaders = savedShort === 'true';
+
+            const saved3DMachines = localStorage.getItem('converter3DMachines');
+            user3DMachines = saved3DMachines ? JSON.parse(saved3DMachines) : JSON.parse(JSON.stringify(DEFAULT_3D_MACHINES));
+
+            const saved3DSettings = localStorage.getItem('converter3DSettings');
+            user3DSettings = saved3DSettings ? JSON.parse(saved3DSettings) : JSON.parse(JSON.stringify(DEFAULT_3D_SETTINGS));
         }
 
         function saveStorage() {
@@ -7394,7 +7480,10 @@ function setupQuickConvert() {
             localStorage.setItem('converterTabConfig', JSON.stringify(userTabConfig));
             localStorage.setItem('converterColConfig', JSON.stringify(userColConfig));
             localStorage.setItem('converterAliases', JSON.stringify(userAliases));
+            localStorage.setItem('converterDisabledAliases', JSON.stringify(disabledDefaultAliases)); // Added
             localStorage.setItem('useShortHeaders', useShortHeaders);
+            localStorage.setItem('converter3DMachines', JSON.stringify(user3DMachines));
+            localStorage.setItem('converter3DSettings', JSON.stringify(user3DSettings));
         }
 
         function toggleShortHeaders(state) {
@@ -7463,8 +7552,27 @@ function setupQuickConvert() {
                 }
             });
         }
+function getTabFromUrl() {
+    // 1. Grab everything after ? or #
+    let rawParams = window.location.hash.substring(1) || window.location.search.substring(1);
+    if (!rawParams) return null;
 
-        function init() {
+    // 2. Ignore the reset command if it's there
+    if (rawParams.includes('reset=1')) return null;
+
+    // 3. Strip out common URL prefixes like 'tab=' or '/'
+    let requestedName = rawParams.replace(/^tab=/, '').replace(/^\//, '');
+
+    // 4. Normalize: lower-case and strip ALL non-alphanumeric characters
+    const normalize = (str) => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+    const targetNormalized = normalize(requestedName);
+
+    // 5. Find the match in the user's config
+    const match = userTabConfig.find(t => normalize(t.name) === targetNormalized);
+    return match ? match.name : null;
+}
+
+function init() {
             loadSavedFonts();
             loadStorage();
             buildDefaultConfigs();
@@ -7500,11 +7608,24 @@ if (window.location.search.includes('reset=1')) {
             const visibleTabs = userTabConfig.filter(t => t.visible);
             const defaultTab = visibleTabs.length > 0 ? visibleTabs[0].name : userTabConfig[0].name;
             const lastTab = localStorage.getItem('lastActiveTab') || defaultTab;
+            let tabToLoad = getTabFromUrl();
             
-            const tabToLoad = userTabConfig.find(t => t.name === lastTab && t.visible) ? lastTab : defaultTab;
-            loadTab(tabToLoad);
-            setupQuickConvert();
+            if (tabToLoad) {
+        // If they linked directly to a tab, ensure it is visible in the sidebar
+        const tabConf = userTabConfig.find(t => t.name === tabToLoad);
+        if (tabConf && !tabConf.visible) {
+            tabConf.visible = true;
+            saveStorage(); 
+            renderSidebar();
         }
+        } else {
+            // Fallback to memory
+            tabToLoad = userTabConfig.find(t => t.name === lastTab && t.visible) ? lastTab : defaultTab;
+        }
+
+        loadTab(tabToLoad);
+        setupQuickConvert();
+    }
         // ==========================================
         // Auto-format the active cell on blur (when tabbing away or clicking off)
         // ==========================================
@@ -7516,7 +7637,25 @@ if (window.location.search.includes('reset=1')) {
             if (typeof TAB_CONFIG !== 'undefined' && TAB_CONFIG[currentTab]) {
                 config = TAB_CONFIG[currentTab];
             }
-
+            // Run text formatting immediately
+            if (currentTab === "3D Print Estimator") {
+                const td = e.target.closest('td');
+                if (!td) return;
+                
+                const rowIdx = parseInt(td.dataset.row);
+                const colIdx = parseInt(td.dataset.col);
+                const headers = getBaseHeaders(currentTab).map(h => h.toLowerCase());
+                
+                if (headers[colIdx] === "build time" && e.target.value.trim() !== "") {
+                    const totalMins = parsePrintTime(e.target.value);
+                    const cleanTime = formatPrintTime(totalMins);
+                    if (cleanTime && e.target.value !== cleanTime) {
+                        e.target.value = cleanTime;
+                        tabData[currentTab][rowIdx][colIdx] = cleanTime;
+                        if (typeof saveStorage === 'function') saveStorage();
+                    }
+                }
+            }
             // Run text formatting immediately
             if (config.isTextTab) {
                 const td = e.target.closest('td');
@@ -7573,8 +7712,11 @@ function loadTab(tabName) {
                 "Currency": "100 eur",
                 "Wages": "25 $/hr",
 
-                // --- COMPUTING & DIGITAL ---
+                // --- 3D PRINTING ---
+                "3D Print Estimator": "150 pla OR 5h 30m",
                 "3D Printing (1.75mm)": "12.5 m OR 500 pla",
+
+                // --- COMPUTING & DIGITAL ---
                 "Digital Storage": "5 gb",
                 "Data Transfer": "50 mbps",
                 "Networking": "buymeacoffee.com/omegaconverter OR 172.67.75.15",
@@ -7748,6 +7890,10 @@ function loadTab(tabName) {
 
             renderGrid();
             if (typeof initVolumetricCostUI === 'function') initVolumetricCostUI(tabName);
+            if (typeof init3DPrintUI === 'function') init3DPrintUI(tabName);// Generate a clean URL slug (e.g., "Time Zone" -> "#time-zone")
+            // Generate a clean URL slug (e.g., "Time Zone" -> "#time-zone")
+            const urlSlug = tabName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+            history.replaceState(null, null, window.location.pathname + '#' + urlSlug);
         }
         function renderSidebar() {
             const list = document.getElementById('tab-list');
@@ -7868,8 +8014,19 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     td.style.maxWidth = `${colDef.minWidth}px`;
                 }
 
-                const cellValue = rowData[origIndex] !== undefined ? rowData[origIndex] : "";
+                let cellValue = rowData[origIndex] !== undefined ? rowData[origIndex] : "";
                 const isIngredientCol = config && config.isDensityTab && (origIndex === 0 || resolveUnitKey(config, colDef.name) === "ingredient");
+                
+                if (currentTab === "3D Print Estimator" && cellValue === "") {
+                    const cName = colDef.name.toLowerCase();
+                    if (cName === "electric rate") cellValue = user3DSettings.electricRate;
+                    else if (cName === "spool cost") cellValue = user3DSettings.spoolCost;
+                    else if (cName === "spool weight") cellValue = user3DSettings.spoolWeight;
+                    
+                    if (cellValue !== "") {
+                        tabData[currentTab][rowIndex][origIndex] = cellValue;
+                    }
+                }
 
                 if (isIngredientCol) {
                     const select = document.createElement('select');
@@ -7901,6 +8058,61 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     select.onfocus = checkAutoAddRow;
                     td.appendChild(select);
 
+                    } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "machine type") {
+                    const select = document.createElement('select');
+                    select.style.width = '100%';
+                    select.style.fontSize = 'var(--grid-font-size)';
+                    user3DMachines.forEach(m => {
+                        const opt = document.createElement('option');
+                        opt.value = m.id; opt.textContent = m.name;
+                        select.appendChild(opt);
+                    });
+                    // Auto-fill default on new rows
+                    if (cellValue === "") {
+                        select.value = user3DSettings.defaultMachineId;
+                        tabData[currentTab][rowIndex][origIndex] = select.value;
+                    } else {
+                        select.value = cellValue;
+                    }
+                    select.onchange = (e) => handle3DPrintInput(rowIndex, origIndex, e.target.value);
+                    select.onfocus = checkAutoAddRow;
+                    td.appendChild(select);
+                    
+                } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "filament type") {
+                    const select = document.createElement('select');
+                    select.style.width = '100%';
+                    select.style.fontSize = 'var(--grid-font-size)';
+                    
+                    P3D_FILAMENT_TYPES.forEach(f => {
+                        const opt = document.createElement('option');
+                        opt.value = f; opt.textContent = f;
+                        select.appendChild(opt);
+                    });
+
+                    // Auto-fill default on new rows
+                    if (cellValue === "") {
+                        select.value = user3DSettings.defaultFilament || P3D_FILAMENT_TYPES[0];
+                        tabData[currentTab][rowIndex][origIndex] = select.value;
+                    } else { 
+                        select.value = cellValue; 
+                    }
+                    
+                    select.onchange = (e) => {
+                        handle3DPrintInput(rowIndex, origIndex, e.target.value);
+                        saveStorage();
+                    };
+                    select.onfocus = checkAutoAddRow;
+                    td.appendChild(select);
+
+                } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "abrasive") {
+                    const cb = document.createElement('input');
+                    cb.type = 'checkbox';
+                    cb.style.width = '20px'; cb.style.height = '20px'; cb.style.margin = '0 auto'; cb.style.display = 'block';
+                    cb.checked = cellValue === "Yes";
+                    cb.onchange = (e) => handle3DPrintInput(rowIndex, origIndex, e.target.checked ? "Yes" : "No");
+                    cb.onfocus = checkAutoAddRow;
+                    td.appendChild(cb);
+
                 } else if (isTimeZoneTab && origIndex === 0) {
                     const dateInput = document.createElement('input');
                     dateInput.type = 'date';
@@ -7925,6 +8137,8 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     const isPctResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "% drop";
                     const isDimNote = currentTab === "Volumetric Cost" && colDef.name.toLowerCase() === "dimensions";
                     const isPartNote = currentTab === "Volumetric Cost" && (colDef.name.toLowerCase() === "part a" || colDef.name.toLowerCase() === "part b");
+                    const is3DCalc = currentTab === "3D Print Estimator" && ["power (watts)", "power cost", "material cost", "wear cost", "total cost"].includes(colDef.name.toLowerCase());
+
                     
                     let input;
                     if (isOrientation) {
@@ -7950,7 +8164,7 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                         input = document.createElement('input');
                         input.type = isSwatch ? 'color' : 'text';
                         
-                        if (isVDropResult || isPctResult || isDimNote || isPartNote) {
+                        if (isVDropResult || isPctResult || isDimNote || isPartNote || is3DCalc) {
                             input.readOnly = true;
                             if (!isDimNote && !isPartNote) input.tabIndex = -1;
                         }
@@ -8007,7 +8221,9 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     input.oninput = (e) => {
                         const tabClean = currentTab.toLowerCase().replace(/[\s\/\\]+/g, "");
                         
-                        if (config && config.isDensityTab) {
+                        if (currentTab === "3D Print Estimator") {
+                            handle3DPrintInput(rowIndex, origIndex, e.target.value);
+                        } else if (config && config.isDensityTab) {
                             handleDensityInput(rowIndex, origIndex, e.target.value, config);
                         } else if (currentTab === "Time Zone" && typeof handleTimeZoneInput === 'function') {
                             handleTimeZoneInput(rowIndex, origIndex, e.target.value, config);
@@ -8501,10 +8717,25 @@ function renderModalList() {
                 localStorage.removeItem('volMatQty');
                 localStorage.removeItem('volMatUnit');
                 localStorage.removeItem('volCostLabel');
+                localStorage.removeItem('converter3DMachines');
+                localStorage.removeItem('converter3DSettings');
+                
+                // --- NEW ITEMS CLEARED ---
+                localStorage.removeItem('useShortHeaders');
+                localStorage.removeItem('lastActiveTab');
+                localStorage.removeItem('volShape');
+                localStorage.removeItem('omega_tab_font');
+                localStorage.removeItem('omega_col_font');
+                localStorage.removeItem('omega_grid_font');
+                useShortHeaders = false;
+
                 // Reset Volumetric Mix Ratios to default 1:1
                 localStorage.setItem('volRatioA', '1');
                 localStorage.setItem('volRatioB', '1');
                 localStorage.removeItem('volRatioUnit');
+                
+                user3DMachines = JSON.parse(JSON.stringify(DEFAULT_3D_MACHINES));
+                user3DSettings = JSON.parse(JSON.stringify(DEFAULT_3D_SETTINGS));
                 
                 if (document.getElementById('vol-ratio-a')) document.getElementById('vol-ratio-a').value = '1';
                 if (document.getElementById('vol-ratio-b')) document.getElementById('vol-ratio-b').value = '1';
@@ -8568,12 +8799,14 @@ function renderModalList() {
                 config = TAB_CONFIG[currentTab];
             }
 
-            console.log("--- Routing Diagnostics ---");
-            console.log("currentTab:", currentTab);
-            console.log("tabClean:", tabClean);
-            console.log("config isResolutionTab:", config.isResolutionTab);
-
-            if (tabClean === "numbers") {
+      //      console.log("--- Routing Diagnostics ---");
+    //        console.log("currentTab:", currentTab);
+    //        console.log("tabClean:", tabClean);
+     //       console.log("config isResolutionTab:", config.isResolutionTab);
+            if (currentTab === "3D Print Estimator") {
+                console.log("Routing to: handle3DPrintInput");
+                handle3DPrintInput(rowIdx, colIdx, val);
+            } else if (tabClean === "numbers") {
                 console.log("Routing to: handleNumbersInput");
                 handleNumbersInput(rowIdx, colIdx, val, config);
             } else if (config.isResolutionTab === true || (tabClean && tabClean.includes("aspect"))) {
@@ -9915,6 +10148,135 @@ function parseNumber(val) {
             return 1;
         }
 
+        // ==========================================
+// 3D PRINT COST ENGINE
+// ==========================================
+
+function parsePrintTime(val) {
+    const clean = String(val).trim().toLowerCase();
+    if (!clean) return 0;
+    
+    // 1. Match H:MM format (e.g., 5:15 or 5:5)
+    const colonMatch = clean.match(/^(\d+):(\d+)$/);
+    if (colonMatch) {
+        return (parseInt(colonMatch[1]) * 60) + parseInt(colonMatch[2]);
+    }
+    
+    // 2. Match compound string (e.g., 5h 15m, 5hr 15min)
+    const compMatch = clean.match(/^(\d+)\s*(?:h|hr|hrs|hours?)\s*(\d+)\s*(?:m|min|mins|minutes?)?$/);
+    if (compMatch) {
+        return (parseInt(compMatch[1]) * 60) + parseInt(compMatch[2]);
+    }
+
+    // 3. Match decimal hours (e.g., 5.5, 5.25h, 5.5 hours)
+    const decMatch = clean.match(/^(\d*\.?\d+)\s*(h|hr|hrs|hours?)$/);
+    if (decMatch) {
+        return Math.round(parseFloat(decMatch[1]) * 60);
+    }
+    
+    // 4. Match explicit minutes (e.g., 315m, 315 min)
+    const minMatch = clean.match(/^(\d*\.?\d+)\s*(m|min|mins|minutes?)$/);
+    if (minMatch) {
+        return Math.round(parseFloat(minMatch[1]));
+    }
+    
+    // 5. Fallback: Raw number. 
+    // If it has a decimal (5.5) assume hours. If it's an integer (315) assume minutes.
+    const rawNum = parseFloat(clean);
+    if (!isNaN(rawNum)) {
+        if (clean.includes('.')) return Math.round(rawNum * 60);
+        return Math.round(rawNum); 
+    }
+    
+    return 0;
+}
+
+// To format the cell nicely back to the user after they type
+function formatPrintTime(totalMinutes) {
+    if (!totalMinutes || totalMinutes <= 0) return "";
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    if (h === 0) return `${m}m`;
+    if (m === 0) return `${h}h`;
+    return `${h}h ${m}m`;
+}
+
+const PRINT_COST_ENGINE = {
+    calcPowerWatts: function(machineObj, filamentType) {
+        const highTempMats = ["abs", "asa", "nylon", "pc"];
+        const isHighTemp = highTempMats.some(mat => String(filamentType).toLowerCase().includes(mat));
+        return isHighTemp ? machineObj.highWatts : machineObj.baseWatts;
+    },
+    calcPowerCost: function(watts, timeMinutes, electricRate) {
+        const hours = timeMinutes / 60;
+        return (watts * hours / 1000) * electricRate;
+    },
+    calcMaterialCost: function(gramsUsed, spoolCost, spoolWeight) {
+        if (!spoolWeight || spoolWeight <= 0) return 0;
+        return (gramsUsed / spoolWeight) * spoolCost;
+    },
+    calcWearCost: function(machineObj, timeMinutes, gramsUsed, isAbrasive, abrasiveSurchargeKg) {
+        const hours = timeMinutes / 60;
+        const baseWear = machineObj.wearPerHour * hours;
+        const abrasiveWear = isAbrasive ? (gramsUsed / 1000) * abrasiveSurchargeKg : 0;
+        return baseWear + abrasiveWear;
+    }
+};
+
+function handle3DPrintInput(rowIdx, colIdx, val) {
+    const headersLower = getBaseHeaders("3D Print Estimator").map(h => h.toLowerCase());
+    
+
+    const colName = headersLower[colIdx];
+    tabData["3D Print Estimator"][rowIdx][colIdx] = val;
+    
+
+
+    // 3. Extract all current row variables
+    const row = tabData["3D Print Estimator"][rowIdx];
+    const getVal = (name) => row[headersLower.indexOf(name)];
+    const getNum = (name) => parseNumber(getVal(name)) || 0;
+
+    const machineId = getVal("machine type");
+    const machineObj = user3DMachines.find(m => m.id === machineId) || user3DMachines[0];
+    const filamentType = getVal("filament type");
+    const isAbrasive = getVal("abrasive") === "Yes";
+    
+    const electricRate = getNum("electric rate");
+    const spoolCost = getNum("spool cost");
+    const spoolWeight = getNum("spool weight");
+    const grams = getNum("grams consumed");
+    const timeMinutes = parsePrintTime(getVal("build time"));
+
+    // 4. Run the Engine
+    if (grams > 0 && timeMinutes > 0) {
+        const watts = PRINT_COST_ENGINE.calcPowerWatts(machineObj, filamentType);
+        const pwrCost = PRINT_COST_ENGINE.calcPowerCost(watts, timeMinutes, electricRate);
+        const matCost = PRINT_COST_ENGINE.calcMaterialCost(grams, spoolCost, spoolWeight);
+        const wearCost = PRINT_COST_ENGINE.calcWearCost(machineObj, timeMinutes, grams, isAbrasive, user3DSettings.abrasiveSurchargeKg);
+        const total = pwrCost + matCost + wearCost;
+
+        const writeCol = (name, num, isDollar) => {
+            const idx = headersLower.indexOf(name);
+            const displayStr = isDollar ? `$${num.toFixed(2)}` : num.toString();
+            tabData["3D Print Estimator"][rowIdx][idx] = displayStr;
+            updateCellDom(rowIdx, idx, displayStr);
+        };
+
+        writeCol("power (watts)", watts, false);
+        writeCol("power cost", pwrCost, true);
+        writeCol("material cost", matCost, true);
+        writeCol("wear cost", wearCost, true);
+        writeCol("total cost", total, true);
+    } else {
+        // Clear outputs if critical inputs are missing
+        ["power (watts)", "power cost", "material cost", "wear cost", "total cost"].forEach(name => {
+            const idx = headersLower.indexOf(name);
+            tabData["3D Print Estimator"][rowIdx][idx] = "";
+            updateCellDom(rowIdx, idx, "");
+        });
+    }
+}
 
 // --- VOLUMETRIC HYBRID UI ENGINE ---
 function initVolumetricCostUI(currentTabName) {
@@ -10110,6 +10472,129 @@ const shapeBtns = document.querySelectorAll('.shape-btn');
             setVolShape(localStorage.getItem('volShape') || 'rectangle');
         }, 0);
     }
+}
+
+function init3DPrintUI(currentTabName) {
+    let container = document.getElementById('print3d-header-container');
+    
+    if (!container) {
+        const tableElement = document.querySelector('table');
+        if (!tableElement) return; 
+        
+        container = document.createElement('div');
+        container.id = 'print3d-header-container';
+        container.style.padding = '0 10px';
+        tableElement.parentNode.insertBefore(container, tableElement);
+    }
+
+    if (currentTabName !== "3D Print Estimator") {
+        container.style.display = 'none';
+        return;
+    }
+    
+    container.style.display = 'block';
+
+    let machineOptions = user3DMachines.map(m => `<option value="${m.id}">${m.name} (${m.baseWatts}W - ${m.highWatts}W)</option>`).join('');
+    let filamentOptions = P3D_FILAMENT_TYPES.map(f => `<option value="${f}">${f}</option>`).join('');
+
+    container.innerHTML = `
+        <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
+            <div style="flex: 1; background: white; padding: 15px; border-radius: 8px; border: 1px solid var(--border); min-width: 250px;">
+                <h3 style="margin: 0 0 10px 0; font-size: 1.05em; color: #333;">Global 3D Print Defaults</h3>
+                
+                <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                        <span style="font-size: 0.85em; color: #64748b;">Electric Rate: $</span>
+                        <input type="number" id="p3d-rate" value="${user3DSettings.electricRate}" step="0.01" style="width: 60px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">/kWh</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                        <span style="font-size: 0.85em; color: #64748b;">Spool: $</span>
+                        <input type="number" id="p3d-cost" value="${user3DSettings.spoolCost}" step="1" style="width: 50px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">per</span>
+                        <input type="number" id="p3d-weight" value="${user3DSettings.spoolWeight}" step="100" style="width: 50px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">g</span>
+                    </div>
+                    
+                    <div style="display: flex; align-items: center; gap: 2px; background: #fef2f2; padding: 4px 8px; border-radius: 4px; border: 1px solid #fecaca;">
+                        <span style="font-size: 0.85em; color: #ef4444;">Abrasive Surcharge: +$</span>
+                        <input type="number" id="p3d-abrasive" value="${user3DSettings.abrasiveSurchargeKg}" step="0.5" style="width: 38px; padding: 0 2px; border: none; background: transparent; outline: none; font-weight: bold; color: #ef4444;">
+                        <span style="font-size: 0.85em; color: #ef4444;">/kg</span>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                        <span style="font-size: 0.85em; color: #64748b;">Filament:</span>
+                        <select id="p3d-filament-select" style="border: none; background: transparent; outline: none; font-weight: bold; color: #333; font-size: 0.9em; padding: 0;">
+                            ${filamentOptions}
+                        </select>
+                    </div>
+                </div>
+
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <span style="font-size: 0.85em; color: #64748b; font-weight: bold;">Default Machine:</span>
+                    <select id="p3d-machine-select" style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                        ${machineOptions}
+                    </select>
+                    <button id="p3d-add-machine" class="btn-icon" title="Add Machine">+</button>
+                    <button id="p3d-del-machine" class="btn-icon" title="Delete Selected Machine" style="color: var(--danger);">-</button>
+                </div>
+            </div>
+        </div>
+    `;
+
+    document.getElementById('p3d-machine-select').value = user3DSettings.defaultMachineId || user3DMachines[0].id;
+    document.getElementById('p3d-filament-select').value = user3DSettings.defaultFilament || P3D_FILAMENT_TYPES[0];
+
+    const saveDefaults = () => {
+        user3DSettings.electricRate = parseFloat(document.getElementById('p3d-rate').value) || 0;
+        user3DSettings.spoolCost = parseFloat(document.getElementById('p3d-cost').value) || 0;
+        user3DSettings.spoolWeight = parseFloat(document.getElementById('p3d-weight').value) || 1000;
+        user3DSettings.abrasiveSurchargeKg = parseFloat(document.getElementById('p3d-abrasive').value) || 0;
+        user3DSettings.defaultMachineId = document.getElementById('p3d-machine-select').value;
+        user3DSettings.defaultFilament = document.getElementById('p3d-filament-select').value;
+        saveStorage();
+    };
+
+    ['p3d-rate', 'p3d-cost', 'p3d-weight', 'p3d-abrasive', 'p3d-machine-select', 'p3d-filament-select'].forEach(id => {
+        document.getElementById(id).addEventListener('change', saveDefaults);
+    });
+
+    document.getElementById('p3d-add-machine').onclick = () => {
+        const name = prompt("Machine Name (e.g. 'Voron 2.4'):");
+        if (!name) return;
+        const baseW = prompt("Base Watts (printing PLA, typically 60-120):", "100");
+        const highW = prompt("High Temp Watts (printing ABS, typically 150-300):", "200");
+        const wear = prompt("Hourly Wear/Depreciation Rate (e.g. 0.10):", "0.15");
+        
+        if (baseW && highW && wear) {
+            const newId = "m_custom_" + Date.now();
+            user3DMachines.push({
+                id: newId,
+                name: name.trim(),
+                baseWatts: parseFloat(baseW) || 100,
+                highWatts: parseFloat(highW) || 200,
+                wearPerHour: parseFloat(wear) || 0.15
+            });
+            user3DSettings.defaultMachineId = newId;
+            saveStorage();
+            init3DPrintUI("3D Print Estimator"); 
+        }
+    };
+
+    document.getElementById('p3d-del-machine').onclick = () => {
+        const idToDelete = document.getElementById('p3d-machine-select').value;
+        if (idToDelete.startsWith("m_") && !idToDelete.startsWith("m_custom")) {
+            alert("Cannot delete default archetypes. You can delete custom machines.");
+            return;
+        }
+        if (confirm("Delete this custom machine?")) {
+            user3DMachines = user3DMachines.filter(m => m.id !== idToDelete);
+            user3DSettings.defaultMachineId = user3DMachines[0].id;
+            saveStorage();
+            init3DPrintUI("3D Print Estimator");
+        }
+    };
 }
 
 function handleRatioInput() {
@@ -10586,13 +11071,16 @@ function handleVolumetricEnter(e) {
         // CONFIG BACKUP & RESTORE
         // ==========================================
         async function exportConfig() {
-            // Gather the structural settings
             const configData = {
                 userTabConfig,
                 userColConfig,
                 userAliases,
-                disabledDefaultAliases
+                disabledDefaultAliases,
+                user3DMachines, // Added
+                user3DSettings  // Added
             };
+            
+            // ... (rest of the function remains exactly the same)
 
             const jsonString = JSON.stringify(configData, null, 2);
             const defaultName = "omega_config.json";
@@ -10646,14 +11134,17 @@ function handleVolumetricEnter(e) {
                         throw new Error("Invalid configuration file.");
                     }
 
-                    // Apply the loaded data to active memory
                     userTabConfig = data.userTabConfig;
                     userColConfig = data.userColConfig;
                     userAliases = data.userAliases || {};
                     disabledDefaultAliases = data.disabledDefaultAliases || [];
+                    
+                    // Added with fallbacks to defaults
+                    user3DMachines = data.user3DMachines || JSON.parse(JSON.stringify(DEFAULT_3D_MACHINES));
+                    user3DSettings = data.user3DSettings || JSON.parse(JSON.stringify(DEFAULT_3D_SETTINGS));
 
                     saveStorage();
-                    buildDefaultConfigs(); // Safety net in case the app was updated since backup
+                    buildDefaultConfigs(); 
                     
                     renderSidebar();
                     if (currentTab) loadTab(currentTab);
@@ -10665,11 +11156,24 @@ function handleVolumetricEnter(e) {
                     alert("❌ Failed to load configuration: " + err.message);
                 }
                 
-                // Clear the input so the exact same file can be selected again later if needed
                 event.target.value = ''; 
             };
             reader.readAsText(file);
         }
+        // --- LISTEN FOR HASH CHANGES IN REAL-TIME ---
+        window.addEventListener('hashchange', () => {
+            const tabToLoad = getTabFromUrl();
+            if (tabToLoad && tabToLoad !== currentTab) {
+                // Ensure the tab is visible in the sidebar if they were linked directly to a hidden one
+                const tabConf = userTabConfig.find(t => t.name === tabToLoad);
+                if (tabConf && !tabConf.visible) {
+                    tabConf.visible = true;
+                    if (typeof saveStorage === 'function') saveStorage();
+                    if (typeof renderSidebar === 'function') renderSidebar();
+                }
+                loadTab(tabToLoad);
+            }
+        });
         window.onload = init;
         // Register Service Worker for Offline Mode
 if ('serviceWorker' in navigator) {
