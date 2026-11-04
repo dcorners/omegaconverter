@@ -996,13 +996,13 @@ const ALL_TABS_ORDERED = [
     "Particle & Mesh Size", "Permeability",
     
     // ENGINEERING, INDUSTRIAL & MATERIALS
-    "3D Printing (1.75mm)", "Volumetric Cost", "Slopes & Gradients", "HVAC Cooling Capacity", 
+    "3D Print Estimator", "3D Printing (1.75mm)", "Volumetric Cost", "Slopes & Gradients", "HVAC Cooling Capacity", 
     "Wire Gauge", "Leather Thickness", "Fabric Weight (Textiles)", "Textiles & Yarn", 
     "Print Production (Paper)", "Oil & Gas (Energy Equiv)",
     
     // HOBBIES, CRAFTS & SPECIALTIES
     "Beer & Malt Color", "Scale Modeling", "Scuba Diving", "Brewing & Winemaking", 
-    "Horology (Watches)", "Diamond Size (Round Brilliant)", "Optometry & Lenses", "IV Drip Rates (Nursing)","3D Print Estimator",
+    "Horology (Watches)", "Diamond Size (Round Brilliant)", "Optometry & Lenses", "IV Drip Rates (Nursing)",
     
     // BASIC PHYSICS & MECHANICS
     "Force", "Power", "Pressure", "Energy", "Torque", "Angles & Rotation", "Acceleration", "Density",
@@ -1018,7 +1018,7 @@ const ALL_TABS_ORDERED = [
     "Thermal Resistance (Absolute)",
     
     // ELECTRICITY & ELECTROMAGNETISM
-    "Voltage Drop","Capacitance", "Current", "Electric Charge", "Electric Conductance", "Electric Conductivity", 
+    "Voltage Drop", "Capacitance", "Current", "Electric Charge", "Electric Conductance", "Electric Conductivity", 
     "Electric Field Strength", "Electric Potential", "Electric Resistance", "Electric Resistivity", 
     "Electrostatic Capacitance", "Inductance", "Linear Charge Density", "Linear Current Density", 
     "Magnetic Field Strength", "Magnetic Flux", "Magnetic Flux Density", "Magnetomotive Force", 
@@ -3522,25 +3522,26 @@ const COLOR_UTILS = {
         "3D Print Estimator": {
             baseUnitName: "Machine",
             defaultVisible: [
-              "Machine Type", "Electric Rate", "Filament Type", "Spool Cost", "Spool Weight", 
-              "Grams Consumed", "Build Time", "Abrasive", "Power (Watts)", 
+              "Machine Type", "Electric Rate", "Filament Type", "Failure Margin (%)", "Spool Cost", "Spool Weight", 
+              "Print Weight (g)", "Build Time", "Abrasive", "Power (Watts)", 
               "Power Cost", "Material Cost", "Wear Cost", "Total Cost"
             ],
             defaultHeaders: [
-              "Machine Type", "Electric Rate", "Filament Type", "Spool Cost", "Spool Weight", 
-              "Grams Consumed", "Build Time", "Abrasive", "Power (Watts)", 
+              "Machine Type", "Electric Rate", "Filament Type", "Failure Margin (%)", "Spool Cost", "Spool Weight", 
+              "Print Weight (g)", "Build Time", "Abrasive", "Power (Watts)", 
               "Power Cost", "Material Cost", "Wear Cost", "Total Cost", "Last Updated"
             ],
             mobileVisible: [
-              "Machine Type", "Grams Consumed", "Build Time", "Total Cost"
+              "Machine Type", "Print Weight (g)", "Build Time", "Total Cost"
             ],
             mobileHeaders: {
                 "machine type": "Machine",
                 "electric rate": "$/kWh",
                 "filament type": "Mat",
+                "failure margin (%)": "Fail %",
                 "spool cost": "$/Spool",
                 "spool weight": "Spool(g)",
-                "grams consumed": "Grams",
+                "print weight (g)": "Weight(g)",
                 "build time": "Time",
                 "abrasive": "Abrasive",
                 "power (watts)": "Watts",
@@ -3553,9 +3554,10 @@ const COLOR_UTILS = {
                 "machine type": { type: "anchor" },
                 "electric rate": { type: "anchor" },
                 "filament type": { type: "anchor" },
+                "failure margin (%)": { type: "anchor" },
                 "spool cost": { type: "anchor" },
                 "spool weight": { type: "anchor" },
-                "grams consumed": { type: "anchor" },
+                "print weight (g)": { type: "anchor" },
                 "build time": { type: "anchor" },
                 "abrasive": { type: "anchor" },
                 "power (watts)": { type: "anchor" },
@@ -6886,6 +6888,8 @@ const QUICK_UNITS = {
             "awg": { tab: "Wire Gauge", col: "awg" }
         };
 let quickConvertActiveRow = -1; 
+let quickConvertTimer = null; 
+const DEBOUNCE_MS = 500; // DELAY TIMER!
 
 function setupQuickConvert() {
             const qc = document.getElementById('quick-convert');
@@ -6949,6 +6953,10 @@ function setupQuickConvert() {
                 }
             });
             qc.addEventListener('input', function(e) {
+                if (quickConvertTimer) clearTimeout(quickConvertTimer);
+
+                quickConvertTimer = setTimeout(() => {
+
                 let rawVal = e.target.value.trim();
                 
                 // 1. Sanitize: Remove degree symbols
@@ -6960,19 +6968,7 @@ function setupQuickConvert() {
                 if (val === "") {
                     statusEl.textContent = "";
                     quickConvertActiveRow = -1;
-                    
-                    // FIX: Check if we are currently sitting on a preview tab
-                    const activeTabConf = userTabConfig.find(t => t.name === currentTab);
-                    if (activeTabConf && !activeTabConf.visible) {
-                        // We are on a ghost tab! Kick the user back to their first visible tab
-                        const visibleTabs = userTabConfig.filter(t => t.visible);
-                        const fallbackTab = visibleTabs.length > 0 ? visibleTabs[0].name : userTabConfig[0].name;
-                        loadTab(fallbackTab);
-                    
-                        renderSidebar();
-                        return;
-                    }
-                    
+                    return;
                 }
 
                 // ==========================================
@@ -7133,7 +7129,7 @@ function setupQuickConvert() {
                     directTab = "Currency";
                     directCol = targetCurrency;
 
-                } else if (quoteMatch && quoteMatch[1].trim() !== "") {
+                } else if (quoteMatch) {
                     numStr = quoteMatch[1]; 
                     
                     // Route to the current tab if it's a text-based tab, otherwise default to Text Case
@@ -7391,6 +7387,7 @@ function setupQuickConvert() {
                         statusEl.style.color = "var(--danger)";
                     }
                 }
+                }, DEBOUNCE_MS);
             });
         }
         // ==========================================
@@ -7713,7 +7710,7 @@ function loadTab(tabName) {
                 "Wages": "25 $/hr",
 
                 // --- 3D PRINTING ---
-                "3D Print Estimator": "150 pla OR 5h 30m",
+                "3D Print Estimator": "Enter print weight and build time",
                 "3D Printing (1.75mm)": "12.5 m OR 500 pla",
 
                 // --- COMPUTING & DIGITAL ---
@@ -7823,7 +7820,7 @@ function loadTab(tabName) {
                 "Sound": "50 sones",
                 
                 // --- MISCELLANEOUS ---
-                "Culinary": "Select an ingredient",
+                
                 "Typography": "12 pt",
                 "Print Production (Paper)": "300 gsm",
                 "Horology (Watches)": "28800 vph",
@@ -8022,6 +8019,12 @@ function appendRowDom(activeCols, rowData, rowIndex) {
                     if (cName === "electric rate") cellValue = user3DSettings.electricRate;
                     else if (cName === "spool cost") cellValue = user3DSettings.spoolCost;
                     else if (cName === "spool weight") cellValue = user3DSettings.spoolWeight;
+                    else if (cName === "failure margin (%)") {
+                        const defFil = user3DSettings.defaultFilament || "PLA";
+                        if (defFil.includes("PETG")) cellValue = "10";
+                        else if (defFil.includes("ABS")) cellValue = "20";
+                        else cellValue = "5";
+                    }
                     
                     if (cellValue !== "") {
                         tabData[currentTab][rowIndex][origIndex] = cellValue;
@@ -10226,12 +10229,9 @@ const PRINT_COST_ENGINE = {
 function handle3DPrintInput(rowIdx, colIdx, val) {
     const headersLower = getBaseHeaders("3D Print Estimator").map(h => h.toLowerCase());
     
-
     const colName = headersLower[colIdx];
     tabData["3D Print Estimator"][rowIdx][colIdx] = val;
     
-
-
     // 3. Extract all current row variables
     const row = tabData["3D Print Estimator"][rowIdx];
     const getVal = (name) => row[headersLower.indexOf(name)];
@@ -10242,22 +10242,48 @@ function handle3DPrintInput(rowIdx, colIdx, val) {
     const filamentType = getVal("filament type");
     const isAbrasive = getVal("abrasive") === "Yes";
     
+    // --- NEW: Auto-fill Failure Margin when Filament Type changes ---
+    let failureMarginStr = getVal("failure margin (%)");
+    if (colName === "filament type" || failureMarginStr === "") {
+        let defaultMargin = "5"; // PLA / TPU
+        if (filamentType.includes("PETG")) defaultMargin = "10";
+        else if (filamentType.includes("ABS")) defaultMargin = "20";
+        
+        failureMarginStr = defaultMargin;
+        const marginIdx = headersLower.indexOf("failure margin (%)");
+        if (marginIdx > -1) {
+            tabData["3D Print Estimator"][rowIdx][marginIdx] = defaultMargin;
+            updateCellDom(rowIdx, marginIdx, defaultMargin);
+        }
+    }
+    
     const electricRate = getNum("electric rate");
     const spoolCost = getNum("spool cost");
     const spoolWeight = getNum("spool weight");
-    const grams = getNum("grams consumed");
+    const grams = getNum("print weight (g)");
     const timeMinutes = parsePrintTime(getVal("build time"));
+    const failureMargin = parseNumber(failureMarginStr) || 0; // Grab the numeric percentage
 
     // 4. Run the Engine
     if (grams > 0 && timeMinutes > 0) {
         const watts = PRINT_COST_ENGINE.calcPowerWatts(machineObj, filamentType);
-        const pwrCost = PRINT_COST_ENGINE.calcPowerCost(watts, timeMinutes, electricRate);
-        const matCost = PRINT_COST_ENGINE.calcMaterialCost(grams, spoolCost, spoolWeight);
-        const wearCost = PRINT_COST_ENGINE.calcWearCost(machineObj, timeMinutes, grams, isAbrasive, user3DSettings.abrasiveSurchargeKg);
+        
+        // Calculate Base Costs
+        let pwrCost = PRINT_COST_ENGINE.calcPowerCost(watts, timeMinutes, electricRate);
+        let matCost = PRINT_COST_ENGINE.calcMaterialCost(grams, spoolCost, spoolWeight);
+        let wearCost = PRINT_COST_ENGINE.calcWearCost(machineObj, timeMinutes, grams, isAbrasive, user3DSettings.abrasiveSurchargeKg);
+        
+        // --- NEW: Apply the Failure Multiplier (e.g., 10% failure = 1.1x cost) ---
+        const multiplier = 1 + (failureMargin / 100);
+        pwrCost *= multiplier;
+        matCost *= multiplier;
+        wearCost *= multiplier;
+        
         const total = pwrCost + matCost + wearCost;
 
         const writeCol = (name, num, isDollar) => {
             const idx = headersLower.indexOf(name);
+            if (idx === -1) return; // Failsafe
             const displayStr = isDollar ? `$${num.toFixed(2)}` : num.toString();
             tabData["3D Print Estimator"][rowIdx][idx] = displayStr;
             updateCellDom(rowIdx, idx, displayStr);
@@ -10272,8 +10298,10 @@ function handle3DPrintInput(rowIdx, colIdx, val) {
         // Clear outputs if critical inputs are missing
         ["power (watts)", "power cost", "material cost", "wear cost", "total cost"].forEach(name => {
             const idx = headersLower.indexOf(name);
-            tabData["3D Print Estimator"][rowIdx][idx] = "";
-            updateCellDom(rowIdx, idx, "");
+            if (idx > -1) {
+                tabData["3D Print Estimator"][rowIdx][idx] = "";
+                updateCellDom(rowIdx, idx, "");
+            }
         });
     }
 }
