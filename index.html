@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>omegaConverter</title>
@@ -542,7 +543,7 @@
                                         <code>warp 1</code> or <code>mach 872504.24</code> (Speed)<br>
                                         <code>9 3/4 pounds</code> or <code>9 lbs 12 oz</code> (Weight)<br>
                                         <code>9.81 m/s2</code> or <code>1 grav</code> (Acceleration)<br>
-                                        <code>1A4 hex</code> or <code>CDXX roman</code> (Numbers)<br>
+                                        <code>2A hex</code> or <code>XLII roman</code> (Numbers)<br>
                                         <code>1.21 gw</code> (Power)<br>
                                         <code>14 AWG</code> (Wire Gauge)<br>
                                         <code>72 f</code> (Temperature)<br>
@@ -571,6 +572,7 @@
                 </div>
             </div>
             <div class="header-actions" style="flex-shrink: 0;">
+                <button class="btn-icon" onclick="exportTabToCSV()" title="Export to CSV">📥</button>
                 <button class="btn-icon" onclick="openColSettings()" title="Configure Columns">⚙️</button>
                 <button class="btn-clear-page" onclick="clearCurrentPage()">🗑 Clear Tab Data</button>
             </div>
@@ -3522,49 +3524,70 @@ const COLOR_UTILS = {
         "3D Print Estimator": {
             baseUnitName: "Machine",
             defaultVisible: [
-              "Machine Type", "Electric Rate", "Filament Type", "Failure Margin (%)", "Spool Cost", "Spool Weight", 
-              "Print Weight (g)", "Build Time", "Abrasive", "Power (Watts)", 
-              "Power Cost", "Material Cost", "Wear Cost", "Total Cost"
+              "Quantity","Source File",  "Job Name", "Machine Type", "Filament Type", "Print Weight (g)", "Build Time", 
+              "Design (Hours)", "Design Rate ($/hr)", "Design Apply Tax", 
+              "Labor (Hours)", "Job Labor Rate ($/hr)", "Labor Apply Tax", 
+              "Job Packaging ($)", "Packaging Apply Tax", "Margin (%)", "Tax (%)", 
+              "Failure Margin (%)", "Spool Cost", "Spool Weight", "Electric Rate", "Power (Watts)", 
+              "Power Cost", "Material Cost", "Wear Cost", "Design Cost", "Labor Cost", "Packaging Cost", 
+              "Landed Cost", "Unit Cost", "Unit Price", "Profit Amount ($)", "Selling Price", "Tax Amount ($)", "Total Price"
             ],
             defaultHeaders: [
-              "Machine Type", "Electric Rate", "Filament Type", "Failure Margin (%)", "Spool Cost", "Spool Weight", 
-              "Print Weight (g)", "Build Time", "Abrasive", "Power (Watts)", 
-              "Power Cost", "Material Cost", "Wear Cost", "Total Cost", "Last Updated"
+              "Quantity","Source File",  "Job Name", "Machine Type", "Filament Type", "Print Weight (g)", "Build Time", 
+              "Design (Hours)", "Design Rate ($/hr)", "Design Apply Tax", 
+              "Labor (Hours)", "Job Labor Rate ($/hr)", "Labor Apply Tax", 
+              "Job Packaging ($)", "Packaging Apply Tax", "Margin (%)", "Tax (%)", 
+              "Failure Margin (%)", "Spool Cost", "Spool Weight", "Electric Rate", "Power (Watts)", 
+              "Power Cost", "Material Cost", "Wear Cost", "Design Cost", "Labor Cost", "Packaging Cost", 
+              "Landed Cost", "Unit Cost", "Unit Price", "Profit Amount ($)", "Selling Price", "Tax Amount ($)", "Total Price",
+              "Parsed Time", "Parsed Weight", "Last Updated" 
             ],
             mobileVisible: [
-              "Machine Type", "Print Weight (g)", "Build Time", "Total Cost"
+              "Quantity","Source File",  "Job Name", "Machine Type", "Print Weight (g)", "Build Time", "Unit Price", "Total Price"
             ],
             mobileHeaders: {
+                "quantity": "Qty",
+                "source file": "File",
+                
+                "job name": "Job",
                 "machine type": "Machine",
-                "electric rate": "$/kWh",
-                "filament type": "Mat",
-                "failure margin (%)": "Fail %",
-                "spool cost": "$/Spool",
-                "spool weight": "Spool(g)",
-                "print weight (g)": "Weight(g)",
+                "print weight (g)": "Wt(g)",
                 "build time": "Time",
-                "abrasive": "Abrasive",
-                "power (watts)": "Watts",
+                "design (hours)": "Des(h)",
+                "design rate ($/hr)": "Des Rate",
+                "design apply tax": "Apply Tax",
+                "labor (hours)": "Lbr(h)",
+                "job labor rate ($/hr)": "Lbr Rate",
+                "labor apply tax": "Apply Tax",
+                "job packaging ($)": "Pkg $",
+                "packaging apply tax": "Apply Tax",
                 "power cost": "Pwr $",
                 "material cost": "Mat $",
                 "wear cost": "Wear $",
-                "total cost": "Total $"
+                "design cost": "Des Cost",
+                "labor cost": "Lbr Cost",
+                "packaging cost": "Pkg Cost",
+                "landed cost": "Landed $",
+                "unit cost": "Unit Cost",
+                "unit price": "Unit Price",
+                "profit amount ($)": "Profit",
+                "selling price": "Price",
+                "tax amount ($)": "Tax $",
+                "total price": "Total"
             },
             units: {
-                "machine type": { type: "anchor" },
-                "electric rate": { type: "anchor" },
-                "filament type": { type: "anchor" },
-                "failure margin (%)": { type: "anchor" },
-                "spool cost": { type: "anchor" },
-                "spool weight": { type: "anchor" },
-                "print weight (g)": { type: "anchor" },
-                "build time": { type: "anchor" },
-                "abrasive": { type: "anchor" },
-                "power (watts)": { type: "anchor" },
-                "power cost": { type: "anchor" },
-                "material cost": { type: "anchor" },
-                "wear cost": { type: "anchor" },
-                "total cost": { type: "anchor" }
+                "source file": { type: "anchor" }, "quantity": { type: "anchor" }, "job name": { type: "anchor" }, "machine type": { type: "anchor" }, 
+                "filament type": { type: "anchor" }, "print weight (g)": { type: "anchor" }, "build time": { type: "anchor" }, 
+                "design (hours)": { type: "anchor" }, "design rate ($/hr)": { type: "anchor" }, "design apply tax": { type: "anchor" },
+                "labor (hours)": { type: "anchor" }, "job labor rate ($/hr)": { type: "anchor" }, "labor apply tax": { type: "anchor" }, 
+                "job packaging ($)": { type: "anchor" }, "packaging apply tax": { type: "anchor" }, "margin (%)": { type: "anchor" }, 
+                "tax (%)": { type: "anchor" }, "failure margin (%)": { type: "anchor" }, "spool cost": { type: "anchor" }, 
+                "spool weight": { type: "anchor" }, "power (watts)": { type: "anchor" }, "electric rate": { type: "anchor" }, 
+                "power cost": { type: "anchor" }, "material cost": { type: "anchor" }, "wear cost": { type: "anchor" }, 
+                "design cost": { type: "anchor" }, "labor cost": { type: "anchor" }, "packaging cost": { type: "anchor" }, "landed cost": { type: "anchor" }, 
+                "unit cost": { type: "anchor" }, "unit price": { type: "anchor" }, "profit amount ($)": { type: "anchor" }, 
+                "selling price": { type: "anchor" }, "tax amount ($)": { type: "anchor" }, "total price": { type: "anchor" }, 
+                "parsed time": { type: "anchor" }, "parsed weight": { type: "anchor" }
             }
         },
 
@@ -6889,7 +6912,7 @@ const QUICK_UNITS = {
         };
 let quickConvertActiveRow = -1; 
 let quickConvertTimer = null; 
-const DEBOUNCE_MS = 500; // DELAY TIMER!
+const DEBOUNCE_MS = 400; // DELAY TIMER!
 
 function setupQuickConvert() {
             const qc = document.getElementById('quick-convert');
@@ -7394,6 +7417,8 @@ function setupQuickConvert() {
         // 2. STATE & INITIALIZATION
         // ==========================================
         let currentTab = null;
+        let lastDeletedRow = null;
+        let undoToastTimeout = null;
         let tabData = {}; 
         let userTabConfig = []; 
         let userColConfig = {}; 
@@ -7406,25 +7431,33 @@ function setupQuickConvert() {
         let user3DSettings = {};
 
         const DEFAULT_3D_MACHINES = [
-            { id: "m_mini", name: "Mini / Small (A1 Mini, Prusa Mini)", baseWatts: 60, highWatts: 60, wearPerHour: 0.10 },
-            { id: "m_std", name: "Standard (Ender 3, MK4, A1)", baseWatts: 90, highWatts: 170, wearPerHour: 0.10 },
-            { id: "m_corexy", name: "Enclosed CoreXY (P1S, X1C, K1)", baseWatts: 110, highWatts: 190, wearPerHour: 0.20 },
-            { id: "m_large", name: "Large Format (300mm+)", baseWatts: 150, highWatts: 300, wearPerHour: 0.25 }
+            { id: "m_mini", name: "Mini / Small", baseWatts: 60, highWatts: 60, cost: 300, upfront: 50, maint: 50, life: 3, uptime: 70 },
+            { id: "m_std", name: "Standard (Bedslinger)", baseWatts: 90, highWatts: 170, cost: 800, upfront: 100, maint: 100, life: 3, uptime: 70 },
+            { id: "m_corexy", name: "Enclosed CoreXY", baseWatts: 110, highWatts: 190, cost: 1500, upfront: 200, maint: 150, life: 4, uptime: 85 },
+            { id: "m_large", name: "Large Format", baseWatts: 150, highWatts: 300, cost: 3000, upfront: 300, maint: 300, life: 5, uptime: 80 }
         ];
 
         const DEFAULT_3D_SETTINGS = {
             electricRate: 0.16,
             spoolCost: 20.00,
             spoolWeight: 1000,
-            abrasiveSurchargeKg: 5.00,
+            designRate: 60.00,    
+            laborRate: 25.00,       
+            defaultPackagingCost: 10.00, 
+            bufferFactor: 30,       
+            defaultMargin: 40,      
+            defaultTax: 0,          
             defaultMachineId: "m_corexy",
             defaultFilament: "PLA / TPU (Low Temp)"
         };
-        const P3D_FILAMENT_TYPES = [
+
+        const DEFAULT_3D_FILAMENTS = [
             'PLA / TPU (Low Temp)', 
             'PETG / PVB (Mid Temp)', 
             'ABS / ASA / Nylon (High Temp)'
         ];
+        
+        let user3DFilaments = [];
 
 
 
@@ -7470,6 +7503,8 @@ function setupQuickConvert() {
 
             const saved3DSettings = localStorage.getItem('converter3DSettings');
             user3DSettings = saved3DSettings ? JSON.parse(saved3DSettings) : JSON.parse(JSON.stringify(DEFAULT_3D_SETTINGS));
+            const saved3DFilaments = localStorage.getItem('converter3DFilaments');
+            user3DFilaments = saved3DFilaments ? JSON.parse(saved3DFilaments) : [...DEFAULT_3D_FILAMENTS];
         }
 
         function saveStorage() {
@@ -7481,6 +7516,7 @@ function setupQuickConvert() {
             localStorage.setItem('useShortHeaders', useShortHeaders);
             localStorage.setItem('converter3DMachines', JSON.stringify(user3DMachines));
             localStorage.setItem('converter3DSettings', JSON.stringify(user3DSettings));
+            localStorage.setItem('converter3DFilaments', JSON.stringify(user3DFilaments));
         }
 
         function toggleShortHeaders(state) {
@@ -7542,6 +7578,29 @@ function setupQuickConvert() {
                         };
                     });
                 } else {
+                    // Self-heal: inject new columns into existing saved configurations
+                    const configDef = (typeof TAB_CONFIG !== 'undefined' && TAB_CONFIG[tab]) ? TAB_CONFIG[tab] : null;
+                    if (configDef) {
+                        const baseHeaders = getBaseHeaders(tab);
+                        baseHeaders.forEach((h, i) => {
+                            if (!userColConfig[tab].find(c => c.name === h)) {
+                                userColConfig[tab].push({
+                                    name: h,
+                                    displayName: h,
+                                    visible: configDef.defaultVisible ? configDef.defaultVisible.includes(h) : true,
+                                    originalIndex: i,
+                                    isFraction: h.toLowerCase().includes("fraction")
+                                });
+                            }
+                        });
+                        // Re-sync index orders just in case
+                        userColConfig[tab].forEach(c => {
+                            const correctIdx = baseHeaders.indexOf(c.name);
+                            if (correctIdx > -1) c.originalIndex = correctIdx;
+                        });
+                        userColConfig[tab].sort((a, b) => a.originalIndex - b.originalIndex);
+                    }
+
                     userColConfig[tab].forEach(c => { 
                         if (!c.displayName) c.displayName = c.name; 
                         if (c.isFraction === undefined) c.isFraction = c.name.toLowerCase().includes("fraction");
@@ -7619,6 +7678,7 @@ if (window.location.search.includes('reset=1')) {
             // Fallback to memory
             tabToLoad = userTabConfig.find(t => t.name === lastTab && t.visible) ? lastTab : defaultTab;
         }
+        setupGridDelegation()
 
         loadTab(tabToLoad);
         setupQuickConvert();
@@ -7717,7 +7777,7 @@ function loadTab(tabName) {
                 "Digital Storage": "5 gb",
                 "Data Transfer": "50 mbps",
                 "Networking": "buymeacoffee.com/omegaconverter OR 172.67.75.15",
-                "Numbers": "1A4 hex",
+                "Numbers": "2A hex or XLII roman",
                 "Text Case": '"hello world"',
                 "Data Encoding": '"hello world"',
                 "Cryptographic Hashes": '"hello world"',
@@ -7980,410 +8040,447 @@ function loadTab(tabName) {
         }
         
 function appendRowDom(activeCols, rowData, rowIndex) {
-            const tbody = document.getElementById('grid-body');
-            const tr = document.createElement('tr');
-            tr.setAttribute('data-row', rowIndex);
+    const tbody = document.getElementById('grid-body');
+    const tr = document.createElement('tr');
+    tr.setAttribute('data-row', rowIndex);
 
-            const isCulinaryTab = currentTab === "baking (weight/vol)" || (typeof CULINARY_CONFIG !== 'undefined' && TAB_CONFIG[currentTab] === CULINARY_CONFIG);
-            const isTimeZoneTab = currentTab === "Time Zone";
-            let config = TAB_CONFIG[currentTab];
-            if (currentTab === "Time Zone" && typeof TIMEZONE_CONFIG !== 'undefined') config = TIMEZONE_CONFIG;
-            if (currentTab === "Wages" && typeof WAGES_CONFIG !== 'undefined') config = WAGES_CONFIG;
-            
-            const checkAutoAddRow = () => {
-                if (rowIndex === tabData[currentTab].length - 1) {
-                    const baseLen = getBaseHeaders(currentTab).length;
-                    const newRow = new Array(baseLen).fill("");
-                    tabData[currentTab].push(newRow);
-                    appendRowDom(activeCols, newRow, rowIndex + 1);
-                }
-            };
-            
-            activeCols.forEach((colDef) => {
-                const origIndex = colDef.originalIndex;
-                const td = document.createElement('td');
-                td.setAttribute('data-row', rowIndex);
-                td.setAttribute('data-col', origIndex);
+    const isCulinaryTab = currentTab === "baking (weight/vol)" || (typeof CULINARY_CONFIG !== 'undefined' && TAB_CONFIG[currentTab] === CULINARY_CONFIG);
+    const isTimeZoneTab = currentTab === "Time Zone";
+    let config = TAB_CONFIG[currentTab];
+    if (currentTab === "Time Zone" && typeof TIMEZONE_CONFIG !== 'undefined') config = TIMEZONE_CONFIG;
+    if (currentTab === "Wages" && typeof WAGES_CONFIG !== 'undefined') config = WAGES_CONFIG;
+    
+    activeCols.forEach((colDef) => {
+        const origIndex = colDef.originalIndex;
+        const td = document.createElement('td');
+        td.setAttribute('data-row', rowIndex);
+        td.setAttribute('data-col', origIndex);
 
-                if (colDef.minWidth) {
-                    td.style.width = `${colDef.minWidth}px`;
-                    td.style.minWidth = `${colDef.minWidth}px`;
-                    td.style.maxWidth = `${colDef.minWidth}px`;
-                }
-
-                let cellValue = rowData[origIndex] !== undefined ? rowData[origIndex] : "";
-                const isIngredientCol = config && config.isDensityTab && (origIndex === 0 || resolveUnitKey(config, colDef.name) === "ingredient");
-                
-                if (currentTab === "3D Print Estimator" && cellValue === "") {
-                    const cName = colDef.name.toLowerCase();
-                    if (cName === "electric rate") cellValue = user3DSettings.electricRate;
-                    else if (cName === "spool cost") cellValue = user3DSettings.spoolCost;
-                    else if (cName === "spool weight") cellValue = user3DSettings.spoolWeight;
-                    else if (cName === "failure margin (%)") {
-                        const defFil = user3DSettings.defaultFilament || "PLA";
-                        if (defFil.includes("PETG")) cellValue = "10";
-                        else if (defFil.includes("ABS")) cellValue = "20";
-                        else cellValue = "5";
-                    }
-                    
-                    if (cellValue !== "") {
-                        tabData[currentTab][rowIndex][origIndex] = cellValue;
-                    }
-                }
-
-                if (isIngredientCol) {
-                    const select = document.createElement('select');
-                    select.style.width = '100%';
-                    select.style.fontSize = 'var(--grid-font-size)';
-                    
-                    const defaultOpt = document.createElement('option');
-                    defaultOpt.value = '';
-                    defaultOpt.textContent = `-- Select ${colDef.displayName || colDef.name} --`;
-                    select.appendChild(defaultOpt);
-
-                    if (config && config.ingredients) {
-                        const sortedIngredients = Object.keys(config.ingredients).sort((a, b) => 
-                            a.localeCompare(b, undefined, { sensitivity: 'base' })
-                        );
-
-                        sortedIngredients.forEach(ingName => {
-                            const opt = document.createElement('option');
-                            opt.value = ingName;
-                            opt.textContent = ingName;
-                            if (ingName.toLowerCase() === String(cellValue).toLowerCase()) {
-                                opt.selected = true;
-                            }
-                            select.appendChild(opt);
-                        });
-                    }
-
-                    select.onchange = (e) => handleDensityInput(rowIndex, origIndex, e.target.value, config);
-                    select.onfocus = checkAutoAddRow;
-                    td.appendChild(select);
-
-                    } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "machine type") {
-                    const select = document.createElement('select');
-                    select.style.width = '100%';
-                    select.style.fontSize = 'var(--grid-font-size)';
-                    user3DMachines.forEach(m => {
-                        const opt = document.createElement('option');
-                        opt.value = m.id; opt.textContent = m.name;
-                        select.appendChild(opt);
-                    });
-                    // Auto-fill default on new rows
-                    if (cellValue === "") {
-                        select.value = user3DSettings.defaultMachineId;
-                        tabData[currentTab][rowIndex][origIndex] = select.value;
-                    } else {
-                        select.value = cellValue;
-                    }
-                    select.onchange = (e) => handle3DPrintInput(rowIndex, origIndex, e.target.value);
-                    select.onfocus = checkAutoAddRow;
-                    td.appendChild(select);
-                    
-                } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "filament type") {
-                    const select = document.createElement('select');
-                    select.style.width = '100%';
-                    select.style.fontSize = 'var(--grid-font-size)';
-                    
-                    P3D_FILAMENT_TYPES.forEach(f => {
-                        const opt = document.createElement('option');
-                        opt.value = f; opt.textContent = f;
-                        select.appendChild(opt);
-                    });
-
-                    // Auto-fill default on new rows
-                    if (cellValue === "") {
-                        select.value = user3DSettings.defaultFilament || P3D_FILAMENT_TYPES[0];
-                        tabData[currentTab][rowIndex][origIndex] = select.value;
-                    } else { 
-                        select.value = cellValue; 
-                    }
-                    
-                    select.onchange = (e) => {
-                        handle3DPrintInput(rowIndex, origIndex, e.target.value);
-                        saveStorage();
-                    };
-                    select.onfocus = checkAutoAddRow;
-                    td.appendChild(select);
-
-                } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "abrasive") {
-                    const cb = document.createElement('input');
-                    cb.type = 'checkbox';
-                    cb.style.width = '20px'; cb.style.height = '20px'; cb.style.margin = '0 auto'; cb.style.display = 'block';
-                    cb.checked = cellValue === "Yes";
-                    cb.onchange = (e) => handle3DPrintInput(rowIndex, origIndex, e.target.checked ? "Yes" : "No");
-                    cb.onfocus = checkAutoAddRow;
-                    td.appendChild(cb);
-
-                } else if (isTimeZoneTab && origIndex === 0) {
-                    const dateInput = document.createElement('input');
-                    dateInput.type = 'date';
-                    dateInput.value = cellValue;
-                    dateInput.style.width = '100%';
-                    dateInput.style.fontSize = 'var(--grid-font-size)';
-                    
-                    dateInput.onchange = (e) => {
-                        if (typeof handleTimeZoneInput === 'function') {
-                            handleTimeZoneInput(rowIndex, origIndex, e.target.value,config);
-                        }
-                    };
-                    dateInput.onfocus = checkAutoAddRow;
-                    td.appendChild(dateInput);
-
-                } else {
-                    const isSwatch = currentTab === "Colors" && colDef.name.toLowerCase() === "swatch";
-                    const isOrientation = currentTab === "Aspect Ratios & Resolutions" && colDef.name.toLowerCase() === "orientation";
-                    
-                    const isMaterial = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "material (cu/al)";
-                    const isVDropResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "voltage drop (v)";
-                    const isPctResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "% drop";
-                    const isDimNote = currentTab === "Volumetric Cost" && colDef.name.toLowerCase() === "dimensions";
-                    const isPartNote = currentTab === "Volumetric Cost" && (colDef.name.toLowerCase() === "part a" || colDef.name.toLowerCase() === "part b");
-                    const is3DCalc = currentTab === "3D Print Estimator" && ["power (watts)", "power cost", "material cost", "wear cost", "total cost"].includes(colDef.name.toLowerCase());
-
-                    
-                    let input;
-                    if (isOrientation) {
-                        input = document.createElement('select');
-                        ['', 'Landscape', 'Portrait', 'Square'].forEach(optStr => {
-                            let opt = document.createElement('option');
-                            opt.value = optStr; 
-                            opt.innerText = optStr;
-                            input.appendChild(opt);
-                        });
-                        input.value = cellValue;
-                    } else if (isMaterial) {
-                        input = document.createElement('select');
-                        ['Cu', 'Al', 'CCA', 'Ag', 'Au'].forEach(optStr => {
-                            let opt = document.createElement('option');
-                            opt.value = optStr; 
-                            opt.innerText = optStr;
-                            input.appendChild(opt);
-                        });
-                        input.value = cellValue || "Cu";
-                        if (cellValue === "") tabData[currentTab][rowIndex][origIndex] = "Cu";
-                    } else {
-                        input = document.createElement('input');
-                        input.type = isSwatch ? 'color' : 'text';
-                        
-                        if (isVDropResult || isPctResult || isDimNote || isPartNote || is3DCalc) {
-                            input.readOnly = true;
-                            if (!isDimNote && !isPartNote) input.tabIndex = -1;
-                        }
-                        
-                        if (isSwatch) {
-                            input.value = (cellValue === "" || !cellValue.startsWith('#')) ? "#ffffff" : cellValue;
-                            input.style.height = '40px';
-                            input.style.padding = '0';
-                            input.style.cursor = 'pointer';
-                            input.style.border = '1px solid var(--border)';
-                        } else {
-                            input.value = cellValue;
-                        }
-                    }
-                    
-                    input.style.width = '100%';
-                    input.style.fontSize = 'var(--grid-font-size)';
-                    
-                    input.addEventListener('dblclick', function(e) {
-                        if (e.target.value.trim() !== "") {
-                            navigator.clipboard.writeText(e.target.value).then(() => {
-                                if(typeof showCopiedPopup === 'function') showCopiedPopup(e);
-                                e.target.select(); 
-                            }).catch(err => console.error("Copy failed", err));
-                        }
-                    });
-                    
-                    if (currentTab === "Time Zone" && colDef.name.toLowerCase() !== "date" && colDef.name.toLowerCase() !== "last updated") {
-                        input.addEventListener('click', function(e) {
-                            if (e.target.value.trim() === "") {
-                                const sourceKey = String(colDef.name).trim().toLowerCase();
-                                const key = (TIMEZONE_CONFIG.aliases && TIMEZONE_CONFIG.aliases[sourceKey]) ? TIMEZONE_CONFIG.aliases[sourceKey] : sourceKey;
-                                const iana = TIMEZONE_CONFIG.zones[key];
-                                
-                                if (iana) {
-                                    pendingTimeTarget = e.target;
-                                    pendingTimeIana = iana;
-                                    
-                                    const modal = document.getElementById('time-prompt-modal');
-                                    if(modal) {
-                                        modal.style.display = 'flex';
-                                        const buttons = modal.querySelectorAll('button');
-                                        buttons.forEach(btn => {
-                                            if (btn.textContent.trim().toLowerCase() === 'yes') {
-                                                btn.focus();
-                                            }
-                                        });
-                                    }
-                                }
-                            }
-                        });
-                    }
-                    
-                    input.oninput = (e) => {
-                        const tabClean = currentTab.toLowerCase().replace(/[\s\/\\]+/g, "");
-                        
-                        if (currentTab === "3D Print Estimator") {
-                            handle3DPrintInput(rowIndex, origIndex, e.target.value);
-                        } else if (config && config.isDensityTab) {
-                            handleDensityInput(rowIndex, origIndex, e.target.value, config);
-                        } else if (currentTab === "Time Zone" && typeof handleTimeZoneInput === 'function') {
-                            handleTimeZoneInput(rowIndex, origIndex, e.target.value, config);
-                        } else if (currentTab === "Wages" && typeof handleWagesInput === 'function') {
-                            handleWagesInput(rowIndex, origIndex, e.target.value, config);
-                        } else if (tabClean === "numbers") {
-                            handleNumbersInput(rowIndex, origIndex, e.target.value, config);
-                        } else if (config && config.isResolutionTab) {
-                            handleResolutionInput(rowIndex, origIndex, e.target.value);
-                        } else if (config && config.isCryptoTab) {
-                            handleCryptoInput(rowIndex, origIndex, e.target.value, config);
-                        } else if (config && config.isTextTab) { 
-                            handleCaseInput(rowIndex, origIndex, e.target.value, config);
-                        } else if (config && config.isNetworkingTab) {
-                            handleNetworkingInput(rowIndex, origIndex, e.target.value, config, false);
-                        } else if (config && config.isVoltageDropTab) {
-                            handleVoltageDropInput(rowIndex, origIndex, e.target.value, config);
-                        } else {
-                            handleStandardInput(rowIndex, origIndex, e.target.value, config);
-                        }
-                        if(typeof saveStorage === 'function') saveStorage();
-                    };
-                    input.onfocus = checkAutoAddRow;
-                    
-                    // --- UI INJECTIONS (Badges & Fraction Pad) ---
-                    if (colDef.name.toLowerCase() === "part a") {
-                        const wrapper = document.createElement('div');
-                        wrapper.style.position = 'relative';
-                        wrapper.style.display = 'flex';
-                        wrapper.style.alignItems = 'center';
-                        
-                        input.style.paddingRight = '24px'; 
-                        wrapper.appendChild(input);
-
-                        const badge = document.createElement('span');
-                        badge.id = `ratio-badge-${rowIndex}`;
-                        badge.style.position = 'absolute';
-                        badge.style.right = '-12px';
-                        badge.style.top = '50%';
-                        badge.style.transform = 'translateY(-50%)';
-                        badge.style.background = '#e2e8f0';
-                        badge.style.color = '#475569';
-                        badge.style.fontSize = '0.65rem';
-                        badge.style.fontWeight = 'bold';
-                        badge.style.padding = '2px 4px';
-                        badge.style.borderRadius = '4px';
-                        badge.style.boxShadow = '0 0 0 2px #fff';
-                        badge.style.pointerEvents = 'none';
-                        badge.style.zIndex = '10';
-                        badge.style.display = 'none';
-
-                        wrapper.appendChild(badge);
-                        td.appendChild(wrapper);
-                        
-                        if(typeof refreshRatioBadge === 'function') {
-                            setTimeout(() => refreshRatioBadge(rowIndex), 0);
-                        }
-                    } else if (colDef.name.toLowerCase().includes("fraction") && !input.readOnly) {
-                        const wrapper = document.createElement('div');
-                        wrapper.style.position = 'relative';
-                        wrapper.style.display = 'flex';
-                        wrapper.style.alignItems = 'center';
-                        
-                        input.style.paddingRight = '30px';
-                        wrapper.appendChild(input);
-                        
-                        const fracBtn = document.createElement('button');
-                        fracBtn.innerHTML = '½';
-                        fracBtn.className = 'btn-icon';
-                        fracBtn.style.position = 'absolute';
-                        fracBtn.style.right = '2px';
-                        fracBtn.style.fontSize = '1.1rem';
-                        fracBtn.style.color = '#0284c7';
-                        fracBtn.style.background = 'transparent';
-                        fracBtn.style.border = 'none';
-                        fracBtn.style.cursor = 'pointer';
-                        fracBtn.title = "Open Fraction Pad";
-                        
-                        fracBtn.onclick = (e) => {
-                            e.preventDefault();
-                            if(typeof openFractionModal === 'function') openFractionModal(input);
-                        };
-                        
-                        wrapper.appendChild(fracBtn);
-                        td.appendChild(wrapper);
-                    } else {
-                        if (colDef.name.toLowerCase() === "part b") {
-                            input.style.paddingLeft = '18px';
-                        }
-                        td.appendChild(input);
-                    }
-                }
-
-                tr.appendChild(td);
-            });
-
-            const actionTd = document.createElement('td');
-            actionTd.style.textAlign = 'center';
-            actionTd.style.verticalAlign = 'middle';
-            actionTd.style.width = '70px';
-            actionTd.style.minWidth = '70px'; 
-            actionTd.style.whiteSpace = 'nowrap';
-            
-            const dupBtn = document.createElement('button');
-            dupBtn.innerHTML = '⧉';
-            dupBtn.className = 'btn-icon';
-            dupBtn.style.color = '#7f8c8d';
-            dupBtn.style.border = 'none';
-            dupBtn.style.background = 'transparent';
-            dupBtn.style.fontSize = '1.2rem';
-            dupBtn.style.padding = '0 6px';
-            dupBtn.style.lineHeight = '1';
-            dupBtn.style.cursor = 'pointer';
-            dupBtn.title = "Duplicate Row";
-            
-            dupBtn.onclick = () => {
-                const clonedRow = [...tabData[currentTab][rowIndex]];
-                tabData[currentTab].splice(rowIndex + 1, 0, clonedRow);
-                if(typeof saveStorage === 'function') saveStorage();
-                if(typeof renderGrid === 'function') renderGrid(); 
-            };
-
-            const delBtn = document.createElement('button');
-            delBtn.innerHTML = '×';
-            delBtn.className = 'btn-icon';
-            delBtn.style.color = 'var(--danger)';
-            delBtn.style.border = 'none';
-            delBtn.style.background = 'transparent';
-            delBtn.style.fontSize = '1.5rem';
-            delBtn.style.padding = '0 6px';
-            delBtn.style.lineHeight = '1';
-            delBtn.style.cursor = 'pointer';
-            delBtn.title = "Delete Row";
-            
-            delBtn.onclick = () => {
-                tabData[currentTab].splice(rowIndex, 1);
-                quickConvertActiveRow = -1;
-                if(typeof saveStorage === 'function') saveStorage();
-                
-                const isGridEmpty = tabData[currentTab].length === 0 || tabData[currentTab].every(row => row.every(cell => cell === ""));
-                const activeTabConf = userTabConfig.find(t => t.name === currentTab);
-                
-                if (isGridEmpty && activeTabConf && !activeTabConf.visible) {
-                    const visibleTabs = userTabConfig.filter(t => t.visible);
-                    const fallbackTab = visibleTabs.length > 0 ? visibleTabs[0].name : userTabConfig[0].name;
-                    if(typeof loadTab === 'function') loadTab(fallbackTab);
-                } else {
-                    if(typeof renderGrid === 'function') renderGrid();
-                }
-            };
-
-            actionTd.appendChild(dupBtn);
-            actionTd.appendChild(delBtn);
-            tr.appendChild(actionTd);
-
-            tbody.appendChild(tr);
+        if (colDef.minWidth) {
+            td.style.width = `${colDef.minWidth}px`;
+            td.style.minWidth = `${colDef.minWidth}px`;
+            td.style.maxWidth = `${colDef.minWidth}px`;
         }
+
+        let cellValue = rowData[origIndex] !== undefined ? rowData[origIndex] : "";
+        const isIngredientCol = config && config.isDensityTab && (origIndex === 0 || resolveUnitKey(config, colDef.name) === "ingredient");
+        
+        if (currentTab === "3D Print Estimator" && cellValue === "") {
+            const cName = colDef.name.toLowerCase();
+            if (cName === "quantity") cellValue = "1";
+            else if (cName === "electric rate") cellValue = user3DSettings.electricRate;
+            else if (cName === "design rate ($/hr)") cellValue = user3DSettings.designRate !== undefined ? user3DSettings.designRate : 60;
+            else if (cName === "spool cost") cellValue = user3DSettings.spoolCost;
+            else if (cName === "spool weight") cellValue = user3DSettings.spoolWeight;
+            else if (cName === "job labor rate ($/hr)") cellValue = user3DSettings.laborRate;
+            else if (cName === "job packaging ($)") cellValue = user3DSettings.defaultPackagingCost;
+            else if (cName === "margin (%)") cellValue = user3DSettings.defaultMargin;
+            else if (cName === "tax (%)") cellValue = user3DSettings.defaultTax;
+            else if (cName === "failure margin (%)") {
+                const defFil = user3DSettings.defaultFilament || "PLA";
+                if (defFil.includes("PETG")) cellValue = "10";
+                else if (defFil.includes("ABS")) cellValue = "20";
+                else cellValue = "5";
+            }
+            
+            if (cellValue !== "") {
+                tabData[currentTab][rowIndex][origIndex] = cellValue;
+            }
+        }
+
+        if (isIngredientCol) {
+            const select = document.createElement('select');
+            select.style.width = '100%';
+            select.style.fontSize = 'var(--grid-font-size)';
+            
+            const defaultOpt = document.createElement('option');
+            defaultOpt.value = '';
+            defaultOpt.textContent = `-- Select ${colDef.displayName || colDef.name} --`;
+            select.appendChild(defaultOpt);
+
+            if (config && config.ingredients) {
+                const sortedIngredients = Object.keys(config.ingredients).sort((a, b) => 
+                    a.localeCompare(b, undefined, { sensitivity: 'base' })
+                );
+
+                sortedIngredients.forEach(ingName => {
+                    const opt = document.createElement('option');
+                    opt.value = ingName;
+                    opt.textContent = ingName;
+                    if (ingName.toLowerCase() === String(cellValue).toLowerCase()) {
+                        opt.selected = true;
+                    }
+                    select.appendChild(opt);
+                });
+            }
+            td.appendChild(select);
+
+        } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "machine type") {
+            const select = document.createElement('select');
+            select.style.width = '100%';
+            select.style.fontSize = 'var(--grid-font-size)';
+            user3DMachines.forEach(m => {
+                const opt = document.createElement('option');
+                opt.value = m.id; opt.textContent = m.name;
+                select.appendChild(opt);
+            });
+            if (cellValue === "") {
+                select.value = user3DSettings.defaultMachineId;
+                tabData[currentTab][rowIndex][origIndex] = select.value;
+            } else {
+                select.value = cellValue;
+            }
+            td.appendChild(select);
+            
+        } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "filament type") {
+            const select = document.createElement('select');
+            select.style.width = '100%';
+            select.style.fontSize = 'var(--grid-font-size)';
+            
+            user3DFilaments.forEach(f => {
+                const opt = document.createElement('option');
+                opt.value = f; opt.textContent = f;
+                select.appendChild(opt);
+            });
+            if (cellValue === "") {
+                select.value = user3DSettings.defaultFilament || user3DFilaments[0];
+                tabData[currentTab][rowIndex][origIndex] = select.value;
+            } else { 
+                select.value = cellValue; 
+            }
+            td.appendChild(select);
+
+        } else if (currentTab === "3D Print Estimator" && (colDef.name.toLowerCase() === "abrasive" || colDef.name.toLowerCase().includes("apply tax"))) {
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.style.width = '20px'; cb.style.height = '20px'; cb.style.margin = '0 auto'; cb.style.display = 'block';
+            
+            if (cellValue === "") {
+                cb.checked = colDef.name.toLowerCase() === "labor apply tax" || colDef.name.toLowerCase() === "design apply tax";
+                tabData[currentTab][rowIndex][origIndex] = cb.checked ? "Yes" : "No";
+            } else {
+                cb.checked = cellValue === "Yes";
+            }
+            td.appendChild(cb);
+
+        } else if (isTimeZoneTab && origIndex === 0) {
+            const dateInput = document.createElement('input');
+            dateInput.type = 'date';
+            dateInput.value = cellValue;
+            dateInput.style.width = '100%';
+            dateInput.style.fontSize = 'var(--grid-font-size)';
+            td.appendChild(dateInput);
+
+        // ==========================================
+        // Source File Picker UI
+        // ==========================================
+        } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "source file") {
+            const wrapper = document.createElement('div');
+            wrapper.style.display = 'flex';
+            wrapper.style.alignItems = 'center';
+            wrapper.style.gap = '5px';
+            wrapper.style.padding = '2px 4px';
+            
+            const fileBtn = document.createElement('input');
+            fileBtn.type = 'file';
+            fileBtn.accept = '.3mf, .gcode';
+            fileBtn.style.display = 'none';
+            fileBtn.onchange = (e) => handlePrintFileUpload(e, rowIndex);
+            
+            const triggerBtn = document.createElement('button');
+            triggerBtn.textContent = '📁';
+            triggerBtn.className = 'btn-icon';
+            triggerBtn.style.padding = '2px 6px';
+            triggerBtn.onclick = () => fileBtn.click();
+            
+            const fileNameDisplay = document.createElement('span');
+            fileNameDisplay.style.fontSize = '0.8rem';
+            fileNameDisplay.style.overflow = 'hidden';
+            fileNameDisplay.style.textOverflow = 'ellipsis';
+            fileNameDisplay.style.whiteSpace = 'nowrap';
+            fileNameDisplay.style.maxWidth = '100px';
+            fileNameDisplay.textContent = cellValue || "No file";
+            
+            wrapper.appendChild(fileBtn);
+            wrapper.appendChild(triggerBtn);
+            wrapper.appendChild(fileNameDisplay);
+            td.appendChild(wrapper);
+
+        } else {
+            const isSwatch = currentTab === "Colors" && colDef.name.toLowerCase() === "swatch";
+            const isOrientation = currentTab === "Aspect Ratios & Resolutions" && colDef.name.toLowerCase() === "orientation";
+            const isMaterial = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "material (cu/al)";
+            const isVDropResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "voltage drop (v)";
+            const isPctResult = config && config.isVoltageDropTab && colDef.name.toLowerCase() === "% drop";
+            const isDimNote = currentTab === "Volumetric Cost" && colDef.name.toLowerCase() === "dimensions";
+            const isPartNote = currentTab === "Volumetric Cost" && (colDef.name.toLowerCase() === "part a" || colDef.name.toLowerCase() === "part b");
+            
+            const is3DCalc = currentTab === "3D Print Estimator" && [
+                "power (watts)", "power cost", "material cost", "wear cost", 
+                "design cost", "labor cost", "packaging cost", "landed cost", "unit cost", "unit price", "profit amount ($)", 
+                "selling price", "tax amount ($)", "total price"
+            ].includes(colDef.name.toLowerCase());
+            
+            let input;
+            if (isOrientation) {
+                input = document.createElement('select');
+                ['', 'Landscape', 'Portrait', 'Square'].forEach(optStr => {
+                    let opt = document.createElement('option');
+                    opt.value = optStr; opt.innerText = optStr;
+                    input.appendChild(opt);
+                });
+                input.value = cellValue;
+            } else if (isMaterial) {
+                input = document.createElement('select');
+                ['Cu', 'Al', 'CCA', 'Ag', 'Au'].forEach(optStr => {
+                    let opt = document.createElement('option');
+                    opt.value = optStr; opt.innerText = optStr;
+                    input.appendChild(opt);
+                });
+                input.value = cellValue || "Cu";
+                if (cellValue === "") tabData[currentTab][rowIndex][origIndex] = "Cu";
+            } else {
+                input = document.createElement('input');
+                input.type = isSwatch ? 'color' : 'text';
+                
+                if (isVDropResult || isPctResult || isDimNote || isPartNote || is3DCalc) {
+                    input.readOnly = true;
+                    if (!isDimNote && !isPartNote) input.tabIndex = -1;
+                }
+                
+                if (isSwatch) {
+                    input.value = (cellValue === "" || !cellValue.startsWith('#')) ? "#ffffff" : cellValue;
+                    input.style.height = '40px';
+                    input.style.padding = '0';
+                    input.style.cursor = 'pointer';
+                    input.style.border = '1px solid var(--border)';
+                } else {
+                    input.value = cellValue;
+                }
+            }
+            
+            input.style.width = '100%';
+            input.style.fontSize = 'var(--grid-font-size)';
+            
+            if (currentTab === "Time Zone" && colDef.name.toLowerCase() !== "date" && colDef.name.toLowerCase() !== "last updated") {
+                input.addEventListener('click', function(e) {
+                    if (e.target.value.trim() === "") {
+                        const sourceKey = String(colDef.name).trim().toLowerCase();
+                        const key = (TIMEZONE_CONFIG.aliases && TIMEZONE_CONFIG.aliases[sourceKey]) ? TIMEZONE_CONFIG.aliases[sourceKey] : sourceKey;
+                        const iana = TIMEZONE_CONFIG.zones[key];
+                        if (iana) {
+                            pendingTimeTarget = e.target;
+                            pendingTimeIana = iana;
+                            const modal = document.getElementById('time-prompt-modal');
+                            if(modal) {
+                                modal.style.display = 'flex';
+                                const buttons = modal.querySelectorAll('button');
+                                buttons.forEach(btn => { if (btn.textContent.trim().toLowerCase() === 'yes') btn.focus(); });
+                            }
+                        }
+                    }
+                });
+            }
+            
+            // ==========================================
+            // Override Revert UI
+            // ==========================================
+            if (currentTab === "3D Print Estimator" && (colDef.name.toLowerCase() === "print weight (g)" || colDef.name.toLowerCase() === "build time")) {
+                const headersLower = getBaseHeaders(currentTab).map(h => h.toLowerCase());
+                const parsedIdx = headersLower.indexOf(colDef.name.toLowerCase() === "print weight (g)" ? "parsed weight" : "parsed time");
+                const parsedValue = parsedIdx > -1 ? rowData[parsedIdx] : "";
+
+                if (parsedValue && parsedValue !== "" && String(cellValue).trim() !== String(parsedValue).trim()) {
+                    input.style.backgroundColor = '#fff3cd';
+                    input.style.border = '1px solid #ffe69c';
+                    
+                    const wrapper = document.createElement('div');
+                    wrapper.style.position = 'relative';
+                    wrapper.style.display = 'flex';
+                    wrapper.style.alignItems = 'center';
+                    
+                    input.style.paddingRight = '24px';
+                    wrapper.appendChild(input);
+                    
+                    const revertBtn = document.createElement('button');
+                    revertBtn.innerHTML = '↺';
+                    revertBtn.className = 'btn-icon';
+                    revertBtn.style.position = 'absolute';
+                    revertBtn.style.right = '2px';
+                    revertBtn.style.color = '#856404';
+                    revertBtn.style.background = 'transparent';
+                    revertBtn.style.border = 'none';
+                    revertBtn.style.cursor = 'pointer';
+                    revertBtn.title = `Revert to parsed value: ${parsedValue}`;
+                    
+                    revertBtn.onclick = (e) => {
+                        e.preventDefault();
+                        tabData[currentTab][rowIndex][origIndex] = parsedValue;
+                        handle3DPrintInput(rowIndex, origIndex, parsedValue);
+                        if(typeof saveStorage === 'function') saveStorage();
+                        renderGrid();
+                    };
+                    
+                    wrapper.appendChild(revertBtn);
+                    td.appendChild(wrapper);
+                } else {
+                    td.appendChild(input);
+                }
+            } else if (colDef.name.toLowerCase() === "part a") {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'center';
+                
+                input.style.paddingRight = '24px'; 
+                wrapper.appendChild(input);
+
+                const badge = document.createElement('span');
+                badge.id = `ratio-badge-${rowIndex}`;
+                badge.style.position = 'absolute';
+                badge.style.right = '-12px';
+                badge.style.top = '50%';
+                badge.style.transform = 'translateY(-50%)';
+                badge.style.background = '#e2e8f0';
+                badge.style.color = '#475569';
+                badge.style.fontSize = '0.65rem';
+                badge.style.fontWeight = 'bold';
+                badge.style.padding = '2px 4px';
+                badge.style.borderRadius = '4px';
+                badge.style.boxShadow = '0 0 0 2px #fff';
+                badge.style.pointerEvents = 'none';
+                badge.style.zIndex = '10';
+                badge.style.display = 'none';
+
+                wrapper.appendChild(badge);
+                td.appendChild(wrapper);
+                
+                if(typeof refreshRatioBadge === 'function') {
+                    setTimeout(() => refreshRatioBadge(rowIndex), 0);
+                }
+            } else if (colDef.name.toLowerCase().includes("fraction") && !input.readOnly) {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'center';
+                
+                input.style.paddingRight = '30px';
+                wrapper.appendChild(input);
+                
+                const fracBtn = document.createElement('button');
+                fracBtn.innerHTML = '½';
+                fracBtn.className = 'btn-icon';
+                fracBtn.style.position = 'absolute';
+                fracBtn.style.right = '2px';
+                fracBtn.style.fontSize = '1.1rem';
+                fracBtn.style.color = '#0284c7';
+                fracBtn.style.background = 'transparent';
+                fracBtn.style.border = 'none';
+                fracBtn.style.cursor = 'pointer';
+                fracBtn.title = "Open Fraction Pad";
+                
+                fracBtn.onclick = (e) => {
+                    e.preventDefault();
+                    if(typeof openFractionModal === 'function') openFractionModal(input);
+                };
+                
+                wrapper.appendChild(fracBtn);
+                td.appendChild(wrapper);
+            } else if (currentTab === "3D Print Estimator" && colDef.name.toLowerCase() === "quantity") {
+                const wrapper = document.createElement('div');
+                wrapper.style.position = 'relative';
+                wrapper.style.display = 'flex';
+                wrapper.style.alignItems = 'center';
+                
+                input.style.paddingRight = '20px';
+                input.style.textAlign = 'center';
+                wrapper.appendChild(input);
+                
+                const multiplierMark = document.createElement('span');
+                multiplierMark.innerHTML = '×';
+                multiplierMark.style.position = 'absolute';
+                multiplierMark.style.right = '6px';
+                multiplierMark.style.color = '#94a3b8';
+                multiplierMark.style.fontSize = '1.1rem';
+                multiplierMark.style.pointerEvents = 'none';
+                
+                wrapper.appendChild(multiplierMark);
+                td.appendChild(wrapper);
+            } else {
+                if (colDef.name.toLowerCase() === "part b") {
+                    input.style.paddingLeft = '18px';
+                }
+                td.appendChild(input);
+            }
+        }
+        tr.appendChild(td);
+    });
+
+    const actionTd = document.createElement('td');
+    actionTd.style.textAlign = 'center';
+    actionTd.style.verticalAlign = 'middle';
+    actionTd.style.width = '70px';
+    actionTd.style.minWidth = '70px'; 
+    actionTd.style.whiteSpace = 'nowrap';
+    
+    const dupBtn = document.createElement('button');
+    dupBtn.innerHTML = '⧉';
+    dupBtn.className = 'btn-icon dup-drag-btn'; 
+    dupBtn.style.color = '#7f8c8d';
+    dupBtn.style.border = 'none';
+    dupBtn.style.background = 'transparent';
+    dupBtn.style.fontSize = '1.2rem';
+    dupBtn.style.padding = '0 6px';
+    dupBtn.style.lineHeight = '1';
+    dupBtn.style.cursor = 'grab';
+    dupBtn.title = "Click to Duplicate / Drag to Reorder";
+    
+    dupBtn.onclick = () => {
+        const clonedRow = [...tabData[currentTab][rowIndex]];
+        tabData[currentTab].splice(rowIndex + 1, 0, clonedRow);
+        if(typeof saveStorage === 'function') saveStorage();
+        if(typeof renderGrid === 'function') renderGrid(); 
+    };
+
+    const delBtn = document.createElement('button');
+    delBtn.innerHTML = '×';
+    delBtn.className = 'btn-icon';
+    delBtn.style.color = 'var(--danger)';
+    delBtn.style.border = 'none';
+    delBtn.style.background = 'transparent';
+    delBtn.style.fontSize = '1.5rem';
+    delBtn.style.padding = '0 6px';
+    delBtn.style.lineHeight = '1';
+    delBtn.style.cursor = 'pointer';
+    delBtn.title = "Delete Row";
+    
+    delBtn.onclick = () => {
+        lastDeletedRow = {
+            tab: currentTab,
+            index: rowIndex,
+            data: [...tabData[currentTab][rowIndex]] 
+        };
+        tabData[currentTab].splice(rowIndex, 1);
+        quickConvertActiveRow = -1;
+        if(typeof saveStorage === 'function') saveStorage();
+        
+        const isGridEmpty = tabData[currentTab].length === 0 || tabData[currentTab].every(row => row.every(cell => cell === ""));
+        const activeTabConf = userTabConfig.find(t => t.name === currentTab);
+        
+        if (isGridEmpty && activeTabConf && !activeTabConf.visible) {
+            const visibleTabs = userTabConfig.filter(t => t.visible);
+            const fallbackTab = visibleTabs.length > 0 ? visibleTabs[0].name : userTabConfig[0].name;
+            if(typeof loadTab === 'function') loadTab(fallbackTab);
+        } else {
+            if(typeof renderGrid === 'function') renderGrid();
+        }
+    };
+
+    actionTd.appendChild(dupBtn);
+    actionTd.appendChild(delBtn);
+    tr.appendChild(actionTd);
+    tbody.appendChild(tr);
+}
 
         // --- Custom Time Prompt Logic ---
         let pendingTimeTarget = null;
@@ -8407,16 +8504,76 @@ function appendRowDom(activeCols, rowData, rowIndex) {
         // --- Modals ---
         let tempSettingsList = [];
 
-function openTabSettings() {
+        function openTabSettings() {
             activeModalMode = "tabs";
             document.getElementById('modal-title').textContent = "Configure Tabs";
             const shw = document.getElementById('short-headers-wrapper');
             if (shw) shw.style.display = 'none';
+            const taxWrap = document.getElementById('tax-shortcut-wrapper');
+            if (taxWrap) taxWrap.style.display = 'none';
             
             tempSettingsList = JSON.parse(JSON.stringify(userTabConfig));
             renderModalList();
             document.getElementById('settings-modal').style.display = 'flex';
         }
+
+        function showUndoToast() {
+    let toast = document.getElementById('undo-toast');
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.id = 'undo-toast';
+        toast.style.cssText = 'position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #333; color: #fff; padding: 10px 20px; border-radius: 4px; font-size: 0.9rem; z-index: 9999; display: flex; gap: 15px; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: opacity 0.3s;';
+        
+        const msg = document.createElement('span');
+        msg.textContent = 'Row deleted.';
+        
+        const btn = document.createElement('button');
+        btn.textContent = 'Undo';
+        btn.style.cssText = 'background: transparent; border: none; color: var(--primary); font-weight: bold; cursor: pointer; padding: 0;';
+        btn.onclick = undoDeleteRow;
+        
+        toast.appendChild(msg);
+        toast.appendChild(btn);
+        document.body.appendChild(toast);
+    }
+    
+    toast.style.opacity = '1';
+    toast.style.pointerEvents = 'auto';
+    
+    if (undoToastTimeout) clearTimeout(undoToastTimeout);
+    undoToastTimeout = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.pointerEvents = 'none';
+        lastDeletedRow = null; // Clear memory when toast expires
+    }, 5000);
+}
+
+function undoDeleteRow() {
+    if (!lastDeletedRow) return;
+    
+    const { tab, index, data } = lastDeletedRow;
+    
+    // Safety check just in case the entire tab data was wiped
+    if (!tabData[tab]) tabData[tab] = [];
+    
+    // Splice the row back exactly where it was
+    tabData[tab].splice(index, 0, data);
+    lastDeletedRow = null;
+    
+    if (typeof saveStorage === 'function') saveStorage();
+    
+    // Hide the toast
+    const toast = document.getElementById('undo-toast');
+    if (toast) {
+        toast.style.opacity = '0';
+        toast.style.pointerEvents = 'none';
+    }
+    
+    // If we are currently looking at the tab where the undo happened, re-render it
+    if (currentTab === tab && typeof renderGrid === 'function') {
+        renderGrid();
+    }
+}
 
         function openColSettings() {
             activeModalMode = "cols";
@@ -8433,9 +8590,101 @@ function openTabSettings() {
             const apiWrapper = document.getElementById('api-key-btn-wrapper');
             if (apiWrapper) apiWrapper.style.display = (currentTab === "Currency") ? "block" : "none";
             
+            setupTaxShortcutUI();
+
             document.getElementById('settings-modal').style.display = 'flex';
         }
 
+function setupTaxShortcutUI() {
+    let taxWrapper = document.getElementById('tax-shortcut-wrapper');
+    
+    if (currentTab !== "3D Print Estimator") {
+        if (taxWrapper) taxWrapper.style.display = 'none';
+        return;
+    }
+
+    if (!taxWrapper) {
+        taxWrapper = document.createElement('div');
+        taxWrapper.id = 'tax-shortcut-wrapper';
+        taxWrapper.style.display = 'flex';
+        taxWrapper.style.alignItems = 'center';
+        taxWrapper.style.justifyContent = 'space-between';
+        taxWrapper.style.padding = '8px 12px';
+        taxWrapper.style.marginBottom = '10px';
+        taxWrapper.style.background = '#f1f5f9';
+        taxWrapper.style.border = '1px solid #e2e8f0';
+        taxWrapper.style.borderRadius = '6px';
+        taxWrapper.style.fontWeight = 'bold';
+        taxWrapper.style.fontSize = '0.9rem';
+
+        const label = document.createElement('label');
+        label.textContent = "Use Tax";
+        label.htmlFor = 'shortcut-use-tax';
+        label.style.cursor = 'pointer';
+
+        const checkbox = document.createElement('input');
+        checkbox.type = 'checkbox';
+        checkbox.id = 'shortcut-use-tax';
+        checkbox.style.cursor = 'pointer';
+        checkbox.style.width = '18px';
+        checkbox.style.height = '18px';
+
+        taxWrapper.appendChild(label);
+        taxWrapper.appendChild(checkbox);
+
+        const ul = document.getElementById('modal-item-list');
+        if (ul && ul.parentNode) {
+            ul.parentNode.insertBefore(taxWrapper, ul);
+        }
+    }
+
+    taxWrapper.style.display = 'flex';
+
+    const checkbox = document.getElementById('shortcut-use-tax');
+    if (!checkbox) return;
+
+    const isTaxActive = tempSettingsList.some(c => c.name.toLowerCase() === "tax (%)" && c.visible);
+    checkbox.checked = isTaxActive;
+
+    checkbox.onchange = function(e) {
+        const isChecking = e.target.checked;
+
+        if (!isChecking) {
+            const currentTaxRate = parseFloat(user3DSettings.defaultTax) || 
+                (document.getElementById('p3d-tax') ? parseFloat(document.getElementById('p3d-tax').value) : 0) || 0;
+
+            if (currentTaxRate > 0) {
+                const confirmed = confirm(
+                    `⚠️ WARNING: The default tax rate is currently set to ${currentTaxRate}%!\n\n` +
+                    `We are by default adding tax and you won't see it anywhere!\n\n` +
+                    `Click OK to hide all tax fields anyway, or Cancel to keep them visible so you can fix the tax rate first.`
+                );
+
+                if (!confirmed) {
+                    e.target.checked = true;
+                    return;
+                }
+            }
+        }
+
+        const taxColNames = [
+            "design apply tax",
+            "labor apply tax",
+            "packaging apply tax",
+            "tax (%)",
+            "tax amount ($)"
+        ];
+
+        tempSettingsList.forEach(item => {
+            if (taxColNames.includes(item.name.toLowerCase())) {
+                item.visible = isChecking;
+            }
+        });
+
+        update3DPrintTaxVisibility(isChecking);
+        renderModalList();
+    };
+}
 
         function addCustomAlias(colName) {
             const term = prompt(`Enter a new Quick Convert shortcut for "${colName}":\n(e.g., "myval")`);
@@ -8693,6 +8942,14 @@ function renderModalList() {
             } else if (activeModalMode === "cols") {
                 userColConfig[currentTab] = tempSettingsList;
                 renderGrid();
+                if (currentTab === "3D Print Estimator") {
+                    const showTax = tempSettingsList.some(c => c.name.toLowerCase() === "tax (%)" && c.visible);
+                    const taxInput = document.getElementById('p3d-tax');
+                    if (taxInput) {
+                        const taxBadge = taxInput.closest('div');
+                        if (taxBadge) taxBadge.style.display = showTax ? 'flex' : 'none';
+                    }
+                }
             }
             saveStorage();
             closeModal();
@@ -8722,6 +8979,8 @@ function renderModalList() {
                 localStorage.removeItem('volCostLabel');
                 localStorage.removeItem('converter3DMachines');
                 localStorage.removeItem('converter3DSettings');
+                localStorage.removeItem('converter3DFilaments');
+                user3DFilaments = [...DEFAULT_3D_FILAMENTS];
                 
                 // --- NEW ITEMS CLEARED ---
                 localStorage.removeItem('useShortHeaders');
@@ -8786,46 +9045,7 @@ function renderModalList() {
         function showAbout() {
             document.getElementById('about-modal').style.display = 'flex';
         }
-        function handleInput(e) {
-            const rowIdx = parseInt(e.target.dataset.row);
-            const colIdx = parseInt(e.target.dataset.col);
-            const val = e.target.value;
-            
-            const tabClean = currentTab.toLowerCase().replace(/[\s\/\\]+/g, "");
-
-            let config = {};
-            if (["wages", "wage", "salary", "pay"].includes(tabClean)) {
-                config = typeof WAGES_CONFIG !== 'undefined' ? WAGES_CONFIG : {};
-            } else if (["timezone", "timezones", "worldtime"].includes(tabClean)) {
-                config = typeof TIMEZONE_CONFIG !== 'undefined' ? TIMEZONE_CONFIG : {};
-            } else if (typeof TAB_CONFIG !== 'undefined' && TAB_CONFIG[currentTab]) {
-                config = TAB_CONFIG[currentTab];
-            }
-
-      //      console.log("--- Routing Diagnostics ---");
-    //        console.log("currentTab:", currentTab);
-    //        console.log("tabClean:", tabClean);
-     //       console.log("config isResolutionTab:", config.isResolutionTab);
-            if (currentTab === "3D Print Estimator") {
-                console.log("Routing to: handle3DPrintInput");
-                handle3DPrintInput(rowIdx, colIdx, val);
-            } else if (tabClean === "numbers") {
-                console.log("Routing to: handleNumbersInput");
-                handleNumbersInput(rowIdx, colIdx, val, config);
-            } else if (config.isResolutionTab === true || (tabClean && tabClean.includes("aspect"))) {
-                console.log("Routing to: handleResolutionInput");
-                handleResolutionInput(rowIdx, colIdx, val);
-            } else if (config.isTextTab === true) { 
-                console.log("Routing to: handleCaseInput");
-                handleCaseInput(rowIdx, colIdx, val, config);                
-            } else {
-                console.log("Routing to: handleStandardInput");
-                handleStandardInput(rowIdx, colIdx, val, config); 
-            }
-
-            saveStorage();
-        }
-
+     
         function updateCellDom(rowIdx, colIdx, value) {
             const td = document.querySelector(`td[data-row="${rowIdx}"][data-col="${colIdx}"]`);
             if (!td) return;
@@ -9979,49 +10199,56 @@ function handleVoltageDropInput(rowIdx, colIdx, numStr, config) {
         }
 
 function parseNumber(val) {
-            // Stealth injection: pMod will be 1 (normal) or 0 (tampered)
-            const pMod = getPrecisionMod();
-            
-            if (typeof val === "number") {
-                return val * pMod;
-            }
-            
-            if (typeof val !== "string") {
-                return null;
-            }
+    // Stealth injection: pMod will be 1 (normal) or 0 (tampered)
+    const pMod = getPrecisionMod();
+    
+    if (typeof val === "number") {
+        return val * pMod;
+    }
+    
+    if (typeof val !== "string") {
+        return null;
+    }
 
-            const trimmed = val.trim().replace(/^\$/, "");
-            if (trimmed === "") {
-                return null;
-            }
-            
-            let parsed = null;
-            
-            if (!isNaN(trimmed)) {
-                parsed = parseFloat(trimmed);
-            } else if (trimmed.includes(" ")) {
-                const parts = trimmed.split(/\s+/);
-                if (parts.length === 2 && parts[1].includes("/")) {
-                    const whole = parseFloat(parts[0]);
-                    const frac = parts[1].split("/");
-                    if (frac.length === 2 && !isNaN(frac[0]) && !isNaN(frac[1])) {
-                        parsed = whole + (parseFloat(frac[0]) / parseFloat(frac[1]));
-                    }
+    const trimmed = val.trim().replace(/^\$/, "");
+    if (trimmed === "") {
+        return null;
+    }
+    
+    let parsed = null;
+    
+    if (!isNaN(trimmed)) {
+        parsed = parseFloat(trimmed);
+    } else if (trimmed.includes(" ")) {
+        const parts = trimmed.split(/\s+/);
+        if (parts.length === 2 && parts[1].includes("/")) {
+            const whole = parseFloat(parts[0]);
+            const frac = parts[1].split("/");
+            if (frac.length === 2 && !isNaN(frac[0]) && !isNaN(frac[1])) {
+                const fractionValue = parseFloat(frac[0]) / parseFloat(frac[1]);
+                
+                // Fix: Apply the fraction in the correct direction for negative numbers
+                if (trimmed.startsWith("-")) {
+                    parsed = whole - fractionValue;
+                } else {
+                    parsed = whole + fractionValue;
                 }
-            } else if (trimmed.includes("/")) {
-                const frac = trimmed.split("/");
-                if (frac.length === 2 && !isNaN(frac[0]) && !isNaN(frac[1])) {
-                    parsed = parseFloat(frac[0]) / parseFloat(frac[1]);
-                }
-            }
-
-            // If parsed successfully, multiply by our hidden checksum value
-            if (parsed !== null) {
-                return parsed * pMod;
-            } else {
-                return null;
             }
         }
+    } else if (trimmed.includes("/")) {
+        const frac = trimmed.split("/");
+        if (frac.length === 2 && !isNaN(frac[0]) && !isNaN(frac[1])) {
+            parsed = parseFloat(frac[0]) / parseFloat(frac[1]);
+        }
+    }
+
+    // If parsed successfully, multiply by our hidden checksum value
+    if (parsed !== null) {
+        return parsed * pMod;
+    } else {
+        return null;
+    }
+}
 
         
 
@@ -10207,32 +10434,22 @@ function formatPrintTime(totalMinutes) {
 const PRINT_COST_ENGINE = {
     calcPowerWatts: function(machineObj, filamentType) {
         const highTempMats = ["abs", "asa", "nylon", "pc"];
-        const isHighTemp = highTempMats.some(mat => String(filamentType).toLowerCase().includes(mat));
-        return isHighTemp ? machineObj.highWatts : machineObj.baseWatts;
+        return highTempMats.some(mat => String(filamentType).toLowerCase().includes(mat)) ? machineObj.highWatts : machineObj.baseWatts;
     },
-    calcPowerCost: function(watts, timeMinutes, electricRate) {
-        const hours = timeMinutes / 60;
-        return (watts * hours / 1000) * electricRate;
+    calcDepreciationPerHour: function(m) {
+        const uptimeHours = 8760 * (m.uptime / 100);
+        return (m.cost + m.upfront) / (m.life * uptimeHours);
     },
-    calcMaterialCost: function(gramsUsed, spoolCost, spoolWeight) {
-        if (!spoolWeight || spoolWeight <= 0) return 0;
-        return (gramsUsed / spoolWeight) * spoolCost;
-    },
-    calcWearCost: function(machineObj, timeMinutes, gramsUsed, isAbrasive, abrasiveSurchargeKg) {
-        const hours = timeMinutes / 60;
-        const baseWear = machineObj.wearPerHour * hours;
-        const abrasiveWear = isAbrasive ? (gramsUsed / 1000) * abrasiveSurchargeKg : 0;
-        return baseWear + abrasiveWear;
+    calcMaintenancePerHour: function(m) {
+        const uptimeHours = 8760 * (m.uptime / 100);
+        return m.maint / uptimeHours;
     }
 };
 
 function handle3DPrintInput(rowIdx, colIdx, val) {
     const headersLower = getBaseHeaders("3D Print Estimator").map(h => h.toLowerCase());
-    
-    const colName = headersLower[colIdx];
     tabData["3D Print Estimator"][rowIdx][colIdx] = val;
     
-    // 3. Extract all current row variables
     const row = tabData["3D Print Estimator"][rowIdx];
     const getVal = (name) => row[headersLower.indexOf(name)];
     const getNum = (name) => parseNumber(getVal(name)) || 0;
@@ -10240,68 +10457,110 @@ function handle3DPrintInput(rowIdx, colIdx, val) {
     const machineId = getVal("machine type");
     const machineObj = user3DMachines.find(m => m.id === machineId) || user3DMachines[0];
     const filamentType = getVal("filament type");
-    const isAbrasive = getVal("abrasive") === "Yes";
     
-    // --- NEW: Auto-fill Failure Margin when Filament Type changes ---
-    let failureMarginStr = getVal("failure margin (%)");
-    if (colName === "filament type" || failureMarginStr === "") {
-        let defaultMargin = "5"; // PLA / TPU
-        if (filamentType.includes("PETG")) defaultMargin = "10";
-        else if (filamentType.includes("ABS")) defaultMargin = "20";
-        
-        failureMarginStr = defaultMargin;
-        const marginIdx = headersLower.indexOf("failure margin (%)");
-        if (marginIdx > -1) {
-            tabData["3D Print Estimator"][rowIdx][marginIdx] = defaultMargin;
-            updateCellDom(rowIdx, marginIdx, defaultMargin);
-        }
-    }
-    
+    // Core User Inputs
+    const qty = getNum("quantity") || 1; // Default to 1 if blank/0
     const electricRate = getNum("electric rate");
     const spoolCost = getNum("spool cost");
     const spoolWeight = getNum("spool weight");
     const grams = getNum("print weight (g)");
     const timeMinutes = parsePrintTime(getVal("build time"));
-    const failureMargin = parseNumber(failureMarginStr) || 0; // Grab the numeric percentage
+    
+    // Fixed Job Costs
+    const designHrs = getNum("design (hours)");
+    const designRate = getNum("design rate ($/hr)");
+    const designApplyTax = getVal("design apply tax") === "Yes";
 
-    // 4. Run the Engine
+    // Variable Unit Costs
+    const laborHrs = getNum("labor (hours)");
+    const jobLaborRate = getNum("job labor rate ($/hr)");
+    const laborApplyTax = getVal("labor apply tax") === "Yes";
+    
+    const jobPkg = getNum("job packaging ($)");
+    const pkgApplyTax = getVal("packaging apply tax") === "Yes";
+    
+    const failureMargin = getNum("failure margin (%)");
+    const margin = getNum("margin (%)");
+    const taxRate = getNum("tax (%)");
+
+    // FORMULA CALCULATIONS
     if (grams > 0 && timeMinutes > 0) {
+        const hours = timeMinutes / 60;
         const watts = PRINT_COST_ENGINE.calcPowerWatts(machineObj, filamentType);
+        const efficiencyFactor = 1 + (failureMargin / 100);
+        const bufferFactor = 1 + ((user3DSettings.bufferFactor || 30) / 100);
         
-        // Calculate Base Costs
-        let pwrCost = PRINT_COST_ENGINE.calcPowerCost(watts, timeMinutes, electricRate);
-        let matCost = PRINT_COST_ENGINE.calcMaterialCost(grams, spoolCost, spoolWeight);
-        let wearCost = PRINT_COST_ENGINE.calcWearCost(machineObj, timeMinutes, grams, isAbrasive, user3DSettings.abrasiveSurchargeKg);
+        // 1. Base Unit Costs (Single Part)
+        const unitMatCost = (grams / spoolWeight) * spoolCost * efficiencyFactor;
+        const pwrCostPerHour = (watts / 1000) * electricRate;
+        const unitPwrCost = hours * pwrCostPerHour * bufferFactor;
         
-        // --- NEW: Apply the Failure Multiplier (e.g., 10% failure = 1.1x cost) ---
-        const multiplier = 1 + (failureMargin / 100);
-        pwrCost *= multiplier;
-        matCost *= multiplier;
-        wearCost *= multiplier;
+        const depPerHour = PRINT_COST_ENGINE.calcDepreciationPerHour(machineObj);
+        const maintPerHour = PRINT_COST_ENGINE.calcMaintenancePerHour(machineObj);
+        const unitWearCost = hours * (depPerHour + maintPerHour) * bufferFactor;
         
-        const total = pwrCost + matCost + wearCost;
+        const unitLaborCost = laborHrs * jobLaborRate;
+        const unitPkgCost = jobPkg;
+
+        // 2. Scale up to Job Totals
+        const totalMatCost = unitMatCost * qty;
+        const totalPwrCost = unitPwrCost * qty;
+        const totalWearCost = unitWearCost * qty;
+        const totalLaborCost = unitLaborCost * qty;
+        const totalPkgCost = unitPkgCost * qty;
+        
+        // Design is a Non-Recurring Engineering (NRE) fixed cost. It applies exactly once per job.
+        const jobDesignCost = designHrs * designRate;
+        
+        // 3. Totals & Pricing
+        const landedCost = totalMatCost + totalPwrCost + totalWearCost + jobDesignCost + totalLaborCost + totalPkgCost;
+        const sellingPrice = margin >= 100 ? 0 : landedCost / (1 - (margin / 100));
+        const profitAmt = sellingPrice - landedCost;
+        
+        // 4. Prorated Taxation
+        let taxableBase = totalMatCost + totalPwrCost + totalWearCost;
+        if (designApplyTax) taxableBase += jobDesignCost;
+        if (laborApplyTax) taxableBase += totalLaborCost;
+        if (pkgApplyTax) taxableBase += totalPkgCost;
+        
+        const taxableProportion = landedCost > 0 ? (taxableBase / landedCost) : 0;
+        const taxableSellingPrice = sellingPrice * taxableProportion;
+        const taxAmt = taxableSellingPrice * (taxRate / 100);
+        
+        const totalPrice = sellingPrice + taxAmt;
+
+        // 5. Derived Unit Metrics
+        const unitCost = landedCost / qty;
+        const unitPrice = totalPrice / qty;
 
         const writeCol = (name, num, isDollar) => {
             const idx = headersLower.indexOf(name);
-            if (idx === -1) return; // Failsafe
+            if (idx === -1) return;
             const displayStr = isDollar ? `$${num.toFixed(2)}` : num.toString();
             tabData["3D Print Estimator"][rowIdx][idx] = displayStr;
             updateCellDom(rowIdx, idx, displayStr);
         };
 
         writeCol("power (watts)", watts, false);
-        writeCol("power cost", pwrCost, true);
-        writeCol("material cost", matCost, true);
-        writeCol("wear cost", wearCost, true);
-        writeCol("total cost", total, true);
+        writeCol("power cost", totalPwrCost, true);
+        writeCol("material cost", totalMatCost, true);
+        writeCol("wear cost", totalWearCost, true);
+        writeCol("design cost", jobDesignCost, true);
+        writeCol("labor cost", totalLaborCost, true);
+        writeCol("packaging cost", totalPkgCost, true);
+        
+        writeCol("landed cost", landedCost, true);
+        writeCol("unit cost", unitCost, true);
+        writeCol("unit price", unitPrice, true);
+        
+        writeCol("profit amount ($)", profitAmt, true);
+        writeCol("selling price", sellingPrice, true);
+        writeCol("tax amount ($)", taxAmt, true);
+        writeCol("total price", totalPrice, true);
     } else {
-        // Clear outputs if critical inputs are missing
-        ["power (watts)", "power cost", "material cost", "wear cost", "total cost"].forEach(name => {
+        ["power (watts)", "power cost", "material cost", "wear cost", "design cost", "labor cost", "packaging cost", "landed cost", "unit cost", "unit price", "profit amount ($)", "selling price", "tax amount ($)", "total price"].forEach(name => {
             const idx = headersLower.indexOf(name);
-            if (idx > -1) {
-                tabData["3D Print Estimator"][rowIdx][idx] = "";
-                updateCellDom(rowIdx, idx, "");
-            }
+            if (idx > -1) { tabData["3D Print Estimator"][rowIdx][idx] = ""; updateCellDom(rowIdx, idx, ""); }
         });
     }
 }
@@ -10504,26 +10763,19 @@ const shapeBtns = document.querySelectorAll('.shape-btn');
 
 function init3DPrintUI(currentTabName) {
     let container = document.getElementById('print3d-header-container');
-    
     if (!container) {
         const tableElement = document.querySelector('table');
         if (!tableElement) return; 
-        
         container = document.createElement('div');
         container.id = 'print3d-header-container';
         container.style.padding = '0 10px';
         tableElement.parentNode.insertBefore(container, tableElement);
     }
-
-    if (currentTabName !== "3D Print Estimator") {
-        container.style.display = 'none';
-        return;
-    }
-    
+    if (currentTabName !== "3D Print Estimator") { container.style.display = 'none'; return; }
     container.style.display = 'block';
 
-    let machineOptions = user3DMachines.map(m => `<option value="${m.id}">${m.name} (${m.baseWatts}W - ${m.highWatts}W)</option>`).join('');
-    let filamentOptions = P3D_FILAMENT_TYPES.map(f => `<option value="${f}">${f}</option>`).join('');
+    let machineOptions = user3DMachines.map(m => `<option value="${m.id}">${m.name}</option>`).join('');
+    let filamentOptions = user3DFilaments.map(f => `<option value="${f}">${f}</option>`).join('');
 
     container.innerHTML = `
         <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-bottom: 15px;">
@@ -10532,77 +10784,99 @@ function init3DPrintUI(currentTabName) {
                 
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
                     <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                        <span style="font-size: 0.85em; color: #64748b;">Electric Rate: $</span>
-                        <input type="number" id="p3d-rate" value="${user3DSettings.electricRate}" step="0.01" style="width: 60px; border: none; background: transparent; outline: none; font-weight: bold;">
-                        <span style="font-size: 0.85em; color: #64748b;">/kWh</span>
+                        <span style="font-size: 0.85em; color: #64748b;">Design: $</span>
+                        <input type="number" id="p3d-design" value="${user3DSettings.designRate !== undefined ? user3DSettings.designRate : 60}" step="1" style="width: 40px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">/hr</span>
                     </div>
-
+                    <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                        <span style="font-size: 0.85em; color: #64748b;">Labor: $</span>
+                        <input type="number" id="p3d-labor" value="${user3DSettings.laborRate}" step="1" style="width: 40px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">/hr</span>
+                    </div>
+                    <!-- RESTORED SPOOL FIELDS -->
                     <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
                         <span style="font-size: 0.85em; color: #64748b;">Spool: $</span>
-                        <input type="number" id="p3d-cost" value="${user3DSettings.spoolCost}" step="1" style="width: 50px; border: none; background: transparent; outline: none; font-weight: bold;">
-                        <span style="font-size: 0.85em; color: #64748b;">per</span>
-                        <input type="number" id="p3d-weight" value="${user3DSettings.spoolWeight}" step="100" style="width: 50px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <input type="number" id="p3d-cost" value="${user3DSettings.spoolCost}" step="1" style="width: 40px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">/</span>
+                        <input type="number" id="p3d-weight" value="${user3DSettings.spoolWeight}" step="100" style="width: 45px; border: none; background: transparent; outline: none; font-weight: bold;">
                         <span style="font-size: 0.85em; color: #64748b;">g</span>
                     </div>
-                    
-                    <div style="display: flex; align-items: center; gap: 2px; background: #fef2f2; padding: 4px 8px; border-radius: 4px; border: 1px solid #fecaca;">
-                        <span style="font-size: 0.85em; color: #ef4444;">Abrasive Surcharge: +$</span>
-                        <input type="number" id="p3d-abrasive" value="${user3DSettings.abrasiveSurchargeKg}" step="0.5" style="width: 38px; padding: 0 2px; border: none; background: transparent; outline: none; font-weight: bold; color: #ef4444;">
-                        <span style="font-size: 0.85em; color: #ef4444;">/kg</span>
-                    </div>
-
+                    <!-- END RESTORED SPOOL FIELDS -->
                     <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
-                        <span style="font-size: 0.85em; color: #64748b;">Filament:</span>
-                        <select id="p3d-filament-select" style="border: none; background: transparent; outline: none; font-weight: bold; color: #333; font-size: 0.9em; padding: 0;">
-                            ${filamentOptions}
-                        </select>
+                        <span style="font-size: 0.85em; color: #64748b;">Pkg: $</span>
+                        <input type="number" id="p3d-pkg" value="${user3DSettings.defaultPackagingCost}" step="0.5" style="width: 40px; border: none; background: transparent; outline: none; font-weight: bold;">
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                        <span style="font-size: 0.85em; color: #64748b;">Margin:</span>
+                        <input type="number" id="p3d-margin" value="${user3DSettings.defaultMargin}" step="5" style="width: 40px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">%</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 4px; background: #f8fafc; padding: 4px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
+                        <span style="font-size: 0.85em; color: #64748b;">Tax:</span>
+                        <input type="number" id="p3d-tax" value="${user3DSettings.defaultTax}" step="0.5" style="width: 40px; border: none; background: transparent; outline: none; font-weight: bold;">
+                        <span style="font-size: 0.85em; color: #64748b;">%</span>
                     </div>
                 </div>
 
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span style="font-size: 0.85em; color: #64748b; font-weight: bold;">Default Machine:</span>
-                    <select id="p3d-machine-select" style="flex: 1; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
-                        ${machineOptions}
-                    </select>
-                    <button id="p3d-add-machine" class="btn-icon" title="Add Machine">+</button>
-                    <button id="p3d-del-machine" class="btn-icon" title="Delete Selected Machine" style="color: var(--danger);">-</button>
+                <div style="display: flex; flex-wrap: wrap; gap: 15px; align-items: center; margin-top: 10px;">
+                    <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 240px;">
+                        <span style="font-size: 0.85em; color: #64748b; font-weight: bold; white-space: nowrap;">Default Machine:</span>
+                        <select id="p3d-machine-select" style="flex: 1; min-width: 0; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                            ${machineOptions}
+                        </select>
+                        <button id="p3d-add-machine" class="btn-icon" title="Add Machine">+</button>
+                        <button id="p3d-del-machine" class="btn-icon" title="Delete Selected Machine" style="color: var(--danger);">-</button>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 8px; flex: 1; min-width: 240px;">
+                        <span style="font-size: 0.85em; color: #64748b; font-weight: bold; white-space: nowrap;">Filament:</span>
+                        <select id="p3d-filament-select" style="flex: 1; min-width: 0; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
+                            ${filamentOptions}
+                        </select>
+                        <button id="p3d-add-filament" class="btn-icon" title="Add Filament">+</button>
+                        <button id="p3d-del-filament" class="btn-icon" title="Delete Selected Filament" style="color: var(--danger);">-</button>
+                    </div>
                 </div>
             </div>
         </div>
     `;
 
     document.getElementById('p3d-machine-select').value = user3DSettings.defaultMachineId || user3DMachines[0].id;
-    document.getElementById('p3d-filament-select').value = user3DSettings.defaultFilament || P3D_FILAMENT_TYPES[0];
+    document.getElementById('p3d-filament-select').value = user3DSettings.defaultFilament || user3DFilaments[0];
 
     const saveDefaults = () => {
         user3DSettings.electricRate = parseFloat(document.getElementById('p3d-rate').value) || 0;
-        user3DSettings.spoolCost = parseFloat(document.getElementById('p3d-cost').value) || 0;
-        user3DSettings.spoolWeight = parseFloat(document.getElementById('p3d-weight').value) || 1000;
-        user3DSettings.abrasiveSurchargeKg = parseFloat(document.getElementById('p3d-abrasive').value) || 0;
+        user3DSettings.designRate = parseFloat(document.getElementById('p3d-design').value) || 0;
+        user3DSettings.laborRate = parseFloat(document.getElementById('p3d-labor').value) || 0;
+        user3DSettings.spoolCost = parseFloat(document.getElementById('p3d-cost').value) || 0;       // Restored
+        user3DSettings.spoolWeight = parseFloat(document.getElementById('p3d-weight').value) || 1000; // Restored
+        user3DSettings.defaultPackagingCost = parseFloat(document.getElementById('p3d-pkg').value) || 0;
+        user3DSettings.defaultMargin = parseFloat(document.getElementById('p3d-margin').value) || 0;
+        user3DSettings.defaultTax = parseFloat(document.getElementById('p3d-tax').value) || 0;
         user3DSettings.defaultMachineId = document.getElementById('p3d-machine-select').value;
         user3DSettings.defaultFilament = document.getElementById('p3d-filament-select').value;
         saveStorage();
     };
 
-    ['p3d-rate', 'p3d-cost', 'p3d-weight', 'p3d-abrasive', 'p3d-machine-select', 'p3d-filament-select'].forEach(id => {
+    ['p3d-rate', 'p3d-labor', 'p3d-design', 'p3d-cost', 'p3d-weight', 'p3d-pkg', 'p3d-margin', 'p3d-tax', 'p3d-machine-select', 'p3d-filament-select'].forEach(id => {
         document.getElementById(id).addEventListener('change', saveDefaults);
     });
 
     document.getElementById('p3d-add-machine').onclick = () => {
-        const name = prompt("Machine Name (e.g. 'Voron 2.4'):");
+        const name = prompt("Machine Name:");
         if (!name) return;
-        const baseW = prompt("Base Watts (printing PLA, typically 60-120):", "100");
-        const highW = prompt("High Temp Watts (printing ABS, typically 150-300):", "200");
-        const wear = prompt("Hourly Wear/Depreciation Rate (e.g. 0.10):", "0.15");
+        const cost = prompt("Printer Cost ($):", "1000");
+        const upfront = prompt("Additional Upfront Cost (Mods, Enclosures) ($):", "200");
+        const maint = prompt("Annual Maintenance ($):", "150");
+        const life = prompt("Estimated Life (Years):", "4");
+        const uptime = prompt("Uptime Percentage (e.g. 80):", "80");
         
-        if (baseW && highW && wear) {
+        if (cost && life && uptime) {
             const newId = "m_custom_" + Date.now();
             user3DMachines.push({
-                id: newId,
-                name: name.trim(),
-                baseWatts: parseFloat(baseW) || 100,
-                highWatts: parseFloat(highW) || 200,
-                wearPerHour: parseFloat(wear) || 0.15
+                id: newId, name: name.trim(),
+                baseWatts: 100, highWatts: 200, 
+                cost: parseFloat(cost)||0, upfront: parseFloat(upfront)||0, 
+                maint: parseFloat(maint)||0, life: parseFloat(life)||1, uptime: parseFloat(uptime)||100
             });
             user3DSettings.defaultMachineId = newId;
             saveStorage();
@@ -10623,6 +10897,44 @@ function init3DPrintUI(currentTabName) {
             init3DPrintUI("3D Print Estimator");
         }
     };
+    
+    document.getElementById('p3d-add-filament').onclick = () => {
+        const name = prompt("Filament Name (e.g. 'Carbon Fiber Nylon'):");
+        if (!name) return;
+        const cleanName = name.trim();
+        
+        if (user3DFilaments.includes(cleanName)) {
+            alert("This filament already exists.");
+            return;
+        }
+        
+        user3DFilaments.push(cleanName);
+        user3DSettings.defaultFilament = cleanName;
+        saveStorage();
+        init3DPrintUI("3D Print Estimator"); 
+    };
+
+    document.getElementById('p3d-del-filament').onclick = () => {
+        const valToDelete = document.getElementById('p3d-filament-select').value;
+        if (DEFAULT_3D_FILAMENTS.includes(valToDelete)) {
+            alert("Cannot delete default archetypes. You can delete custom filaments.");
+            return;
+        }
+        if (confirm(`Delete custom filament "${valToDelete}"?`)) {
+            user3DFilaments = user3DFilaments.filter(f => f !== valToDelete);
+            user3DSettings.defaultFilament = user3DFilaments[0];
+            saveStorage();
+            init3DPrintUI("3D Print Estimator");
+        }
+    };
+    const showTaxOnBoot = userColConfig["3D Print Estimator"]
+        ? userColConfig["3D Print Estimator"].some(c => c.name.toLowerCase() === "tax (%)" && c.visible)
+        : true;
+    const taxInputOnBoot = document.getElementById('p3d-tax');
+    if (taxInputOnBoot) {
+        const taxBadgeOnBoot = taxInputOnBoot.closest('div');
+        if (taxBadgeOnBoot) taxBadgeOnBoot.style.display = showTaxOnBoot ? 'flex' : 'none';
+    }
 }
 
 function handleRatioInput() {
@@ -10697,6 +11009,38 @@ function refreshRatioBadge(rowIdx) {
 
     badge.textContent = displayStr;
     badge.style.display = 'inline-block';
+}
+
+function update3DPrintTaxVisibility(showTax) {
+    // 1. Columns to toggle in the grid configuration
+    const taxColNames = [
+            "design apply tax",
+            "labor apply tax",
+            "packaging apply tax",
+            "tax (%)",
+            "tax amount ($)"
+    ];
+
+    if (userColConfig["3D Print Estimator"]) {
+        userColConfig["3D Print Estimator"].forEach(col => {
+            if (taxColNames.includes(col.name.toLowerCase())) {
+                col.visible = showTax;
+            }
+        });
+    }
+
+    // 2. Top header input badge visibility
+    const taxInput = document.getElementById('p3d-tax');
+    if (taxInput) {
+        const taxBadge = taxInput.closest('div');
+        if (taxBadge) {
+            taxBadge.style.display = showTax ? 'flex' : 'none';
+        }
+    }
+
+    // 3. Persist and redraw
+    if (typeof saveStorage === 'function') saveStorage();
+    if (typeof renderGrid === 'function') renderGrid();
 }
 
 function setVolShape(shape) {
@@ -10902,6 +11246,366 @@ function handleBaseCostDirect(e) {
     calculateVolumetric(); 
 }
 
+// ==========================================
+// LAZY-LOAD JSZIP DEPENDENCY
+// ==========================================
+function loadJSZip() {
+    return new Promise((resolve, reject) => {
+        // If it's already loaded, resolve instantly
+        if (typeof JSZip !== 'undefined') {
+            resolve(); 
+            return;
+        }
+        
+        // Otherwise, inject the script tag dynamically
+        const script = document.createElement('script');
+        script.src = "https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js";
+        script.onload = resolve;
+        script.onerror = () => reject(new Error("Failed to load JSZip from CDN."));
+        document.head.appendChild(script);
+    });
+}
+
+// ==========================================
+// 3MF PARSER (Multi-Slicer Detection)
+// ==========================================
+async function handle3mfUpload(event, rowIdx) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const cleanFileName = file.name.split(/[/\\]/).pop();
+    const currentTabName = "3D Print Estimator";
+    const headersLower = getBaseHeaders(currentTabName).map(h => h.toLowerCase());
+    
+    const fileColIdx = headersLower.indexOf("source file");
+    const weightColIdx = headersLower.indexOf("print weight (g)");
+    const timeColIdx = headersLower.indexOf("build time");
+    const parsedWeightIdx = headersLower.indexOf("parsed weight");
+    const parsedTimeIdx = headersLower.indexOf("parsed time");
+    const jobNameIdx = headersLower.indexOf("job name");
+
+    // SAFE DOM UPDATER
+    const setFileUI = (text) => {
+        if (fileColIdx > -1) {
+            tabData[currentTabName][rowIdx][fileColIdx] = text;
+            const td = document.querySelector(`td[data-row="${rowIdx}"][data-col="${fileColIdx}"]`);
+            if (td) {
+                const span = td.querySelector('span');
+                if (span) {
+                    span.textContent = text;
+                    span.title = text; // Update tooltip so long statuses can be hovered
+                }
+            }
+        }
+    };
+
+    try {
+        setFileUI("1/4: Loading Engine...");
+        await loadJSZip();
+
+        setFileUI("2/4: Reading Archive...");
+        const zip = await JSZip.loadAsync(file);
+        
+        setFileUI("3/4: Detecting Slicer...");
+        
+        // Slicer Detection Logic based on internal folder/file signatures
+        const zipFiles = Object.keys(zip.files);
+        let slicerType = "Unknown";
+        
+        if (zip.file("Metadata/slice_info.config")) {
+            slicerType = "Bambu/Orca";
+        } else if (zip.file("Metadata/Slic3r_PE.config") || zip.file("Metadata/PrusaSlicer.config")) {
+            slicerType = "PrusaSlicer";
+        } else if (zipFiles.some(path => path.toLowerCase().startsWith('cura/'))) {
+            slicerType = "Cura";
+        } else if (zipFiles.some(path => path.toLowerCase().startsWith('3d/'))) {
+            slicerType = "Generic 3D Builder";
+        }
+        
+        // Small delay just so the user can read what slicer was detected
+        setFileUI(`Found: ${slicerType}...`);
+        await new Promise(r => setTimeout(r, 600)); 
+
+        if (slicerType === "PrusaSlicer" || slicerType === "Cura" || slicerType === "Unknown" || slicerType === "Generic 3D Builder") {
+            alert(`${slicerType} uses .3mf purely as a "Project" file. It only contains 3D geometry and settings, not the final sliced print time or weight.\n\nOnly Bambu/Orca package sliced print data inside their .3mf files. For ${slicerType}, you would need to parse a .gcode file to get time and weight.`);
+            setFileUI(`No Slice Data (${slicerType})`);
+            event.target.value = '';
+            return;
+        }
+
+        setFileUI("4/4: Extracting Data...");
+
+        // PROCEED WITH BAMBU/ORCA PARSING
+        const configFile = zip.file("Metadata/slice_info.config");
+        const xmlText = await configFile.async("string");
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+        // Extract Material Weight
+        const filamentNodes = xmlDoc.getElementsByTagName("filament");
+        let totalWeight = 0;
+        for (let i = 0; i < filamentNodes.length; i++) {
+            const usedG = parseFloat(filamentNodes[i].getAttribute("used_g"));
+            if (!isNaN(usedG)) totalWeight += usedG;
+        }
+
+        // Extract Print Time
+        const timeNode = xmlDoc.querySelector("estimated_print_time_s, [estimated_print_time]");
+        let timeMinutes = 0;
+        if (timeNode) {
+            const seconds = parseFloat(timeNode.textContent || timeNode.getAttribute("estimated_print_time"));
+            if (!isNaN(seconds) && seconds > 0) {
+                timeMinutes = Math.ceil(seconds / 60);
+            }
+        }
+
+        // Update State
+        let formattedWeight = "";
+        if (totalWeight > 0) {
+            formattedWeight = totalWeight.toFixed(2);
+            if (weightColIdx > -1) tabData[currentTabName][rowIdx][weightColIdx] = formattedWeight;
+            if (parsedWeightIdx > -1) tabData[currentTabName][rowIdx][parsedWeightIdx] = formattedWeight;
+        }
+        
+        if (timeMinutes > 0) {
+            const formattedTime = typeof formatPrintTime === 'function' ? formatPrintTime(timeMinutes) : `${timeMinutes}m`;
+            if (timeColIdx > -1) tabData[currentTabName][rowIdx][timeColIdx] = formattedTime;
+            if (parsedTimeIdx > -1) tabData[currentTabName][rowIdx][parsedTimeIdx] = formattedTime;
+        }
+
+        // Trigger math engine
+        if (formattedWeight !== "" && weightColIdx > -1) {
+            if (typeof handle3DPrintInput === 'function') {
+                handle3DPrintInput(rowIdx, weightColIdx, formattedWeight);
+            }
+        }
+
+        // Auto-fill Job Name
+        if (jobNameIdx > -1 && !tabData[currentTabName][rowIdx][jobNameIdx]) {
+            const cleanJobName = cleanFileName.replace(/\.3mf$/i, '');
+            tabData[currentTabName][rowIdx][jobNameIdx] = cleanJobName;
+        }
+
+        // Finish and show file name
+        setFileUI(cleanFileName);
+
+        if (typeof saveStorage === 'function') saveStorage();
+        if (typeof renderGrid === 'function') renderGrid();
+
+    } catch (error) {
+        console.error("3MF Parsing Error:", error);
+        alert("Failed to parse the 3MF file. It may be corrupted.");
+        setFileUI("Error Parsing");
+    }
+    
+    event.target.value = '';
+}
+
+function setupGridDelegation() {
+    const tbody = document.getElementById('grid-body');
+
+    // ==========================================
+    // 1. DOUBLE CLICK: Copy to clipboard
+    // ==========================================
+    tbody.addEventListener('dblclick', function(e) {
+        if (e.target.tagName === 'INPUT' && e.target.type !== 'checkbox') {
+            if (e.target.value.trim() !== "") {
+                navigator.clipboard.writeText(e.target.value).then(() => {
+                    if (typeof showCopiedPopup === 'function') showCopiedPopup(e);
+                    e.target.select();
+                }).catch(err => console.error("Copy failed", err));
+            }
+        }
+    });
+
+    // ==========================================
+    // 2. FOCUSIN: Auto-add row when focusing the last row
+    // ==========================================
+    tbody.addEventListener('focusin', function(e) {
+        const td = e.target.closest('td');
+        if (!td) return;
+        
+        const rowIdx = parseInt(td.dataset.row);
+        if (rowIdx === tabData[currentTab].length - 1) {
+            const baseLen = getBaseHeaders(currentTab).length;
+            const newRow = new Array(baseLen).fill("");
+            tabData[currentTab].push(newRow);
+            
+            // Get active columns accounting for mobile overrides
+            let activeCols = userColConfig[currentTab].filter(c => c.visible);
+            let config = TAB_CONFIG[currentTab];
+            if (currentTab === "Time Zone") config = TIMEZONE_CONFIG;
+            if (currentTab === "Wages") config = WAGES_CONFIG;
+            if (window.innerWidth <= 768 && config && config.mobileVisible) {
+                const mobileAllowed = config.mobileVisible.map(v => v.toLowerCase());
+                activeCols = activeCols.filter(c => mobileAllowed.includes(c.name.toLowerCase()));
+            }
+            
+            appendRowDom(activeCols, newRow, rowIdx + 1);
+        }
+    });
+
+    // ==========================================
+    // 3. INPUT & CHANGE: Route to correct math engines
+    // ==========================================
+    const handleCellChange = function(e) {
+        // Prevent text fields from triggering twice on blur
+        if (e.type === 'change' && e.target.type === 'text') return;
+        if (e.type === 'input' && (e.target.type === 'checkbox' || e.target.tagName === 'SELECT')) return;
+        
+        // ADD THIS LINE: Ignore file pickers so they don't overwrite our custom upload scripts
+        if (e.target.type === 'file') return; 
+        
+        if (e.target.tagName !== 'INPUT' && e.target.tagName !== 'SELECT') return;
+        const td = e.target.closest('td');
+        if (!td) return;
+
+        const rowIdx = parseInt(td.dataset.row);
+        const colIdx = parseInt(td.dataset.col);
+        const val = e.target.type === 'checkbox' ? (e.target.checked ? "Yes" : "No") : e.target.value;
+
+        const tabClean = currentTab.toLowerCase().replace(/[\s\/\\]+/g, "");
+        let config = TAB_CONFIG[currentTab] || {};
+        if (["wages", "wage", "salary", "pay"].includes(tabClean)) config = WAGES_CONFIG;
+        if (["timezone", "timezones", "worldtime"].includes(tabClean)) config = TIMEZONE_CONFIG;
+
+        if (currentTab === "3D Print Estimator") {
+            handle3DPrintInput(rowIdx, colIdx, val);
+        } else if (config.isDensityTab) {
+            handleDensityInput(rowIdx, colIdx, val, config);
+        } else if (currentTab === "Time Zone") {
+            handleTimeZoneInput(rowIdx, colIdx, val, config);
+        } else if (currentTab === "Wages") {
+            handleWagesInput(rowIdx, colIdx, val, config);
+        } else if (tabClean === "numbers") {
+            handleNumbersInput(rowIdx, colIdx, val, config);
+        } else if (config.isResolutionTab) {
+            handleResolutionInput(rowIdx, colIdx, val);
+        } else if (config.isCryptoTab) {
+            handleCryptoInput(rowIdx, colIdx, val, config);
+        } else if (config.isTextTab) {
+            handleCaseInput(rowIdx, colIdx, val, config);
+        } else if (config.isNetworkingTab) {
+            handleNetworkingInput(rowIdx, colIdx, val, config, false);
+        } else if (config.isVoltageDropTab) {
+            handleVoltageDropInput(rowIdx, colIdx, val, config);
+        } else {
+            handleStandardInput(rowIdx, colIdx, val, config);
+        }
+        
+        if (typeof saveStorage === 'function') saveStorage();
+    };
+
+    tbody.addEventListener('input', handleCellChange);
+    tbody.addEventListener('change', handleCellChange);
+
+    // ==========================================
+    // 4. TEMPORARY DRAG UNLOCK (via Duplicate Button)
+    // ==========================================
+    tbody.addEventListener('mousedown', function(e) {
+        if (e.target.classList.contains('dup-drag-btn')) {
+            const tr = e.target.closest('tr');
+            if (tr) tr.setAttribute('draggable', 'true');
+        }
+    });
+
+    tbody.addEventListener('mouseup', function(e) {
+        if (e.target.classList.contains('dup-drag-btn')) {
+            const tr = e.target.closest('tr');
+            if (tr) tr.setAttribute('draggable', 'false');
+        }
+    });
+
+    // ==========================================
+    // 5. HTML5 DRAG & DROP LOGIC
+    // ==========================================
+    let draggedRowIndex = null;
+
+    tbody.addEventListener('dragstart', function(e) {
+        const tr = e.target.closest('tr');
+        if (!tr) return;
+        draggedRowIndex = parseInt(tr.dataset.row);
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', draggedRowIndex); // Required for Firefox
+        setTimeout(() => tr.style.opacity = '0.4', 0); // Visual ghosting
+    });
+
+    tbody.addEventListener('dragover', function(e) {
+        e.preventDefault(); // Necessary to allow dropping
+        const tr = e.target.closest('tr');
+        if (!tr || tr.dataset.row == draggedRowIndex) return;
+        
+        // Visual indicator: draw a line above or below depending on mouse position
+        const bounding = tr.getBoundingClientRect();
+        const offset = bounding.y + (bounding.height / 2);
+        
+        if (e.clientY - offset > 0) {
+            tr.style.borderBottom = '2px solid var(--primary)';
+            tr.style.borderTop = '';
+        } else {
+            tr.style.borderTop = '2px solid var(--primary)';
+            tr.style.borderBottom = '';
+        }
+    });
+
+    tbody.addEventListener('dragleave', function(e) {
+        const tr = e.target.closest('tr');
+        if (tr) {
+            tr.style.borderTop = '';
+            tr.style.borderBottom = '';
+        }
+    });
+
+    tbody.addEventListener('drop', function(e) {
+        e.preventDefault();
+        const tr = e.target.closest('tr');
+        if (!tr) return;
+
+        const targetRowIndex = parseInt(tr.dataset.row);
+        if (draggedRowIndex === null || draggedRowIndex === targetRowIndex) return;
+
+        // Determine if we drop above or below the target row
+        const bounding = tr.getBoundingClientRect();
+        const offset = bounding.y + (bounding.height / 2);
+        let insertIndex = targetRowIndex;
+        if (e.clientY - offset > 0) insertIndex++; 
+        
+        // Adjust array index math if dragging downwards
+        if (draggedRowIndex < insertIndex) insertIndex--;
+
+        // Reorder the memory array
+        const rowData = tabData[currentTab].splice(draggedRowIndex, 1)[0];
+        tabData[currentTab].splice(insertIndex, 0, rowData);
+        
+        // Keep the Quick Convert target locked onto the correct row if it moved
+        if (quickConvertActiveRow === draggedRowIndex) {
+            quickConvertActiveRow = insertIndex;
+        } else if (quickConvertActiveRow > draggedRowIndex && quickConvertActiveRow <= insertIndex) {
+            quickConvertActiveRow--;
+        } else if (quickConvertActiveRow < draggedRowIndex && quickConvertActiveRow >= insertIndex) {
+            quickConvertActiveRow++;
+        }
+
+        if (typeof saveStorage === 'function') saveStorage();
+        if (typeof renderGrid === 'function') renderGrid();
+    });
+
+    tbody.addEventListener('dragend', function(e) {
+        const tr = e.target.closest('tr');
+        if (tr) {
+            tr.style.opacity = '1';
+            tr.setAttribute('draggable', 'false');
+        }
+        draggedRowIndex = null;
+        
+        // Clean up any lingering visual borders
+        Array.from(tbody.children).forEach(row => {
+            row.style.borderTop = '';
+            row.style.borderBottom = '';
+        });
+    });
+}
+
 function getActiveLitersInput() {
     let input = document.querySelector('tbody tr:last-child input[data-unit="liters"]') || 
                 document.querySelector('tbody tr:last-child input[data-col="liters"]') ||
@@ -10997,6 +11701,178 @@ function showDirectory() {
             });
         }
 
+
+// ==========================================
+// UNIVERSAL PRINT FILE PARSER (.3MF & .GCODE)
+// ==========================================
+async function handlePrintFileUpload(event, rowIdx) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Helper to route progress updates to the global status bar
+    const updateGlobalStatus = (text) => {
+        const statusEl = document.getElementById('quick-status');
+        if (statusEl) {
+            statusEl.textContent = text;
+        }
+    };
+
+    const cleanFileName = file.name.split(/[/\\]/).pop();
+    const isGcode = cleanFileName.toLowerCase().endsWith('.gcode');
+    const is3mf = cleanFileName.toLowerCase().endsWith('.3mf');
+
+    if (!isGcode && !is3mf) {
+        alert("Unsupported file type. Please upload a .gcode or .3mf file.");
+        updateGlobalStatus("Unsupported File Type");
+        event.target.value = '';
+        return;
+    }
+
+    const currentTabName = "3D Print Estimator";
+    const headersLower = getBaseHeaders(currentTabName).map(h => h.toLowerCase());
+    
+    const fileColIdx = headersLower.indexOf("source file");
+    const weightColIdx = headersLower.indexOf("print weight (g)");
+    const timeColIdx = headersLower.indexOf("build time");
+    const parsedWeightIdx = headersLower.indexOf("parsed weight");
+    const parsedTimeIdx = headersLower.indexOf("parsed time");
+    const jobNameIdx = headersLower.indexOf("job name");
+
+    // Instantly set the grid cell to the clean file name and leave it alone
+    if (fileColIdx > -1) {
+        tabData[currentTabName][rowIdx][fileColIdx] = cleanFileName;
+        const td = document.querySelector(`td[data-row="${rowIdx}"][data-col="${fileColIdx}"]`);
+        if (td) {
+            const span = td.querySelector('span');
+            if (span) {
+                span.textContent = cleanFileName;
+                span.title = cleanFileName;
+            }
+        }
+    }
+
+    // Auto-fill Job Name instantly so it populates even if slice data is missing later
+    if (jobNameIdx > -1 && !tabData[currentTabName][rowIdx][jobNameIdx]) {
+        const cleanJobName = cleanFileName.replace(/\.(3mf|gcode)$/i, '');
+        tabData[currentTabName][rowIdx][jobNameIdx] = cleanJobName;
+        if (typeof updateCellDom === 'function') updateCellDom(rowIdx, jobNameIdx, cleanJobName);
+    }
+
+    updateGlobalStatus("1/3: Reading File...");
+
+    try {
+        let totalWeight = 0;
+        let timeMinutes = 0;
+
+        // ---------------------------------------------------------
+        // PATH A: GCODE PARSING (Prusa, Orca, Cura)
+        // ---------------------------------------------------------
+        if (isGcode) {
+            updateGlobalStatus("2/3: Scanning GCODE...");
+            
+            const chunkSize = Math.min(50000, file.size);
+            const headBlob = file.slice(0, chunkSize);
+            const tailBlob = file.slice(file.size - chunkSize, file.size);
+            
+            const headText = await headBlob.text();
+            const tailText = await tailBlob.text();
+            const fullText = headText + "\n" + tailText;
+
+            const weightMatch = fullText.match(/;\s*(?:total\s*)?filament used \[g\]\s*=\s*([0-9.]+)/i);
+            if (weightMatch) {
+                totalWeight = parseFloat(weightMatch[1]);
+            } else {
+                const altWeightMatch = fullText.match(/;\s*weight.*?([0-9.]+)/i);
+                if (altWeightMatch) totalWeight = parseFloat(altWeightMatch[1]);
+            }
+
+            const curaTimeMatch = fullText.match(/;\s*TIME:\s*(\d+)/i);
+            if (curaTimeMatch) {
+                timeMinutes = Math.ceil(parseInt(curaTimeMatch[1], 10) / 60);
+            } else {
+                const prusaTimeMatch = fullText.match(/;\s*estimated printing time[^=]*=\s*((?:\d+d\s*)?(?:\d+h\s*)?(?:\d+m\s*)?(?:\d+s\s*)?)/i);
+                if (prusaTimeMatch && prusaTimeMatch[1]) {
+                    let tStr = prusaTimeMatch[1];
+                    let d = tStr.match(/(\d+)d/i) ? parseInt(tStr.match(/(\d+)d/i)[1]) : 0;
+                    let h = tStr.match(/(\d+)h/i) ? parseInt(tStr.match(/(\d+)h/i)[1]) : 0;
+                    let m = tStr.match(/(\d+)m/i) ? parseInt(tStr.match(/(\d+)m/i)[1]) : 0;
+                    let s = tStr.match(/(\d+)s/i) ? parseInt(tStr.match(/(\d+)s/i)[1]) : 0;
+                    timeMinutes = (d * 24 * 60) + (h * 60) + m + Math.ceil(s / 60);
+                }
+            }
+        } 
+        // ---------------------------------------------------------
+        // PATH B: 3MF PARSING (Bambu / Orca only)
+        // ---------------------------------------------------------
+        else if (is3mf) {
+            updateGlobalStatus("2/3: Unzipping 3MF...");
+            await loadJSZip();
+            const zip = await JSZip.loadAsync(file);
+            
+            const configFile = zip.file("Metadata/slice_info.config");
+            if (!configFile) {
+                alert("This 3MF file acts as a Project file (no slice data). Please slice the file and export the .gcode to get time and weight estimates.");
+                updateGlobalStatus("No Slice Data Found");
+                if (typeof saveStorage === 'function') saveStorage();
+                event.target.value = '';
+                return;
+            }
+
+            const xmlText = await configFile.async("string");
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(xmlText, "text/xml");
+
+            const filamentNodes = xmlDoc.getElementsByTagName("filament");
+            for (let i = 0; i < filamentNodes.length; i++) {
+                const usedG = parseFloat(filamentNodes[i].getAttribute("used_g"));
+                if (!isNaN(usedG)) totalWeight += usedG;
+            }
+
+            const timeNode = xmlDoc.querySelector("estimated_print_time_s, [estimated_print_time]");
+            if (timeNode) {
+                const seconds = parseFloat(timeNode.textContent || timeNode.getAttribute("estimated_print_time"));
+                if (!isNaN(seconds) && seconds > 0) timeMinutes = Math.ceil(seconds / 60);
+            }
+        }
+
+        // ---------------------------------------------------------
+        // APPLY EXTRACTED DATA TO GRID
+        // ---------------------------------------------------------
+        updateGlobalStatus("3/3: Applying Data...");
+
+        let formattedWeight = "";
+        if (totalWeight > 0) {
+            formattedWeight = totalWeight.toFixed(2);
+            if (weightColIdx > -1) tabData[currentTabName][rowIdx][weightColIdx] = formattedWeight;
+            if (parsedWeightIdx > -1) tabData[currentTabName][rowIdx][parsedWeightIdx] = formattedWeight;
+        }
+        
+        if (timeMinutes > 0) {
+            const formattedTime = typeof formatPrintTime === 'function' ? formatPrintTime(timeMinutes) : `${timeMinutes}m`;
+            if (timeColIdx > -1) tabData[currentTabName][rowIdx][timeColIdx] = formattedTime;
+            if (parsedTimeIdx > -1) tabData[currentTabName][rowIdx][parsedTimeIdx] = formattedTime;
+        }
+
+        if (formattedWeight !== "" && weightColIdx > -1) {
+            if (typeof handle3DPrintInput === 'function') {
+                handle3DPrintInput(rowIdx, weightColIdx, formattedWeight);
+            }
+        }
+
+        if (typeof saveStorage === 'function') saveStorage();
+        if (typeof renderGrid === 'function') renderGrid();
+
+        updateGlobalStatus("Parsed Successfully!");
+
+    } catch (error) {
+        console.error("File Parsing Error:", error);
+        alert("Failed to parse the file. It may be corrupted or from an unrecognized slicer format.");
+        updateGlobalStatus("Error Parsing File");
+        if (typeof saveStorage === 'function') saveStorage();
+    }
+    
+    event.target.value = '';
+}
 function showAliasPopup(e, tabName, unitName) {
             e.stopPropagation(); // Keep the document click listener from immediately hiding it
             const cleanUnit = String(unitName).toLowerCase();
@@ -11095,6 +11971,79 @@ function handleVolumetricEnter(e) {
         }
     }
 }
+
+async function exportTabToCSV() {
+    if (!tabData[currentTab] || tabData[currentTab].length === 0) return;
+
+    // 1. Get visible columns to only export what the user sees
+    const activeCols = userColConfig[currentTab].filter(c => c.visible);
+    if (activeCols.length === 0) {
+        alert("No visible columns to export.");
+        return;
+    }
+
+    // 2. Build the header row (escaping quotes for CSV standard)
+    const headers = activeCols.map(c => `"${(c.displayName || c.name).replace(/"/g, '""')}"`);
+    let csvContent = headers.join(',') + '\r\n';
+
+    // 3. Process the rows using the cascade heuristic
+    const rows = tabData[currentTab];
+    
+    for (let i = 0; i < rows.length; i++) {
+        const row = rows[i];
+        
+        // Count how many cells are truly empty in this row
+        const emptyCount = row.filter(cell => cell === null || cell === undefined || String(cell).trim() === "").length;
+        
+        // If half or more of the row's columns are empty, it's an unused/default row. Skip it.
+        if (emptyCount >= (row.length / 2)) {
+            continue; 
+        }
+
+        // Build the CSV string for this valid row
+        const csvRow = activeCols.map(colDef => {
+            let cellVal = String(row[colDef.originalIndex] || "");
+            return `"${cellVal.replace(/"/g, '""')}"`;
+        });
+        
+        csvContent += csvRow.join(',') + '\r\n';
+    }
+
+    // 4. Trigger the Download / Save As
+    const cleanTabName = currentTab.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    const defaultName = `omega_${cleanTabName}_export.csv`;
+
+    if (window.showSaveFilePicker) {
+        try {
+            const fileHandle = await window.showSaveFilePicker({
+                suggestedName: defaultName,
+                types: [{
+                    description: 'CSV File',
+                    accept: { 'text/csv': ['.csv'] }
+                }]
+            });
+            const writable = await fileHandle.createWritable();
+            await writable.write(csvContent);
+            await writable.close();
+            return; 
+        } catch (err) {
+            if (err.name === 'AbortError') return; 
+            console.error("Save As API failed, falling back to auto-download...", err);
+        }
+    }
+
+    // Fallback for mobile and browsers that don't support the File System Access API
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = defaultName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
+
         // ==========================================
         // CONFIG BACKUP & RESTORE
         // ==========================================
